@@ -1,0 +1,373 @@
+"use client";
+
+import EmblaCarousel from '@/components/carousel/EmblaCarousel'
+import { EmblaOptionsType } from 'embla-carousel'
+import '../components/carousel/css/embla.css'
+import TrueFocus from '@/textanimate/TextAnimations/TrueFocus/TrueFocus';
+import SectionHeader from '@/components/ui/SectionHeader';
+import { FiMail, FiSend } from "react-icons/fi";
+import MainHeader from '@/components/ui/MainHeader';
+import MainFooter from '@/components/ui/MainFooter';
+import ListingCard from '@/components/HotelCard';
+import React from 'react';
+import GenericCarousel from '@/components/carousel/GenericCarousel';
+
+
+const OPTIONS: EmblaOptionsType = { axis: 'y' }
+// Création d'un tableau d'images
+const IMAGES = [
+   { src: "/media/slide/slide3.jpg", alt: "Image 3" },
+   { src: "/media/slide/slide5.jpg", alt: "Image 5" },
+   { src: "/media/slide/slide4.jpg", alt: "Image 4" },
+   { src: "/media/slide/slide1.jpg", alt: "Image 1" },
+   { src: "/media/slide/slide2.jpg", alt: "Image 2" },
+]
+
+// Tableau d'hôtels pour la section "Hôtels en vogue"
+const hotels = [
+  {
+    image: "/media/hotels/hotel1.jpg",
+    name: "Hôtel du Soleil",
+    city: "Paris, France",
+    rating: 4.5,
+    description: "Un havre de paix au cœur de la ville, avec piscine et spa.",
+    price: "Dès 78 000 FCFA/nuit",
+    isPopular: true,
+    freeCancel: true,
+  },
+  {
+    image: "/media/hotels/hotel2.jpg",
+    name: "Hôtel du Soleil",
+    city: "Paris, France",
+    rating: 4.5,
+    description: "Un havre de paix au cœur de la ville, avec piscine et spa.",
+    price: "Dès 78 000 FCFA/nuit",
+    isPopular: true,
+    freeCancel: true,
+  },
+  {
+    image: "/media/hotels/hotel3.jpg",
+    name: "Hôtel du Soleil",
+    city: "Paris, France",
+    rating: 4.5,
+    description: "Un havre de paix au cœur de la ville, avec piscine et spa.",
+    price: "Dès 78 000 FCFA/nuit",
+    isPopular: true,
+    freeCancel: true,
+  },
+  {
+   image: "/media/hotels/hotel1.jpg",
+   name: "Hôtel du Soleil",
+   city: "Paris, France",
+   rating: 4.5,
+   description: "Un havre de paix au cœur de la ville, avec piscine et spa.",
+   price: "Dès 78 000 FCFA/nuit",
+   isPopular: true,
+   freeCancel: true,
+ },
+ {
+   image: "/media/hotels/hotel2.jpg",
+   name: "Hôtel du Soleil",
+   city: "Paris, France",
+   rating: 4.5,
+   description: "Un havre de paix au cœur de la ville, avec piscine et spa.",
+   price: "Dès 78 000 FCFA/nuit",
+   isPopular: true,
+   freeCancel: true,
+ },
+ {
+   image: "/media/hotels/hotel3.jpg",
+   name: "Hôtel du Soleil",
+   city: "Paris, France",
+   rating: 4.5,
+   description: "Un havre de paix au cœur de la ville, avec piscine et spa.",
+   price: "Dès 78 000 FCFA/nuit",
+   isPopular: true,
+   freeCancel: true,
+ },
+];
+
+// Tableau de restaurants pour la section "la hâute gastronomie"
+const restaurants = [
+  {
+    image: "/media/hotels/hotel1.jpg",
+    name: "Le Gourmet Parisien",
+    city: "Paris, France",
+    rating: 4.8,
+    description: "Cuisine raffinée et ambiance élégante au cœur de Paris.",
+    price: "Menu dès 45 000 FCFA",
+    isPopular: true,
+    freeCancel: false,
+  },
+  {
+    image: "/media/hotels/hotel2.jpg",
+    name: "Saveurs du Monde",
+    city: "Lyon, France",
+    rating: 4.7,
+    description: "Voyage culinaire à travers les saveurs du monde.",
+    price: "Menu dès 38 000 FCFA",
+    isPopular: false,
+    freeCancel: true,
+  },
+  {
+    image: "/media/hotels/hotel3.jpg",
+    name: "Bistro Chic",
+    city: "Marseille, France",
+    rating: 4.6,
+    description: "Ambiance conviviale et plats traditionnels revisités.",
+    price: "Menu dès 30 000 FCFA",
+    isPopular: false,
+    freeCancel: true,
+  },
+  {
+   image: "/media/hotels/hotel1.jpg",
+   name: "Le Gourmet Parisien",
+   city: "Paris, France",
+   rating: 4.8,
+   description: "Cuisine raffinée et ambiance élégante au cœur de Paris.",
+   price: "Menu dès 45 000 FCFA",
+   isPopular: true,
+   freeCancel: false,
+ },
+ {
+   image: "/media/hotels/hotel2.jpg",
+   name: "Saveurs du Monde",
+   city: "Lyon, France",
+   rating: 4.7,
+   description: "Voyage culinaire à travers les saveurs du monde.",
+   price: "Menu dès 38 000 FCFA",
+   isPopular: false,
+   freeCancel: true,
+ },
+ {
+   image: "/media/hotels/hotel3.jpg",
+   name: "Bistro Chic",
+   city: "Marseille, France",
+   rating: 4.6,
+   description: "Ambiance conviviale et plats traditionnels revisités.",
+   price: "Menu dès 30 000 FCFA",
+   isPopular: false,
+   freeCancel: true,
+ },
+];
+
+// Ajouter les tableaux de données fictives pour chaque section
+const chillPlaces = [
+  { image: '/media/hotels/hotel1.jpg', name: 'Chill Bar', city: 'Abidjan', rating: 4.2, description: 'Ambiance lounge et cocktails signature.', price: 'Entrée libre', isPopular: false, freeCancel: false },
+  { image: '/media/hotels/hotel2.jpg', name: 'Night Vibes', city: 'Abidjan', rating: 4.4, description: 'Soirées DJ et tapas.', price: 'Entrée 5 000 FCFA', isPopular: true, freeCancel: false },
+  { image: '/media/hotels/hotel3.jpg', name: 'Rooftop 360', city: 'Abidjan', rating: 4.6, description: 'Vue panoramique et musique live.', price: 'Entrée 10 000 FCFA', isPopular: false, freeCancel: true },
+  { image: '/media/hotels/hotel1.jpg', name: 'Cosy Spot', city: 'Abidjan', rating: 4.1, description: 'Canapés moelleux et mocktails.', price: 'Entrée libre', isPopular: false, freeCancel: true },
+];
+const kidsSpaces = [
+  { image: '/media/hotels/hotel2.jpg', name: 'Kids Park', city: 'Abidjan', rating: 4.7, description: 'Jeux et animations pour enfants.', price: 'Entrée 2 000 FCFA', isPopular: true, freeCancel: true },
+  { image: '/media/hotels/hotel3.jpg', name: 'Fun Zone', city: 'Abidjan', rating: 4.5, description: 'Espace sécurisé et éducatif.', price: 'Entrée 3 000 FCFA', isPopular: false, freeCancel: true },
+  { image: '/media/hotels/hotel1.jpg', name: 'Mini Club', city: 'Abidjan', rating: 4.3, description: 'Ateliers créatifs et jeux.', price: 'Entrée 2 500 FCFA', isPopular: false, freeCancel: false },
+  { image: '/media/hotels/hotel2.jpg', name: 'Playground', city: 'Abidjan', rating: 4.6, description: 'Structures gonflables et toboggans.', price: 'Entrée 2 000 FCFA', isPopular: true, freeCancel: true },
+];
+const residences = [
+  { image: '/media/hotels/hotel3.jpg', name: 'Résidence Zen', city: 'Abidjan', rating: 4.8, description: 'Studios tout équipés et discrets.', price: 'Dès 60 000 FCFA/nuit', isPopular: true, freeCancel: true },
+  { image: '/media/hotels/hotel1.jpg', name: 'Secret Loft', city: 'Abidjan', rating: 4.5, description: 'Ambiance feutrée et confort.', price: 'Dès 55 000 FCFA/nuit', isPopular: false, freeCancel: true },
+  { image: '/media/hotels/hotel2.jpg', name: 'Urban Hideout', city: 'Abidjan', rating: 4.4, description: 'Emplacement central et calme.', price: 'Dès 50 000 FCFA/nuit', isPopular: false, freeCancel: false },
+  { image: '/media/hotels/hotel3.jpg', name: 'Quiet Place', city: 'Abidjan', rating: 4.7, description: 'Service discret et raffiné.', price: 'Dès 65 000 FCFA/nuit', isPopular: true, freeCancel: true },
+];
+const lounges = [
+  { image: '/media/hotels/hotel1.jpg', name: 'Lounge Relax', city: 'Abidjan', rating: 4.3, description: 'Ambiance cosy et raffinée.', price: 'Entrée 4 000 FCFA', isPopular: false, freeCancel: true },
+  { image: '/media/hotels/hotel2.jpg', name: 'Chic Corner', city: 'Abidjan', rating: 4.5, description: 'Cocktails et douce musique.', price: 'Entrée 5 000 FCFA', isPopular: true, freeCancel: false },
+  { image: '/media/hotels/hotel3.jpg', name: 'Zen Space', city: 'Abidjan', rating: 4.6, description: 'Détente et gourmandises.', price: 'Entrée 6 000 FCFA', isPopular: false, freeCancel: true },
+  { image: '/media/hotels/hotel1.jpg', name: 'Cosy Lounge', city: 'Abidjan', rating: 4.2, description: 'Espace chaleureux.', price: 'Entrée 4 500 FCFA', isPopular: false, freeCancel: true },
+];
+const magicPlaces = [
+  { image: '/media/hotels/hotel2.jpg', name: 'Magic Lake', city: 'Abidjan', rating: 4.9, description: 'Lieu féérique au bord de l’eau.', price: 'Visite 8 000 FCFA', isPopular: true, freeCancel: true },
+  { image: '/media/hotels/hotel3.jpg', name: 'Enchanted Garden', city: 'Abidjan', rating: 4.8, description: 'Jardin secret et animations.', price: 'Visite 7 000 FCFA', isPopular: false, freeCancel: true },
+  { image: '/media/hotels/hotel1.jpg', name: 'Hidden Falls', city: 'Abidjan', rating: 4.7, description: 'Cascade cachée et détente.', price: 'Visite 9 000 FCFA', isPopular: false, freeCancel: false },
+];
+
+
+export default function Home() {
+   // Embla pour la section Hôtels en vogue
+   React.useEffect(() => {
+      // This block is removed as emblaRef and emblaApi are no longer used for the restaurants section
+   }, []);
+
+   return (
+      <div>
+
+         {/* Header */}
+         <MainHeader />
+
+         <section className="mb-5 px-2 md:px-0">
+            <div className="">
+               <EmblaCarousel slides={IMAGES} options={OPTIONS} />
+            </div>
+         </section>
+
+         <section className="container mx-auto flex items-center justify-center py-5 mb-20 px-2 md:px-0">
+            <TrueFocus
+               sentence="Le Coin Chic du Moment"
+               manualMode={false}
+               blurAmount={5}
+               borderColor="#12100c"
+               animationDuration={2}
+               pauseBetweenAnimations={1}
+            />
+         </section>
+
+         <section className="container mx-auto space-y-5 mb-20 px-2 md:px-0">
+            <div>
+               <SectionHeader title="Hôtels en vogue" subtitle="Découvrez les établissements les plus prisés du moment" />
+            </div>
+            <div>
+              <GenericCarousel
+                items={hotels}
+                renderItem={(hotel, idx) => <ListingCard key={idx} {...hotel} />}
+                options={{ loop: true }}
+                containerStyle={{ display: 'flex', flexDirection: 'row', paddingLeft: '1rem' }}
+                slideStyle={{
+                  flex: '0 0 33.3333%',
+                  minWidth: 0,
+                  marginRight: '1.5rem',
+                  marginBottom: '1rem',
+                  borderRadius: '1.5rem',
+                  boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07), 0 1.5px 6px 0 rgba(0,0,0,0.03)',
+                  background: 'rgba(255,255,255,0.7)',
+                  backdropFilter: 'blur(2px)',
+                }}
+              />
+            </div>
+         </section>
+
+         <section className="container mx-auto space-y-5 mb-20 px-2 md:px-0">
+            <div>
+               <SectionHeader title="la hâute gastronomie" subtitle="Savourez une expérience culinaire d'exception" />
+            </div>
+            <div>
+              <GenericCarousel
+                items={restaurants}
+                renderItem={(restaurant, idx) => <ListingCard key={idx} {...restaurant} />}
+                options={{ loop: true }}
+                className="bg-gradient-to-br from-orange-50 via-white to-yellow-100 rounded-3xl shadow-xl py-12 md:py-16 px-2 md:px-8"
+                containerStyle={{ display: 'flex', flexDirection: 'row', paddingLeft: 0, paddingRight: 0 }}
+                slideStyle={{
+                  flex: '0 0 25%',
+                  minWidth: 0,
+                  marginRight: '1.5rem',
+                  marginBottom: '1rem',
+                  borderRadius: '1.5rem',
+                  boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07), 0 1.5px 6px 0 rgba(0,0,0,0.03)',
+                  background: 'rgba(255,255,255,0.7)',
+                  backdropFilter: 'blur(2px)',
+                }}
+                controlsClassName="flex justify-between items-center mt-4 px-4"
+              />
+            </div>
+         </section>
+
+         <section className="container mx-auto space-y-5 mb-20 px-2 md:px-0">
+            <div className="flex justify-end">
+               <SectionHeader title="chill de minuit" subtitle="Des lieux parfaits pour vos soirées inoubliables" />
+            </div>
+            <div>
+              <GenericCarousel
+                items={chillPlaces}
+                renderItem={(item, idx) => <ListingCard key={idx} {...item} />}
+                options={{ loop: true }}
+                containerStyle={{ display: 'flex', flexDirection: 'row', paddingLeft: 0, paddingRight: 0 }}
+                slideStyle={{ flex: '0 0 25%', minWidth: 0, marginRight: '1.5rem', marginBottom: '1rem', borderRadius: '1.5rem', boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07), 0 1.5px 6px 0 rgba(0,0,0,0.03)', background: 'rgba(245, 231, 255, 0.7)', backdropFilter: 'blur(2px)' }}
+                controlsClassName="flex justify-between items-center mt-4 px-4"
+              />
+            </div>
+         </section>
+
+         <section className="container mx-auto space-y-5 mb-20 px-2 md:px-0">
+            <div className="flex justify-end">
+               <SectionHeader title="espace des tout petit" subtitle="Des espaces ludiques et sécurisés pour vos enfants" />
+            </div>
+            <div>
+              <GenericCarousel
+                items={kidsSpaces}
+                renderItem={(item, idx) => <ListingCard key={idx} {...item} />}
+                options={{ loop: true }}
+                containerStyle={{ display: 'flex', flexDirection: 'row', paddingLeft: 0, paddingRight: 0 }}
+                slideStyle={{ flex: '0 0 25%', minWidth: 0, marginRight: '1.5rem', marginBottom: '1rem', borderRadius: '1.5rem', boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07), 0 1.5px 6px 0 rgba(0,0,0,0.03)', background: 'rgba(209, 250, 229, 0.7)', backdropFilter: 'blur(2px)' }}
+                controlsClassName="flex justify-between items-center mt-4 px-4"
+              />
+            </div>
+         </section>
+
+         <section className="container mx-auto space-y-5 mb-20 px-2 md:px-0">
+            <div className="flex justify-end">
+               <SectionHeader title="Résidence inconito" subtitle="Séjournez dans le confort et la discrétion" />
+            </div>
+            <div>
+              <GenericCarousel
+                items={residences}
+                renderItem={(item, idx) => <ListingCard key={idx} {...item} />}
+                options={{ loop: true }}
+                containerStyle={{ display: 'flex', flexDirection: 'row', paddingLeft: 0, paddingRight: 0 }}
+                slideStyle={{ flex: '0 0 25%', minWidth: 0, marginRight: '1.5rem', marginBottom: '1rem', borderRadius: '1.5rem', boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07), 0 1.5px 6px 0 rgba(0,0,0,0.03)', background: 'rgba(219, 234, 254, 0.7)', backdropFilter: 'blur(2px)' }}
+                controlsClassName="flex justify-between items-center mt-4 px-4"
+              />
+            </div>
+         </section>
+
+         <section className="container mx-auto space-y-5 mb-20 px-2 md:px-0">
+            <div className="flex justify-start">
+               <SectionHeader title="Petite detante dans nos lounges" subtitle="Détendez-vous dans une ambiance cosy et raffinée" />
+            </div>
+            <div>
+              <GenericCarousel
+                items={lounges}
+                renderItem={(item, idx) => <ListingCard key={idx} {...item} />}
+                options={{ loop: true }}
+                containerStyle={{ display: 'flex', flexDirection: 'row', paddingLeft: 0, paddingRight: 0 }}
+                slideStyle={{ flex: '0 0 25%', minWidth: 0, marginRight: '1.5rem', marginBottom: '1rem', borderRadius: '1.5rem', boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07), 0 1.5px 6px 0 rgba(0,0,0,0.03)', background: 'rgba(165, 243, 252, 0.7)', backdropFilter: 'blur(2px)' }}
+                controlsClassName="flex justify-between items-center mt-4 px-4"
+              />
+            </div>
+         </section>
+
+         <section className="container mx-auto space-y-5 mb-20 px-2 md:px-0">
+            <div>
+               <SectionHeader title="Lieux magiques" subtitle="Explorez des endroits uniques et enchanteurs" />
+            </div>
+            <div>
+              <GenericCarousel
+                items={magicPlaces}
+                renderItem={(item, idx) => <ListingCard key={idx} {...item} />}
+                options={{ loop: true }}
+                containerStyle={{ display: 'flex', flexDirection: 'row', paddingLeft: 0, paddingRight: 0 }}
+                slideStyle={{ flex: '0 0 33.3333%', minWidth: 0, marginRight: '1.5rem', marginBottom: '1rem', borderRadius: '1.5rem', boxShadow: '0 4px 24px 0 rgba(0,0,0,0.07), 0 1.5px 6px 0 rgba(0,0,0,0.03)', background: 'rgba(251, 207, 232, 0.7)', backdropFilter: 'blur(2px)' }}
+                controlsClassName="flex justify-between items-center mt-4 px-4"
+              />
+            </div>
+         </section>
+
+         <section className="container mx-auto flex justify-center py-10 mb-10 px-2 md:px-0">
+            <div className="w-full md:w-2/3 bg-gradient-to-br from-orange-50 via-white to-yellow-100 rounded-3xl shadow-2xl p-10 flex flex-col items-center gap-6 border border-orange-100">
+               <h2 className="text-3xl md:text-5xl font-extrabold text-theme-primary mb-2 text-center drop-shadow-lg tracking-tight">Restez informé !</h2>
+               <p className="text-gray-700 text-center text-base md:text-lg mb-2 max-w-xl">Abonnez-vous à notre newsletter pour recevoir les meilleures adresses, bons plans et événements exclusifs du Coin Chic du Moment.</p>
+               <form className="w-full flex flex-col md:flex-row gap-3 md:gap-0 md:items-center justify-center">
+                  <div className="relative w-full md:w-2/3">
+                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-theme-primary text-xl"><FiMail /></span>
+                     <input
+                        type="email"
+                        required
+                        placeholder="Votre adresse email"
+                        className="pl-10 pr-4 py-3 rounded-l-full rounded-r-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-theme-primary text-base w-full shadow-sm bg-white"
+                     />
+                  </div>
+                  <button
+                     type="submit"
+                     className="flex items-center gap-2 bg-theme-primary text-white px-8 py-3 rounded-full font-bold text-lg shadow-md hover:bg-orange-500 transition-colors duration-200 md:rounded-l-none md:rounded-r-full md:ml-2"
+                  >S&apos;inscrire <FiSend className="ml-1 text-xl" /></button>
+               </form>
+               <span className="text-xs text-gray-400 mt-2 text-center">Nous respectons votre vie privée. Désabonnement possible à tout moment.</span>
+            </div>
+         </section>
+
+         {/* Footer */}
+         <MainFooter />
+
+      </div>
+   );
+}

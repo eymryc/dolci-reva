@@ -55,8 +55,13 @@ export function LoginForm({
          router.push("/admin/dashboard");
 
       } catch (error) {
-
-         const errorMessage = error.response.data.message;
+         // Type guard pour vérifier si c'est une erreur axios
+         let errorMessage = 'Une erreur est survenue';
+         
+         if (error && typeof error === 'object' && 'response' in error) {
+            const axiosError = error as { response?: { data?: { message?: string } } };
+            errorMessage = axiosError.response?.data?.message || 'Une erreur est survenue';
+         }
 
          // ERROR MESSAGE
          toast.error(errorMessage)

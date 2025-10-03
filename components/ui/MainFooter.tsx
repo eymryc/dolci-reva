@@ -56,7 +56,7 @@ export default function MainFooter() {
               className="flex-1 px-6 py-3 rounded-full border-0 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
             />
             <button className="bg-white text-theme-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200">
-              S'abonner
+              S&apos;abonner
             </button>
           </div>
         </div>
@@ -78,7 +78,7 @@ export default function MainFooter() {
                 />
               </div>
               <p className="text-gray-600 mb-6 leading-relaxed">
-                Découvrez les trésors cachés de la Côte d'Ivoire. Des hôtels d'exception, 
+                Découvrez les trésors cachés de la Côte d&apos;Ivoire. Des hôtels d&apos;exception, 
                 une gastronomie raffinée, des lieux magiques qui vous feront vivre des moments inoubliables.
               </p>
               <div className="flex gap-4">

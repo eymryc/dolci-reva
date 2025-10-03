@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
                 <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
                   <p className="text-sm text-blue-800">
                     <strong>Vérifiez votre boîte de réception</strong> et cliquez sur le lien pour réinitialiser votre mot de passe.
-                    Si vous ne voyez pas l'email, vérifiez votre dossier spam.
+                    Si vous ne voyez pas l&apos;email, vérifiez votre dossier spam.
                   </p>
                 </div>
 
@@ -77,7 +77,7 @@ export default function ForgotPasswordPage() {
                     variant="outline"
                     className="w-full h-12 border-theme-primary text-theme-primary hover:bg-theme-primary hover:text-white font-medium"
                   >
-                    Renvoyer l'email
+                    Renvoyer l&apos;email
                   </Button>
                   
                   <Link href="/auth/sign-in">

@@ -13,18 +13,13 @@ import {
   Filter, 
   MapPin, 
   Star, 
-  Clock, 
-  Home, 
   Bed,
   Bath,
   Square,
   Heart,
   Share2,
   Phone,
-  Globe,
-  Users,
-  Car,
-  Wifi
+  Globe
 } from "lucide-react";
 
 export default function ResidencesPage() {

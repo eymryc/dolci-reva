@@ -42,7 +42,7 @@ export default function SignInPage() {
             />
           </Link>
           <h1 className="text-2xl font-bold text-gray-900 mt-4">Bienvenue sur Dolci Rêva</h1>
-          <p className="text-gray-600 mt-2">Connectez-vous pour découvrir les meilleurs lieux de Côte d'Ivoire</p>
+          <p className="text-gray-600 mt-2">Connectez-vous pour découvrir les meilleurs lieux de Côte d&apos;Ivoire</p>
         </div>
 
         {/* Formulaire de connexion */}

@@ -13,18 +13,12 @@ import {
   Filter, 
   MapPin, 
   Star, 
-  Clock, 
   Users, 
   Calendar,
   Heart,
   Share2,
   Phone,
-  Globe,
-  Wifi,
-  Car,
-  Utensils,
-  Music,
-  Camera
+  Globe
 } from "lucide-react";
 
 export default function EspaceEvenementielsPage() {

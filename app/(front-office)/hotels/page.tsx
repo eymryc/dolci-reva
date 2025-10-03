@@ -1,27 +1,13 @@
 "use client"
 
 import { useState } from 'react';
-import SectionHeader from '@/components/ui/SectionHeader';
 import HotelCard from '@/components/HotelCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
 import { 
   Search, 
-  Filter, 
-  MapPin, 
-  Star, 
-  Wifi, 
-  Car, 
-  Coffee, 
-  Dumbbell,
-  Shield,
-  Clock,
-  Users,
-  Bed,
-  Bath,
-  Square
+  Filter
 } from "lucide-react";
 
 export default function HotelsPage() {
@@ -255,13 +241,12 @@ export default function HotelsPage() {
             <HotelCard
               key={hotel.id}
               name={hotel.name}
-              location={hotel.location}
-              price={hotel.price}
+              city={hotel.location}
+              price={`${hotel.price.toLocaleString()} FCFA`}
               rating={hotel.rating}
-              reviews={hotel.reviews}
+              description={`Hôtel ${hotel.category} avec ${hotel.amenities.join(', ')}`}
               image={hotel.image}
-              amenities={hotel.amenities}
-              popular={hotel.popular}
+              isPopular={hotel.popular}
               freeCancel={hotel.freeCancel}
             />
           ))}

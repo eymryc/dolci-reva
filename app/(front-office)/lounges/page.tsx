@@ -14,16 +14,11 @@ import {
   MapPin, 
   Star, 
   Clock, 
-  Coffee, 
-  Wine,
-  Music,
   Heart,
   Share2,
   Phone,
   Globe,
-  Users,
-  Wifi,
-  Car
+  Users
 } from "lucide-react";
 
 export default function LoungesPage() {

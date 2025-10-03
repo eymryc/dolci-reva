@@ -147,7 +147,7 @@ export default function MainHeader() {
                   Dolci Rêva
                 </SheetTitle>
                 <SheetDescription>
-                  Découvrez les meilleurs lieux de Côte d'Ivoire
+                  Découvrez les meilleurs lieux de Côte d&apos;Ivoire
                 </SheetDescription>
               </SheetHeader>
               

@@ -23,6 +23,16 @@ const nextConfig: NextConfig = {
         hostname: 'dolci-reva.achalivre-afrique.ci',
         pathname: '/storage/**',
       },
+      {
+        protocol: 'http',
+        hostname: 'dolci-reva-x27q.vercel.app',
+        pathname: '/storage/**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'dolci-reva-x27q.vercel.app',
+        pathname: '/storage/**',
+      },
     ],
   },
 };

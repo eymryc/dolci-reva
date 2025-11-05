@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import Image from "next/image";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
@@ -663,10 +664,12 @@ export function ResidenceForm({
                 <div className="grid grid-cols-4 gap-1.5">
                   {mainImagePreview && (
                     <div className="relative w-full h-24 rounded-lg overflow-hidden border border-gray-200 shadow-sm">
-                      <img
+                      <Image
                         src={mainImagePreview}
                         alt="Image principale"
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        unoptimized
                       />
                       <div className="absolute top-1 left-1">
                         <span className="bg-blue-600 text-white text-xs px-1.5 py-0.5 rounded text-[10px]">Principale</span>
@@ -687,10 +690,12 @@ export function ResidenceForm({
                       key={index}
                       className="relative w-full h-24 rounded-lg overflow-hidden border border-gray-200 shadow-sm"
                     >
-                      <img
+                      <Image
                         src={preview}
                         alt={`Image ${index + 1}`}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
+                        unoptimized
                       />
                       <Button
                         type="button"

@@ -172,9 +172,11 @@ export default function Home() {
                   image={residence.main_image_url || residence.main_image_thumb_url || "/media/hotels/hotel1.jpg"}
                   name={residence.name}
                   city={`${residence.city}, ${residence.country}`}
-                  rating={parseFloat(residence.average_rating) || 0}
                   description={residence.description || "Aucune description disponible."}
                   price={`${formatPrice(residence.price)} FCFA`}
+                  type={residence.type}
+                  standing={residence.standing}
+                  amenities={residence.amenities}
                   isPopular={residence.has_ratings || residence.rating_count > 0}
                 />
               ))}

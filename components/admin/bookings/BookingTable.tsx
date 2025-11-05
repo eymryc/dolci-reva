@@ -113,6 +113,9 @@ export function BookingTable({
         header: "Client",
         cell: ({ row }) => {
           const customer = row.original.customer;
+          if (!customer) {
+            return <div className="text-gray-500 text-sm">N/A</div>;
+          }
           return (
             <div className="text-gray-900">
               <div className="font-medium">{`${customer.first_name} ${customer.last_name}`}</div>
@@ -126,6 +129,9 @@ export function BookingTable({
         header: "Résidence",
         cell: ({ row }) => {
           const bookable = row.original.bookable;
+          if (!bookable) {
+            return <div className="text-gray-500 text-sm">N/A</div>;
+          }
           return (
             <div className="text-gray-900">
               <div className="font-medium">{bookable.name}</div>

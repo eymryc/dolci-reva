@@ -14,7 +14,7 @@ const nextConfig: NextConfig = {
         pathname: '/storage/**',
       },
       {
-        protocol: 'https',
+        protocol: 'http',
         hostname: 'dolci-reva.achalivre-afrique.ci',
         pathname: '/storage/**',
       },

@@ -18,6 +18,11 @@ const nextConfig: NextConfig = {
         hostname: 'dolci-reva.achalivre-afrique.ci',
         pathname: '/storage/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'dolci-reva.achalivre-afrique.ci',
+        pathname: '/storage/**',
+      },
     ],
   },
 };

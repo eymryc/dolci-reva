@@ -1,6 +1,6 @@
 "use client";
 import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 interface AnimatedSectionProps {
@@ -14,8 +14,22 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   className = "", 
   delay = 0 
 }) => {
+  const [mounted, setMounted] = useState(false);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  // Ensure component only runs on client to prevent hydration mismatch
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div ref={ref} className={className}>
+        {children}
+      </div>
+    );
+  }
 
   return (
     <motion.div

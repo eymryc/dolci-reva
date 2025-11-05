@@ -27,7 +27,7 @@ export default function MainFooter() {
       { label: "Hôtels", href: "/hotels" },
       { label: "Restaurants", href: "/restaurants" },
       { label: "Lounges", href: "/lounges" },
-      { label: "Circuits", href: "/circuit-touristiques" },
+      { label: "Circuits", href: "/circuits-touristiques" },
     ],
   };
 
@@ -40,28 +40,6 @@ export default function MainFooter() {
 
   return (
     <footer className="bg-gradient-to-br from-gray-50 to-gray-100 border-t border-gray-200">
-      {/* Newsletter Section */}
-      <section className="bg-gradient-to-r from-theme-primary to-orange-500 py-16">
-        <div className="container mx-auto px-4 text-center">
-          <h3 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Restez informé des nouveautés
-          </h3>
-          <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-            Recevez les meilleures adresses et bons plans directement dans votre boîte mail
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
-            <input
-              type="email"
-              placeholder="Votre adresse email"
-              className="flex-1 px-6 py-3 rounded-full border-0 text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-white/50"
-            />
-            <button className="bg-white text-theme-primary px-8 py-3 rounded-full font-semibold hover:bg-gray-100 transition-colors duration-200">
-              S&apos;abonner
-            </button>
-          </div>
-        </div>
-      </section>
-
       {/* Main Footer Content */}
       <section className="py-16">
         <div className="container mx-auto px-4">

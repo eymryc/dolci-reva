@@ -1,18 +1,34 @@
 "use client"
 
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
 import api from '@/lib/axios';
 
-interface User {
+export interface BusinessType {
   id: number;
   name: string;
+}
+
+export interface Wallet {
+  id: number;
+  balance: number;
+}
+
+export interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  phone: string;
   email: string;
-  // Ajoute d'autres champs selon ton modèle utilisateur
+  type: string;
+  businessTypes: BusinessType[];
+  wallet?: Wallet;
 }
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  refreshUser: () => Promise<void>;
+  logout: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -21,21 +37,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchUser = useCallback(async () => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
     if (token) {
-      api.get('/profiles')
-        .then((res) => setUser(res.data.data))
-        .catch(() => setUser(null))
-        .finally(() => setLoading(false));
+      try {
+        const res = await api.get('/profile');
+        setUser(res.data.data);
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
     } else {
+      setUser(null);
       setLoading(false);
     }
   }, []);
 
+  useEffect(() => {
+    fetchUser();
+  }, [fetchUser]);
+
+  const refreshUser = useCallback(async () => {
+    setLoading(true);
+    await fetchUser();
+  }, [fetchUser]);
+
+  const logout = () => {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('remembered_email');
+    setUser(null);
+  };
+
+  // Écouter les changements de token dans localStorage
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'access_token') {
+        if (e.newValue) {
+          refreshUser();
+        } else {
+          setUser(null);
+        }
+      }
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
+  }, [refreshUser]);
 
   return (
-    <AuthContext.Provider value={{ user, loading }}>
+    <AuthContext.Provider value={{ user, loading, refreshUser, logout }}>
       {children}
     </AuthContext.Provider>
   );

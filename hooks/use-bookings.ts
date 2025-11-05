@@ -1,0 +1,209 @@
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import api from '@/lib/axios';
+import { toast } from 'sonner';
+
+// Types
+export interface User {
+  id: number;
+  first_name: string;
+  last_name: string;
+  phone: string;
+  email: string;
+  type: string;
+  email_verified_at?: string | null;
+  deleted_at?: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Bookable {
+  id: number;
+  owner_id: number;
+  name: string;
+  description?: string | null;
+  address: string;
+  city: string;
+  country: string;
+  latitude?: string | null;
+  longitude?: string | null;
+  type: string;
+  max_guests: number;
+  bedrooms?: number | null;
+  bathrooms?: number | null;
+  piece_number?: number | null;
+  price: string;
+  standing: string;
+  average_rating: string;
+  total_ratings: number;
+  rating_count: number;
+  is_available: boolean;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+}
+
+export interface Booking {
+  id: number;
+  customer_id: number;
+  owner_id: number;
+  bookable_type: string;
+  bookable_id: number;
+  start_date: string;
+  end_date: string;
+  guests: number;
+  booking_reference: string;
+  total_price: string;
+  commission_amount: string;
+  owner_amount: string;
+  status: 'CONFIRME' | 'EN_ATTENTE' | 'ANNULE' | 'TERMINE';
+  payment_status: 'PAYE' | 'EN_ATTENTE' | 'REFUSE' | 'REMBOURSE';
+  notes?: string | null;
+  cancellation_reason?: string | null;
+  cancelled_at?: string | null;
+  confirmed_at?: string | null;
+  created_at: string;
+  updated_at: string;
+  customer: User;
+  owner: User;
+  bookable: Bookable;
+}
+
+export interface PaginatedBookingsResponse {
+  data: Booking[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: Array<{
+      url: string | null;
+      label: string;
+      active: boolean;
+    }>;
+    path: string;
+    per_page: number;
+    to: number;
+    total: number;
+  };
+}
+
+export interface BookingFormData {
+  name: string;
+  venue: string;
+  date: string;
+  time: string;
+}
+
+// GET - Fetch all bookings with pagination
+export function useBookings(page: number = 1) {
+  return useQuery({
+    queryKey: ['bookings', page],
+    queryFn: async () => {
+      const response = await api.get('/bookings', {
+        params: { page },
+      });
+      return response.data as PaginatedBookingsResponse;
+    },
+  });
+}
+
+// GET - Fetch single booking
+export function useBooking(id: number) {
+  return useQuery({
+    queryKey: ['bookings', id],
+    queryFn: async () => {
+      const response = await api.get(`/bookings/${id}`);
+      return response.data.data as Booking;
+    },
+    enabled: !!id,
+  });
+}
+
+// POST - Create booking
+export function useCreateBooking() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: BookingFormData) => {
+      const response = await api.post('/bookings', data);
+      return response.data.data as Booking;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      toast.success('Réservation créée avec succès !');
+    },
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
+      toast.error(axiosError.response?.data?.message || axiosError.response?.data?.error || 'Erreur lors de la création de la réservation');
+    },
+  });
+}
+
+// PUT - Update booking
+export function useUpdateBooking() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, data }: { id: number; data: Partial<BookingFormData> }) => {
+      const response = await api.put(`/bookings/${id}`, data);
+      return response.data.data as Booking;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['bookings', variables.id] });
+      toast.success('Réservation mise à jour avec succès !');
+    },
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
+      toast.error(axiosError.response?.data?.message || axiosError.response?.data?.error || 'Erreur lors de la mise à jour de la réservation');
+    },
+  });
+}
+
+// PUT - Cancel booking
+export function useCancelBooking() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id, reason }: { id: number; reason?: string }) => {
+      const response = await api.put(`/bookings/${id}/cancel`, { cancellation_reason: reason });
+      return response.data.data as Booking;
+    },
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      queryClient.invalidateQueries({ queryKey: ['bookings', variables.id] });
+      toast.success('Réservation annulée avec succès !');
+    },
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
+      toast.error(axiosError.response?.data?.message || axiosError.response?.data?.error || 'Erreur lors de l\'annulation de la réservation');
+    },
+  });
+}
+
+// DELETE - Delete booking
+export function useDeleteBooking() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      await api.delete(`/bookings/${id}`);
+      return id;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['bookings'] });
+      toast.success('Réservation supprimée avec succès !');
+    },
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
+      toast.error(axiosError.response?.data?.message || axiosError.response?.data?.error || 'Erreur lors de la suppression de la réservation');
+    },
+  });
+}
+

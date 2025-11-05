@@ -41,7 +41,7 @@ export function LoginForm({
    const onSubmit = async (data: LoginFormValues) => {
       // Ici, tu peux gérer la connexion (API, etc.)
       try {
-         const response = await api.post("login", data);
+         const response = await api.post("auth/login", data);
          const successMessage = response?.data?.message;
          const userData = response.data.data;
 

@@ -3,6 +3,7 @@ import { Rajdhani } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner"
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
+import { QueryProvider } from "@/providers/QueryProvider";
 
 const rajdhani = Rajdhani({
   subsets: ['latin'],
@@ -26,9 +27,11 @@ export default function RootLayout({
         className={`${rajdhani.variable} antialiased`}
       >
         <Toaster richColors position="top-right" />
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <QueryProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

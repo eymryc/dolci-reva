@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://total-rent-api.test/api/",
+  baseURL: "http://v2-dolcireva-api.test/api/",
   //withCredentials: true, // Utile si tu utilises Sanctum ou les cookies
 });
 

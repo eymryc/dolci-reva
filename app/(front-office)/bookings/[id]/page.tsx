@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useBooking } from '@/hooks/use-bookings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -9,7 +9,7 @@ import { toast } from 'sonner';
 import Link from 'next/link';
 import { CheckCircle2, Calendar, Users, MapPin, CreditCard, ArrowLeft, FileText } from 'lucide-react';
 
-export default function BookingDetailPage() {
+function BookingDetailContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const bookingId = params?.id ? parseInt(params.id as string) : null;
@@ -256,6 +256,21 @@ export default function BookingDetailPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function BookingDetailPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-theme-primary mx-auto mb-4"></div>
+          <p className="text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    }>
+      <BookingDetailContent />
+    </Suspense>
   );
 }
 

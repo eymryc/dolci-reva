@@ -69,7 +69,7 @@ export function CommissionForm({
   });
 
   // Hook pour gérer les erreurs du serveur
-  const { serverErrors, showErrorPanel, handleServerError, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<CommissionFormValues>({
+  const { serverErrors, showErrorPanel, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<CommissionFormValues>({
     setError,
     fieldMapping,
   });

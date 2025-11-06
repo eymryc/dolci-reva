@@ -63,7 +63,7 @@ export function BookingForm({
   });
 
   // Hook pour gérer les erreurs du serveur
-  const { serverErrors, showErrorPanel, handleServerError, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<BookingFormValues>({
+  const { serverErrors, showErrorPanel, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<BookingFormValues>({
     setError,
     fieldMapping,
   });

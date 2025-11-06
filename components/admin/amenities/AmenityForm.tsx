@@ -9,6 +9,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { AmenityFormData } from "@/hooks/use-amenities";
+import { ServerErrorPanel } from "@/components/ui/ServerErrorPanel";
+import { useServerErrors } from "@/hooks/use-server-errors";
+import { createFieldLabels } from "@/lib/server-error-utils";
 
 // Schema de validation
 const amenitySchema = z.object({
@@ -35,17 +38,50 @@ export function AmenityForm({
     register,
     handleSubmit,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useForm<AmenityFormValues>({
     resolver: zodResolver(amenitySchema),
     defaultValues: defaultValues || { name: "", description: "" },
   });
 
+  // Mapping des champs
+  const fieldMapping: Record<string, keyof AmenityFormValues> = {
+    name: "name",
+    description: "description",
+  };
+
+  // Labels personnalisés
+  const fieldLabels = createFieldLabels({
+    name: "Nom",
+    description: "Description",
+  });
+
+  // Hook pour gérer les erreurs du serveur
+  const { serverErrors, showErrorPanel, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<AmenityFormValues>({
+    setError,
+    fieldMapping,
+  });
+
   const handleFormSubmit = (data: AmenityFormValues) => {
+    clearServerErrors();
+    clearErrors();
     onSubmit(data);
   };
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+      {/* Panneau d'erreurs du serveur */}
+      <ServerErrorPanel
+        errors={serverErrors}
+        fieldLabels={fieldLabels}
+        show={showErrorPanel}
+        onClose={() => {
+          setShowErrorPanel(false);
+          clearServerErrors();
+          clearErrors();
+        }}
+      />
       <div className="space-y-2">
         <Label htmlFor="name">
           Nom <span className="text-red-500">*</span>

@@ -206,6 +206,11 @@ export default function DetailPage() {
       return;
     }
 
+    if (!residence.is_available) {
+      toast.error("Cette résidence n'est actuellement pas disponible pour la réservation");
+      return;
+    }
+
     if (!startDate || !endDate) {
       toast.error("Veuillez sélectionner les dates d'arrivée et de départ");
       return;
@@ -859,11 +864,17 @@ export default function DetailPage() {
                 </div>
               </div>
 
-              {startDate && endDate && calculateNights() > 0 ? (
+              {!residence.is_available ? (
+                <div className="mb-8 p-5 bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border-2 border-red-200 text-center">
+                  <X className="w-8 h-8 text-red-500 mx-auto mb-3" />
+                  <p className="text-red-700 font-semibold text-base mb-2">Résidence indisponible</p>
+                  <p className="text-red-600 text-sm">Cette résidence n&apos;est actuellement pas disponible pour la réservation.</p>
+                </div>
+              ) : startDate && endDate && calculateNights() > 0 ? (
                 <div className="space-y-3 mb-8 p-5 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100">
                   <div className="flex justify-between text-sm py-2 border-b border-gray-200">
                     <span className="text-gray-600">
-                      {formatPrice(residence.price)} FCFA × {calculateNights()} nuit{calculateNights() > 1 ? 's' : ''}
+                      {formatPrice(residence.price)} FCFA × {calculateNights()} nuit{calculateNights() > 1 ? "s" : ""}
                     </span>
                     <span className="font-semibold text-gray-900">
                       {formatPrice((parseFloat(residence.price) * calculateNights()).toString())} FCFA
@@ -894,7 +905,7 @@ export default function DetailPage() {
 
               <Button 
                 onClick={handleBooking}
-                disabled={!startDate || !endDate || calculateNights() < 1 || bookResidence.isPending}
+                disabled={!residence.is_available || !startDate || !endDate || calculateNights() < 1 || bookResidence.isPending}
                 className="w-full bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {bookResidence.isPending ? (
@@ -902,6 +913,8 @@ export default function DetailPage() {
                     <Loader2 className="w-5 h-5 mr-2 animate-spin inline-block" />
                     Réservation en cours...
                   </>
+                ) : !residence.is_available ? (
+                  "Résidence indisponible"
                 ) : (
                   "Réserver maintenant"
                 )}

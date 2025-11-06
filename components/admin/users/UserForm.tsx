@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { UserFormData } from "@/hooks/use-users";
+import { ServerErrorPanel } from "@/components/ui/ServerErrorPanel";
+import { useServerErrors } from "@/hooks/use-server-errors";
+import { createFieldLabels } from "@/lib/server-error-utils";
 
 // Schema de validation
 const createUserSchema = z.object({
@@ -57,11 +60,15 @@ export function UserForm({
   isLoading = false,
   isEdit = false,
 }: UserFormProps) {
+  type FormValues = z.infer<typeof createUserSchema> | z.infer<typeof editUserSchema>;
+  
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<z.infer<typeof createUserSchema> | z.infer<typeof editUserSchema>>({
+    setError,
+    clearErrors,
+  } = useForm<FormValues>({
     resolver: zodResolver(isEdit ? editUserSchema : createUserSchema),
     defaultValues: {
       first_name: defaultValues?.first_name || "",
@@ -71,10 +78,38 @@ export function UserForm({
       password: "",
       confirm_password: "",
       type: defaultValues?.type || "OWNER",
-    } as z.infer<typeof createUserSchema> | z.infer<typeof editUserSchema>,
+    } as FormValues,
   });
 
-  const handleFormSubmit = (data: z.infer<typeof createUserSchema> | z.infer<typeof editUserSchema>) => {
+  // Mapping des champs (les noms sont déjà en snake_case)
+  const fieldMapping: Record<string, keyof FormValues> = {
+    first_name: "first_name",
+    last_name: "last_name",
+    email: "email",
+    phone: "phone",
+    password: "password",
+    confirm_password: "confirm_password",
+    type: "type",
+  };
+
+  // Labels personnalisés
+  const fieldLabels = createFieldLabels({
+    first_name: "Prénom",
+    last_name: "Nom",
+    email: "Email",
+    phone: "Téléphone",
+    password: "Mot de passe",
+    confirm_password: "Confirmation du mot de passe",
+    type: "Type",
+  });
+
+  // Hook pour gérer les erreurs du serveur
+  const { serverErrors, showErrorPanel, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<FormValues>({
+    setError,
+    fieldMapping,
+  });
+
+  const handleFormSubmit = (data: FormValues) => {
     const formData: UserFormData = {
       first_name: data.first_name,
       last_name: data.last_name,
@@ -93,6 +128,17 @@ export function UserForm({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+      {/* Panneau d'erreurs du serveur */}
+      <ServerErrorPanel
+        errors={serverErrors}
+        fieldLabels={fieldLabels}
+        show={showErrorPanel}
+        onClose={() => {
+          setShowErrorPanel(false);
+          clearServerErrors();
+          clearErrors();
+        }}
+      />
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="first_name">

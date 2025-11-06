@@ -8,6 +8,9 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { BookingFormData } from "@/hooks/use-bookings";
+import { ServerErrorPanel } from "@/components/ui/ServerErrorPanel";
+import { useServerErrors } from "@/hooks/use-server-errors";
+import { createFieldLabels } from "@/lib/server-error-utils";
 
 // Schema de validation
 const bookingSchema = z.object({
@@ -36,17 +39,54 @@ export function BookingForm({
     register,
     handleSubmit,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useForm<BookingFormValues>({
     resolver: zodResolver(bookingSchema),
     defaultValues: defaultValues || { name: "", venue: "", date: "", time: "" },
   });
 
+  // Mapping des champs
+  const fieldMapping: Record<string, keyof BookingFormValues> = {
+    name: "name",
+    venue: "venue",
+    date: "date",
+    time: "time",
+  };
+
+  // Labels personnalisés
+  const fieldLabels = createFieldLabels({
+    name: "Nom",
+    venue: "Lieu",
+    date: "Date",
+    time: "Heure",
+  });
+
+  // Hook pour gérer les erreurs du serveur
+  const { serverErrors, showErrorPanel, handleServerError, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<BookingFormValues>({
+    setError,
+    fieldMapping,
+  });
+
   const handleFormSubmit = (data: BookingFormValues) => {
+    clearServerErrors();
+    clearErrors();
     onSubmit(data);
   };
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+      {/* Panneau d'erreurs du serveur */}
+      <ServerErrorPanel
+        errors={serverErrors}
+        fieldLabels={fieldLabels}
+        show={showErrorPanel}
+        onClose={() => {
+          setShowErrorPanel(false);
+          clearServerErrors();
+          clearErrors();
+        }}
+      />
       <div className="space-y-2">
         <Label htmlFor="name">
           Nom <span className="text-red-500">*</span>

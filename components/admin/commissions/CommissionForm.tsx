@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CommissionFormData } from "@/hooks/use-commissions";
+import { ServerErrorPanel } from "@/components/ui/ServerErrorPanel";
+import { useServerErrors } from "@/hooks/use-server-errors";
+import { createFieldLabels } from "@/lib/server-error-utils";
 
 // Schema de validation
 const commissionSchema = z.object({
@@ -39,6 +42,8 @@ export function CommissionForm({
     setValue,
     watch,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useForm<CommissionFormValues>({
     resolver: zodResolver(commissionSchema),
     defaultValues: defaultValues 
@@ -51,7 +56,27 @@ export function CommissionForm({
 
   const isActive = watch("is_active");
 
+  // Mapping des champs
+  const fieldMapping: Record<string, keyof CommissionFormValues> = {
+    commission: "commission",
+    is_active: "is_active",
+  };
+
+  // Labels personnalisés
+  const fieldLabels = createFieldLabels({
+    commission: "Commission (%)",
+    is_active: "Statut",
+  });
+
+  // Hook pour gérer les erreurs du serveur
+  const { serverErrors, showErrorPanel, handleServerError, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<CommissionFormValues>({
+    setError,
+    fieldMapping,
+  });
+
   const handleFormSubmit = (data: CommissionFormValues) => {
+    clearServerErrors();
+    clearErrors();
     // Ensure is_active is always a boolean
     const formData = {
       ...data,
@@ -62,6 +87,17 @@ export function CommissionForm({
 
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+      {/* Panneau d'erreurs du serveur */}
+      <ServerErrorPanel
+        errors={serverErrors}
+        fieldLabels={fieldLabels}
+        show={showErrorPanel}
+        onClose={() => {
+          setShowErrorPanel(false);
+          clearServerErrors();
+          clearErrors();
+        }}
+      />
       <div className="space-y-2">
         <Label htmlFor="commission">
           Commission (%) <span className="text-red-500">*</span>

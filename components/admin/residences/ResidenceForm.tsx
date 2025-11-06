@@ -21,6 +21,9 @@ import { useAmenities } from "@/hooks/use-amenities";
 import { useAddressAutocomplete } from "@/hooks/use-address-autocomplete";
 import type { AddressSuggestion } from "@/hooks/use-address-autocomplete";
 import { X, Image as ImageIcon, Check, MapPin } from "lucide-react";
+import { ServerErrorPanel } from "@/components/ui/ServerErrorPanel";
+import { useServerErrors } from "@/hooks/use-server-errors";
+import { createFieldLabels } from "@/lib/server-error-utils";
 
 // Schema de validation
 const residenceSchema = z.object({
@@ -86,6 +89,8 @@ export function ResidenceForm({
     setValue,
     watch,
     formState: { errors },
+    setError,
+    clearErrors,
   } = useForm<ResidenceFormValues>({
     // @ts-expect-error - Type compatibility issue between react-hook-form and zod
     resolver: zodResolver(residenceSchema),
@@ -102,7 +107,7 @@ export function ResidenceForm({
       bedrooms: defaultValues.bedrooms ?? null,
       bathrooms: defaultValues.bathrooms ?? null,
       piece_number: defaultValues.piece_number ?? null,
-      price: defaultValues.price || "0.01",
+      price: defaultValues.price,
       standing: defaultValues.standing as "STANDARD" | "SUPERIEUR" | "DELUXE" | "EXECUTIVE" | "SUITE" | "SUITE_JUNIOR" | "SUITE_EXECUTIVE" | "SUITE_PRESIDENTIELLE",
       owner_id: defaultValues.owner_id,
       amenities: defaultValues.amenities || [],
@@ -119,7 +124,7 @@ export function ResidenceForm({
       bedrooms: null,
       bathrooms: null,
       piece_number: null,
-      price: "0.01",
+      price: "",
       standing: "STANDARD",
       owner_id: undefined,
       amenities: [],
@@ -129,6 +134,52 @@ export function ResidenceForm({
   const type = watch("type");
   const standing = watch("standing");
   const selectedAmenities = watch("amenities") || [];
+
+  // Mapping des champs
+  const fieldMapping: Record<string, keyof ResidenceFormValues> = {
+    name: "name",
+    description: "description",
+    address: "address",
+    city: "city",
+    country: "country",
+    latitude: "latitude",
+    longitude: "longitude",
+    type: "type",
+    max_guests: "max_guests",
+    bedrooms: "bedrooms",
+    bathrooms: "bathrooms",
+    piece_number: "piece_number",
+    price: "price",
+    standing: "standing",
+    owner_id: "owner_id",
+    amenities: "amenities",
+  };
+
+  // Labels personnalisés
+  const fieldLabels = createFieldLabels({
+    name: "Nom",
+    description: "Description",
+    address: "Adresse",
+    city: "Ville",
+    country: "Pays",
+    latitude: "Latitude",
+    longitude: "Longitude",
+    type: "Type",
+    max_guests: "Nombre maximum d'invités",
+    bedrooms: "Chambres",
+    bathrooms: "Salles de bain",
+    piece_number: "Nombre de pièces",
+    price: "Prix",
+    standing: "Standing",
+    owner_id: "Propriétaire",
+    amenities: "Équipements",
+  });
+
+  // Hook pour gérer les erreurs du serveur
+  const { serverErrors, showErrorPanel, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<ResidenceFormValues>({
+    setError,
+    fieldMapping,
+  });
   
   // État local pour la valeur de l'adresse pour une mise à jour immédiate
   const [localAddressValue, setLocalAddressValue] = useState(defaultValues?.address || "");
@@ -235,6 +286,10 @@ export function ResidenceForm({
   };
 
   const handleFormSubmit = (data: ResidenceFormValues) => {
+    // Effacer les erreurs précédentes
+    clearServerErrors();
+    clearErrors();
+    
     // Validate images - en mode édition, on accepte les images existantes ou les nouvelles
     const hasExistingMainImage = mainImagePreview && !mainImage;
     const hasNewMainImage = mainImage;
@@ -286,6 +341,17 @@ export function ResidenceForm({
   return (
     // @ts-expect-error - Type compatibility issue between react-hook-form handler types
     <form onSubmit={handleSubmit(handleFormSubmit)} className="container mx-auto">
+      {/* Panneau d'erreurs du serveur */}
+      <ServerErrorPanel
+        errors={serverErrors}
+        fieldLabels={fieldLabels}
+        show={showErrorPanel}
+        onClose={() => {
+          setShowErrorPanel(false);
+          clearServerErrors();
+          clearErrors();
+        }}
+      />
       <div className="grid grid-cols-2 gap-3">
         <div className="space-y-3 p-2">
           <div className="grid grid-cols-2 gap-2">

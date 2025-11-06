@@ -15,6 +15,9 @@ import api from "@/lib/axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useBusinessTypes } from "@/hooks/use-business-types";
+import { ServerErrorPanel } from "@/components/ui/ServerErrorPanel";
+import { useServerErrors } from "@/hooks/use-server-errors";
+import { createFieldLabels } from "@/lib/server-error-utils";
 
 // Schéma de validation
 const signUpSchema = z.object({
@@ -68,8 +71,10 @@ export default function SignUpPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
+    setError,
     watch,
     reset,
+    clearErrors,
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -81,6 +86,36 @@ export default function SignUpPage() {
   });
 
   const acceptTerms = watch("acceptTerms");
+
+  // Mapping des noms de champs du serveur (snake_case) vers le formulaire (camelCase)
+  const fieldMapping: Record<string, keyof SignUpFormValues> = {
+    first_name: "firstName",
+    last_name: "lastName",
+    email: "email",
+    phone: "phone",
+    password: "password",
+    password_confirmation: "confirmPassword",
+    type: "type",
+    services: "businessTypeIds",
+  };
+
+  // Labels personnalisés pour les champs
+  const fieldLabels = createFieldLabels({
+    first_name: "Prénom",
+    last_name: "Nom",
+    email: "Email",
+    phone: "Téléphone",
+    password: "Mot de passe",
+    password_confirmation: "Confirmation du mot de passe",
+    type: "Type de compte",
+    services: "Types de services",
+  });
+
+  // Hook pour gérer les erreurs du serveur
+  const { serverErrors, showErrorPanel, handleServerError, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<SignUpFormValues>({
+    setError,
+    fieldMapping,
+  });
 
   const handleTypeSelection = (type: "OWNER" | "CUSTOMER") => {
     setSelectedType(type);
@@ -122,6 +157,10 @@ export default function SignUpPage() {
 
   const onSubmit = async (data: SignUpFormValues) => {
     try {
+      // Effacer les erreurs précédentes
+      clearServerErrors();
+      clearErrors();
+      
       // S'assurer que les business types sont à jour
       setValue("businessTypeIds", selectedBusinessTypes);
       
@@ -146,15 +185,12 @@ export default function SignUpPage() {
         router.push("/auth/sign-in");
       }, 2000);
     } catch (error) {
-      let errorMessage = "Une erreur est survenue lors de l'inscription";
-      console.log(error);
+      const { errorMessage, hasDetailedErrors } = handleServerError(error);
 
-      if (error && typeof error === "object" && "response" in error) {
-        const axiosError = error as { response?: { data?: { message?: string } } };
-        errorMessage = axiosError.response?.data?.message || errorMessage;
+      // Afficher le toast seulement s'il n'y a pas d'erreurs détaillées
+      if (!hasDetailedErrors) {
+        toast.error(errorMessage);
       }
-
-      toast.error(errorMessage);
     }
   };
 
@@ -467,6 +503,18 @@ export default function SignUpPage() {
                 </CardDescription>
               </CardHeader>
             <CardContent className="pb-8">
+              {/* Panneau d'erreurs du serveur */}
+              <ServerErrorPanel
+                errors={serverErrors}
+                fieldLabels={fieldLabels}
+                show={showErrorPanel}
+                onClose={() => {
+                  setShowErrorPanel(false);
+                  clearServerErrors();
+                  clearErrors();
+                }}
+              />
+              
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 {/* Nom et Prénom */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

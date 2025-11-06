@@ -15,6 +15,9 @@ import api from "@/lib/axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { ServerErrorPanel } from "@/components/ui/ServerErrorPanel";
+import { useServerErrors } from "@/hooks/use-server-errors";
+import { createFieldLabels } from "@/lib/server-error-utils";
 
 // Schéma de validation
 const loginSchema = z.object({
@@ -36,7 +39,9 @@ export default function SignInPage() {
     handleSubmit,
     formState: { errors, isSubmitting },
     setValue,
+    setError,
     watch,
+    clearErrors,
   } = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -51,8 +56,30 @@ export default function SignInPage() {
 
   const rememberMe = watch("rememberMe");
 
+  // Mapping des noms de champs du serveur vers le formulaire
+  const fieldMapping: Record<string, keyof LoginFormValues> = {
+    email: "email",
+    password: "password",
+  };
+
+  // Labels personnalisés pour les champs
+  const fieldLabels = createFieldLabels({
+    email: "Email",
+    password: "Mot de passe",
+  });
+
+  // Hook pour gérer les erreurs du serveur
+  const { serverErrors, showErrorPanel, handleServerError, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<LoginFormValues>({
+    setError,
+    fieldMapping,
+  });
+
   const onSubmit = async (data: LoginFormValues) => {
     try {
+      // Effacer les erreurs précédentes
+      clearServerErrors();
+      clearErrors();
+
       const response = await api.post("auth/login", {
         email: data.email,
         password: data.password,
@@ -80,15 +107,12 @@ export default function SignInPage() {
       // Rediriger vers la page d'accueil
       router.push("/");
     } catch (error) {
-      let errorMessage = "Une erreur est survenue lors de la connexion";
-      console.log(error);
+      const { errorMessage, hasDetailedErrors } = handleServerError(error);
 
-      if (error && typeof error === "object" && "response" in error) {
-        const axiosError = error as { response?: { data?: { message?: string } } };
-        errorMessage = axiosError.response?.data?.message || errorMessage;
+      // Afficher le toast seulement s'il n'y a pas d'erreurs détaillées
+      if (!hasDetailedErrors) {
+        toast.error(errorMessage);
       }
-
-      toast.error(errorMessage);
     }
   };
 
@@ -148,6 +172,18 @@ export default function SignInPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="pb-8">
+              {/* Panneau d'erreurs du serveur */}
+              <ServerErrorPanel
+                errors={serverErrors}
+                fieldLabels={fieldLabels}
+                show={showErrorPanel}
+                onClose={() => {
+                  setShowErrorPanel(false);
+                  clearServerErrors();
+                  clearErrors();
+                }}
+              />
+              
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
                 {/* Email */}
                 <div className="space-y-2 group">

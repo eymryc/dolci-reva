@@ -36,25 +36,28 @@ export default function Home() {
   };
   return (
     <div>
-      <section className="mb-5 px-2 md:px-0">
+      <section className="px-2 md:px-0">
         <div className="">
           <EmblaCarousel slides={IMAGES} options={OPTIONS} />
         </div>
       </section>
 
       {/* Hero Section */}
-      <section className="relative min-h-[70vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-orange-50 via-white to-yellow-100">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-theme-primary rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
-          <div className="absolute top-40 right-10 w-72 h-72 bg-yellow-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-1000"></div>
-          <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-400 rounded-full mix-blend-multiply filter blur-xl animate-pulse delay-2000"></div>
+      <section className="relative min-h-[75vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-orange-50 via-white to-yellow-50">
+        {/* Enhanced Background Pattern */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-80 h-80 bg-theme-primary rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float"></div>
+          <div className="absolute top-40 right-10 w-80 h-80 bg-yellow-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-float-delayed"></div>
+          <div className="absolute -bottom-20 left-1/3 w-80 h-80 bg-orange-300 rounded-full mix-blend-multiply filter blur-3xl opacity-15 animate-float-slow"></div>
         </div>
 
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="text-center max-w-4xl mx-auto">
+        {/* Subtle Grid Overlay */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808008_1px,transparent_1px),linear-gradient(to_bottom,#80808008_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center max-w-5xl mx-auto">
             {/* Main Title */}
-            <div className="mb-8">
+            <div className="mb-8 md:mb-10">
               <TrueFocus
                 sentence="Dolci Rêva, Kiffer l'instant."
                 manualMode={false}
@@ -65,61 +68,94 @@ export default function Home() {
               />
             </div>
 
-            {/* Subtitle */}
-            <p className="text-xl md:text-2xl text-gray-700 mb-8 font-light leading-relaxed">
-              Découvrez les trésors cachés de la Côte d&apos;Ivoire.
+            {/* Enhanced Subtitle */}
+            <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-gray-800 mb-8 md:mb-10 font-light leading-relaxed max-w-3xl mx-auto">
+              Découvrez les trésors cachés de la{' '}
+              <span className="font-semibold text-theme-primary">Côte d&apos;Ivoire</span>.
               <br className="hidden md:block" />
-              Des hôtels d&apos;exception, une gastronomie raffinée, des lieux magiques qui vous feront vivre des moments inoubliables.
+              <span className="text-gray-700">
+                Des hôtels d&apos;exception, une gastronomie raffinée, des lieux magiques qui vous feront vivre des moments inoubliables.
+              </span>
             </p>
 
-            {/* CTA Buttons */}
+            {/* Enhanced CTA Buttons */}
             <AnimatedSection delay={0.3}>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-                <AnimatedButton size="lg" variant="primary">
-                  <span className="flex items-center gap-2">
-                    Explorer maintenant
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                    </svg>
-                  </span>
-                </AnimatedButton>
-                <AnimatedButton size="lg" variant="outline">
-                  <span className="flex items-center gap-2">
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    Découvrir les lieux
-                  </span>
-                </AnimatedButton>
+              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-12 md:mb-16">
+                <Link href="/residences">
+                  <AnimatedButton size="lg" variant="primary" className="w-full sm:w-auto min-w-[200px] shadow-xl hover:shadow-2xl">
+                    <span className="flex items-center justify-center gap-2">
+                      Explorer maintenant
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                      </svg>
+                    </span>
+                  </AnimatedButton>
+                </Link>
+                <Link href="/residences">
+                  <AnimatedButton size="lg" variant="outline" className="w-full sm:w-auto min-w-[200px] bg-white/90 backdrop-blur-sm border-2 hover:bg-white">
+                    <span className="flex items-center justify-center gap-2">
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Découvrir les lieux
+                    </span>
+                  </AnimatedButton>
+                </Link>
               </div>
             </AnimatedSection>
 
-            {/* Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-2xl mx-auto">
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-theme-primary mb-1">500+</div>
-                <div className="text-sm text-gray-600">Lieux découverts</div>
+            {/* Enhanced Stats with Glassmorphism */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
+              <div className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/90">
+                <div className="absolute inset-0 bg-gradient-to-br from-theme-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative">
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-theme-primary to-orange-500 bg-clip-text text-transparent mb-2">
+                    500+
+                  </div>
+                  <div className="text-xs md:text-sm text-gray-600 font-medium">Lieux découverts</div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-theme-primary mb-1">50+</div>
-                <div className="text-sm text-gray-600">Villes couvertes</div>
+              <div className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/90">
+                <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative">
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-theme-primary to-orange-500 bg-clip-text text-transparent mb-2">
+                    50+
+                  </div>
+                  <div className="text-xs md:text-sm text-gray-600 font-medium">Villes couvertes</div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-theme-primary mb-1">10K+</div>
-                <div className="text-sm text-gray-600">Visiteurs satisfaits</div>
+              <div className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/90">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-300/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative">
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-theme-primary to-orange-500 bg-clip-text text-transparent mb-2">
+                    10K+
+                  </div>
+                  <div className="text-xs md:text-sm text-gray-600 font-medium">Visiteurs satisfaits</div>
+                </div>
               </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-theme-primary mb-1">4.9</div>
-                <div className="text-sm text-gray-600">Note moyenne</div>
+              <div className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/90">
+                <div className="absolute inset-0 bg-gradient-to-br from-pink-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <div className="relative">
+                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-theme-primary to-orange-500 bg-clip-text text-transparent mb-2">
+                    4.9
+                    <span className="text-lg md:text-xl text-gray-500">/5</span>
+                  </div>
+                  <div className="text-xs md:text-sm text-gray-600 font-medium">Note moyenne</div>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <div className="w-6 h-10 border-2 border-theme-primary rounded-full flex justify-center">
-            <div className="w-1 h-3 bg-theme-primary rounded-full mt-2 animate-pulse"></div>
+        {/* Enhanced Scroll Indicator */}
+        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2">
+          <div className="flex flex-col items-center gap-2 group cursor-pointer">
+            <span className="text-xs text-gray-500 font-medium uppercase tracking-wider group-hover:text-theme-primary transition-colors">
+              Découvrir
+            </span>
+            <div className="w-6 h-10 border-2 border-theme-primary/60 rounded-full flex justify-center items-start pt-2 group-hover:border-theme-primary transition-colors animate-bounce">
+              <div className="w-1.5 h-3 bg-theme-primary rounded-full"></div>
+            </div>
           </div>
         </div>
       </section>
@@ -177,6 +213,7 @@ export default function Home() {
                   type={residence.type}
                   standing={residence.standing}
                   amenities={residence.amenities}
+                  availability_status={residence.availability_status}
                   isPopular={residence.has_ratings || residence.rating_count > 0}
                 />
               ))}

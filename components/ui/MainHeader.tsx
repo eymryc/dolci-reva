@@ -3,9 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { RiMenuFoldFill, RiCloseFill, RiSearchLine, RiUserLine, RiHeartLine, RiLogoutBoxLine } from "react-icons/ri";
+import { RiMenuFoldFill, RiUserLine, RiHeartLine, RiLogoutBoxLine } from "react-icons/ri";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
    Sheet,
    SheetContent,
@@ -31,7 +30,6 @@ export default function MainHeader() {
   const router = useRouter();
   const { user, logout } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -58,10 +56,10 @@ export default function MainHeader() {
   }, []);
 
   const menuItems: Array<{ label: string; href: string; icon: string }> = [
+    // { label: "Résidences", href: "/residences", icon: "🏠" },
     // { label: "Hôtels", href: "/hotels", icon: "🏨" },
     // { label: "Restaurants", href: "/restaurants", icon: "🍽️" },
     // { label: "Lounges", href: "/lounges", icon: "🍸" },
-    // { label: "Résidences", href: "/residences", icon: "🏠" },
     // { label: "Night Clubs", href: "/nightclubs", icon: "🎵" },
     // { label: "Circuits", href: "/circuits-touristiques", icon: "🗺️" },
     // { label: "Enfants", href: "/espaces-enfants", icon: "🎠" },
@@ -69,52 +67,42 @@ export default function MainHeader() {
   ];
 
   return (
-    <section className={`sticky top-0 z-50 transition-all duration-300 ${
+    <section className={`sticky top-0 z-50 transition-all duration-500 ease-out ${
       isScrolled 
-        ? 'bg-white/98 backdrop-blur-lg shadow-lg border-b border-gray-200/50' 
-        : 'bg-white/95 backdrop-blur-sm shadow-md border-b border-gray-100'
+        ? 'bg-gradient-to-r from-theme-primary/95 to-theme-accent/95 backdrop-blur-xl shadow-[0_8px_30px_rgb(240,132,0,0.2)] border-b border-theme-primary/30' 
+        : 'bg-gradient-to-r from-theme-primary to-theme-accent backdrop-blur-md shadow-[0_4px_20px_rgb(240,132,0,0.15)] border-b border-theme-primary/20'
     }`}>
-      <header className="container mx-auto flex flex-wrap md:flex-nowrap flex-row justify-between items-center py-4 px-4 md:px-6 lg:px-8">
+      <header className="container mx-auto flex flex-wrap md:flex-nowrap flex-row justify-between items-center py-3 md:py-4 px-4 md:px-6 lg:px-8">
         {/* Logo */}
-        <div className="flex-shrink-0">
-          <Link href="/" className="group flex items-center">
+        <div className="flex-shrink-0 relative">
+          <Link href="/" className="group flex items-center relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-theme-primary/20 to-theme-accent/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
             <Image 
               src="/logo/logo-custom.png" 
               alt="Dolci Rêva Logo" 
               width={120} 
               height={60} 
-              className="w-28 md:w-36 h-auto transition-all duration-300 group-hover:scale-105 group-hover:drop-shadow-lg" 
+              className="w-28 md:w-36 h-auto transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-2xl relative z-10" 
             />
           </Link>
         </div>
 
-        {/* Search Bar - Desktop */}
-        <div className="hidden lg:flex items-center flex-1 max-w-lg mx-8">
-          <div className="relative w-full group">
-            <RiSearchLine className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-theme-primary transition-colors duration-200" />
-            <Input
-              type="text"
-              placeholder="Rechercher un lieu, un hôtel, un restaurant..."
-              className="pl-11 pr-4 py-2.5 w-full rounded-full border-2 border-gray-200 bg-gray-50/50 focus:bg-white focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 transition-all duration-200 shadow-sm hover:shadow-md hover:border-gray-300"
-            />
-          </div>
-        </div>
-
         {/* Navigation - Desktop */}
         <div className="hidden lg:flex items-center justify-center">
-          <ul className="flex flex-row items-center justify-center gap-1">
+          <ul className="flex flex-row items-center justify-center gap-1.5">
             {menuItems.slice(0, 6).map((item) => (
               <li key={item.href}>
                 <Link
                   href={item.href}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 group ${
+                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 group overflow-hidden ${
                     (pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)))
-                      ? "bg-theme-primary text-white shadow-md"
-                      : "text-gray-700 hover:bg-gray-100 hover:text-theme-primary"
+                      ? "bg-white text-theme-primary shadow-lg shadow-white/30 scale-105"
+                      : "text-white/90 hover:text-white hover:bg-white/20"
                   }`}
                 >
-                  <span className="text-lg">{item.icon}</span>
-                  <span className="hidden xl:inline">{item.label}</span>
+                  <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <span className="relative z-10 text-lg transition-transform duration-300 group-hover:scale-110">{item.icon}</span>
+                  <span className="relative z-10 hidden xl:inline transition-transform duration-300 group-hover:translate-x-0.5">{item.label}</span>
                 </Link>
               </li>
             ))}
@@ -129,49 +117,62 @@ export default function MainHeader() {
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="flex items-center gap-2.5 px-3 py-2 rounded-full hover:bg-gradient-to-r hover:from-theme-primary/5 hover:to-theme-accent/5 transition-all duration-200 border border-transparent hover:border-theme-primary/20"
+                  className="group relative flex items-center gap-2.5 px-3 py-2 rounded-full bg-white/20 transition-all duration-300 border border-white/30 shadow-lg shadow-white/10 hover:bg-white/30 hover:shadow-xl hover:shadow-white/20"
                 >
-                  <Avatar className="w-9 h-9 ring-2 ring-theme-primary/20 hover:ring-theme-primary/40 transition-all">
-                    <AvatarFallback className="bg-gradient-to-br from-theme-primary to-theme-accent text-white text-xs font-bold shadow-md">
+                  <div className="absolute inset-0 bg-white/10 rounded-full blur-md opacity-100 transition-opacity duration-500" />
+                  <Avatar className="relative z-10 w-9 h-9 ring-2 ring-white/50 transition-all duration-300 group-hover:scale-110">
+                    <AvatarFallback className="bg-white text-theme-primary text-xs font-bold shadow-lg">
                       {getUserInitials()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="hidden xl:inline text-sm font-semibold text-gray-700">
+                  <span className="relative z-10 hidden xl:inline text-sm font-semibold text-white transition-colors duration-300">
                     {getUserFullName()}
                   </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 shadow-xl border border-gray-200 rounded-xl">
-                <DropdownMenuLabel className="px-4 py-3 bg-gradient-to-br from-theme-primary/5 to-theme-accent/5">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="w-10 h-10 ring-2 ring-theme-primary/30">
-                      <AvatarFallback className="bg-gradient-to-br from-theme-primary to-theme-accent text-white font-bold">
-                        {getUserInitials()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col space-y-0.5">
-                      <p className="text-sm font-bold leading-none text-gray-900">{getUserFullName()}</p>
-                      <p className="text-xs leading-none text-gray-500 mt-1">{user.email}</p>
+              <DropdownMenuContent align="end" className="w-72 shadow-[0_20px_60px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] border-2 border-gray-200/60 rounded-2xl bg-white/98 backdrop-blur-xl overflow-hidden transform transition-all duration-300 hover:shadow-[0_25px_70px_rgba(0,0,0,0.2),0_0_0_1px_rgba(0,0,0,0.08)]">
+                <DropdownMenuLabel className="px-6 py-5 bg-gradient-to-br from-theme-primary/15 via-theme-primary/8 to-theme-accent/15 border-b-2 border-gray-200/60 shadow-inner">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-br from-theme-primary/30 to-theme-accent/30 rounded-full blur-md" />
+                      <Avatar className="relative w-14 h-14 ring-4 ring-theme-primary/20 shadow-[0_8px_16px_rgba(240,132,0,0.3)]">
+                        <AvatarFallback className="bg-gradient-to-br from-theme-primary via-theme-primary/90 to-theme-accent text-white font-bold text-base shadow-lg">
+                          {getUserInitials()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex flex-col space-y-1.5">
+                      <p className="text-sm font-bold leading-tight text-gray-900 drop-shadow-sm">{getUserFullName()}</p>
+                      <p className="text-xs leading-tight text-gray-500 font-medium">{user.email}</p>
                     </div>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="px-4 py-2.5 cursor-pointer hover:bg-theme-primary/5">
-                  <Link href="/admin/dashboard" className="flex items-center">
-                    <RiUserLine className="w-4 h-4 mr-3 text-theme-primary" />
-                    <span className="font-medium">Mon compte</span>
+                <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-gray-300/50 to-transparent h-[1px]" />
+                <DropdownMenuItem asChild className="px-6 py-3.5 cursor-pointer hover:bg-gradient-to-r hover:from-theme-primary/10 hover:to-theme-accent/10 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-theme-primary">
+                  <Link href="/admin/dashboard" className="flex items-center w-full relative z-10">
+                    <div className="absolute inset-0 bg-gradient-to-r from-theme-primary/5 to-theme-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-theme-primary/10 group-hover:bg-theme-primary/20 transition-colors duration-300 mr-3 shadow-sm">
+                      <RiUserLine className="w-4 h-4 text-theme-primary group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                    <span className="font-semibold text-gray-800 group-hover:text-theme-primary transition-colors duration-300">Mon compte</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className="px-4 py-2.5 cursor-pointer hover:bg-theme-primary/5">
-                  <Link href="/favoris" className="flex items-center">
-                    <RiHeartLine className="w-4 h-4 mr-3 text-red-500" />
-                    <span className="font-medium">Mes favoris</span>
+                <DropdownMenuItem asChild className="px-6 py-3.5 cursor-pointer hover:bg-gradient-to-r hover:from-red-50/80 hover:to-pink-50/80 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-red-400">
+                  <Link href="/favoris" className="flex items-center w-full relative z-10">
+                    <div className="absolute inset-0 bg-gradient-to-r from-red-50/50 to-pink-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors duration-300 mr-3 shadow-sm">
+                      <RiHeartLine className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                    <span className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors duration-300">Mes favoris</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="px-4 py-2.5 cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700">
-                  <RiLogoutBoxLine className="w-4 h-4 mr-3" />
-                  <span className="font-medium">Se déconnecter</span>
+                <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-gray-300/50 to-transparent h-[1px]" />
+                <DropdownMenuItem onClick={handleLogout} className="px-6 py-3.5 cursor-pointer text-red-600 hover:bg-gradient-to-r hover:from-red-50/80 hover:to-red-100/80 hover:text-red-700 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-red-400">
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-50/50 to-red-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors duration-300 mr-3 shadow-sm">
+                    <RiLogoutBoxLine className="w-4 h-4 text-red-600 group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+                  <span className="relative z-10 font-semibold">Se déconnecter</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -180,10 +181,13 @@ export default function MainHeader() {
               <Button 
                 variant="outline" 
                 size="sm"
-                className="border-2 border-theme-primary text-theme-primary hover:bg-gradient-to-r hover:from-theme-primary hover:to-theme-accent hover:text-white transition-all duration-300 shadow-sm hover:shadow-md px-4 py-2 rounded-full font-semibold"
+                className="group relative border-2 border-white/50 text-white hover:text-theme-primary transition-all duration-300 shadow-md hover:shadow-xl px-5 py-2.5 rounded-full font-semibold overflow-hidden bg-white/10 hover:bg-white"
               >
-                <RiUserLine className="w-4 h-4 mr-2" />
+                <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative z-10 flex items-center">
+                  <RiUserLine className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
                 Se connecter
+                </span>
               </Button>
             </Link>
           )}
@@ -191,60 +195,65 @@ export default function MainHeader() {
 
         {/* Mobile Actions */}
         <div className="flex lg:hidden flex-row gap-2 items-center">
-          <Button 
-            variant="ghost" 
-            size="sm"
-            onClick={() => setIsSearchOpen(!isSearchOpen)}
-            className="text-gray-600 hover:text-theme-primary hover:bg-theme-primary/10 rounded-full p-2 transition-all duration-200"
-          >
-            <RiSearchLine className="w-5 h-5" />
-          </Button>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="p-2 rounded-full hover:bg-theme-primary/10 transition-all duration-200"
+                  className="group relative p-2 rounded-full bg-white/20 transition-all duration-300 border border-white/30 shadow-lg shadow-white/10 hover:bg-white/30 hover:shadow-xl hover:shadow-white/20"
                 >
-                  <Avatar className="w-9 h-9 ring-2 ring-theme-primary/20">
-                    <AvatarFallback className="bg-gradient-to-br from-theme-primary to-theme-accent text-white text-xs font-bold">
+                  <div className="absolute inset-0 bg-white/10 rounded-full blur-md opacity-100 transition-opacity duration-300" />
+                  <Avatar className="relative z-10 w-9 h-9 ring-2 ring-white/50 group-hover:scale-110 transition-all duration-300">
+                    <AvatarFallback className="bg-white text-theme-primary text-xs font-bold shadow-lg">
                       {getUserInitials()}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-64 shadow-xl border border-gray-200 rounded-xl">
-                <DropdownMenuLabel className="px-4 py-3 bg-gradient-to-br from-theme-primary/5 to-theme-accent/5">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="w-10 h-10 ring-2 ring-theme-primary/30">
-                      <AvatarFallback className="bg-gradient-to-br from-theme-primary to-theme-accent text-white font-bold">
-                        {getUserInitials()}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col space-y-0.5">
-                      <p className="text-sm font-bold leading-none text-gray-900">{getUserFullName()}</p>
-                      <p className="text-xs leading-none text-gray-500 mt-1">{user.email}</p>
+              <DropdownMenuContent align="end" className="w-72 shadow-[0_20px_60px_rgba(0,0,0,0.15),0_0_0_1px_rgba(0,0,0,0.05)] border-2 border-gray-200/60 rounded-2xl bg-white/98 backdrop-blur-xl overflow-hidden transform transition-all duration-300 hover:shadow-[0_25px_70px_rgba(0,0,0,0.2),0_0_0_1px_rgba(0,0,0,0.08)]">
+                <DropdownMenuLabel className="px-6 py-5 bg-gradient-to-br from-theme-primary/15 via-theme-primary/8 to-theme-accent/15 border-b-2 border-gray-200/60 shadow-inner">
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-br from-theme-primary/30 to-theme-accent/30 rounded-full blur-md" />
+                      <Avatar className="relative w-14 h-14 ring-4 ring-theme-primary/20 shadow-[0_8px_16px_rgba(240,132,0,0.3)]">
+                        <AvatarFallback className="bg-gradient-to-br from-theme-primary via-theme-primary/90 to-theme-accent text-white font-bold text-base shadow-lg">
+                          {getUserInitials()}
+                        </AvatarFallback>
+                      </Avatar>
+                    </div>
+                    <div className="flex flex-col space-y-1.5">
+                      <p className="text-sm font-bold leading-tight text-gray-900 drop-shadow-sm">{getUserFullName()}</p>
+                      <p className="text-xs leading-tight text-gray-500 font-medium">{user.email}</p>
                     </div>
                   </div>
                 </DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem asChild className="px-4 py-2.5 cursor-pointer hover:bg-theme-primary/5">
-                  <Link href="/admin/dashboard" className="flex items-center">
-                    <RiUserLine className="w-4 h-4 mr-3 text-theme-primary" />
-                    <span className="font-medium">Mon compte</span>
+                <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-gray-300/50 to-transparent h-[1px]" />
+                <DropdownMenuItem asChild className="px-6 py-3.5 cursor-pointer hover:bg-gradient-to-r hover:from-theme-primary/10 hover:to-theme-accent/10 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-theme-primary">
+                  <Link href="/admin/dashboard" className="flex items-center w-full relative z-10">
+                    <div className="absolute inset-0 bg-gradient-to-r from-theme-primary/5 to-theme-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-theme-primary/10 group-hover:bg-theme-primary/20 transition-colors duration-300 mr-3 shadow-sm">
+                      <RiUserLine className="w-4 h-4 text-theme-primary group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                    <span className="font-semibold text-gray-800 group-hover:text-theme-primary transition-colors duration-300">Mon compte</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild className="px-4 py-2.5 cursor-pointer hover:bg-theme-primary/5">
-                  <Link href="/favoris" className="flex items-center">
-                    <RiHeartLine className="w-4 h-4 mr-3 text-red-500" />
-                    <span className="font-medium">Mes favoris</span>
+                <DropdownMenuItem asChild className="px-6 py-3.5 cursor-pointer hover:bg-gradient-to-r hover:from-red-50/80 hover:to-pink-50/80 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-red-400">
+                  <Link href="/favoris" className="flex items-center w-full relative z-10">
+                    <div className="absolute inset-0 bg-gradient-to-r from-red-50/50 to-pink-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors duration-300 mr-3 shadow-sm">
+                      <RiHeartLine className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform duration-300" />
+                    </div>
+                    <span className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors duration-300">Mes favoris</span>
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={handleLogout} className="px-4 py-2.5 cursor-pointer text-red-600 hover:bg-red-50 hover:text-red-700">
-                  <RiLogoutBoxLine className="w-4 h-4 mr-3" />
-                  <span className="font-medium">Se déconnecter</span>
+                <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-gray-300/50 to-transparent h-[1px]" />
+                <DropdownMenuItem onClick={handleLogout} className="px-6 py-3.5 cursor-pointer text-red-600 hover:bg-gradient-to-r hover:from-red-50/80 hover:to-red-100/80 hover:text-red-700 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-red-400">
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-50/50 to-red-100/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors duration-300 mr-3 shadow-sm">
+                    <RiLogoutBoxLine className="w-4 h-4 text-red-600 group-hover:scale-110 transition-transform duration-300" />
+                  </div>
+                  <span className="relative z-10 font-semibold">Se déconnecter</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -253,145 +262,123 @@ export default function MainHeader() {
               <Button 
                 variant="outline" 
                 size="sm"
-                className="border-2 border-theme-primary text-theme-primary hover:bg-gradient-to-r hover:from-theme-primary hover:to-theme-accent hover:text-white text-xs px-3 py-2 rounded-full font-semibold transition-all duration-300 shadow-sm hover:shadow-md"
+                className="group relative border-2 border-white/50 text-white hover:text-theme-primary text-xs px-4 py-2 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-xl overflow-hidden bg-white/10 hover:bg-white"
               >
-                Connexion
+                <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative z-10">Connexion</span>
               </Button>
             </Link>
           )}
           {/* Burger menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="text-gray-600 hover:text-theme-primary hover:bg-theme-primary/10 rounded-full p-2 transition-all duration-200">
-                <RiMenuFoldFill className="w-6 h-6" />
+              <Button variant="ghost" size="sm" className="group relative text-white/80 hover:text-white hover:bg-white/20 rounded-full p-2.5 transition-all duration-300">
+                <div className="absolute inset-0 bg-white/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <RiMenuFoldFill className="relative z-10 w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
               </Button>
             </SheetTrigger>
-            <SheetContent className="w-80 bg-gradient-to-b from-white to-gray-50">
-              <SheetHeader className="pb-4 border-b border-gray-200">
-                <SheetTitle className="flex items-center gap-3">
-                  <Image src="/logo/logo-custom.png" alt="Logo" width={50} height={25} className="rounded-lg" />
-                  <span className="text-xl font-bold bg-gradient-to-r from-theme-primary to-theme-accent bg-clip-text text-transparent">
-                    Dolci Rêva
-                  </span>
-                </SheetTitle>
-                <SheetDescription className="text-gray-600 mt-2">
-                  Découvrez les meilleurs lieux de Côte d&apos;Ivoire
-                </SheetDescription>
-              </SheetHeader>
-              
-              {/* Mobile Search */}
-              <div className="mt-6">
-                <div className="relative group">
-                  <RiSearchLine className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-theme-primary transition-colors" />
-                  <Input
-                    type="text"
-                    placeholder="Rechercher..."
-                    className="pl-11 pr-4 py-2.5 w-full rounded-full border-2 border-gray-200 bg-white focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 shadow-sm"
-                  />
+            <SheetContent className="w-[85vw] max-w-sm bg-gradient-to-br from-white via-gray-50/50 to-white backdrop-blur-xl border-l border-gray-200/50 p-0 overflow-y-auto">
+              <div className="flex flex-col h-full">
+                <SheetHeader className="px-4 pt-6 pb-4 border-b border-gray-200/50 sticky top-0 bg-gradient-to-br from-white via-gray-50/50 to-white backdrop-blur-sm z-10">
+                  <SheetTitle className="flex items-center gap-2.5">
+                    <div className="relative flex-shrink-0">
+                      <div className="absolute inset-0 bg-gradient-to-r from-theme-primary/30 to-theme-accent/30 rounded-xl blur-lg" />
+                      <Image src="/logo/logo-custom.png" alt="Logo" width={40} height={20} className="relative rounded-lg" />
+                    </div>
+                    <span className="text-lg font-bold bg-gradient-to-r from-theme-primary via-theme-accent to-theme-primary bg-clip-text text-transparent bg-[length:200%_auto] animate-[shimmer_3s_ease-in-out_infinite]">
+                      Dolci Rêva
+                    </span>
+                  </SheetTitle>
+                  <SheetDescription className="text-gray-600 mt-1.5 text-xs">
+                    Découvrez les meilleurs lieux de Côte d&apos;Ivoire
+                  </SheetDescription>
+                </SheetHeader>
+
+                {/* Mobile Menu */}
+                <div className="flex-1 overflow-y-auto px-4 py-4">
+                  <ul className="flex flex-col gap-2">
+                    {menuItems.map((item) => (
+                      <li key={item.href}>
+                        <Link
+                          href={item.href}
+                          className={`group relative flex items-center gap-3 px-3 py-3 rounded-xl text-sm font-semibold transition-all duration-300 overflow-hidden ${
+                            (pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)))
+                              ? "bg-gradient-to-r from-theme-primary to-theme-accent text-white shadow-lg shadow-theme-primary/30"
+                              : "text-gray-700 hover:bg-gradient-to-r hover:from-theme-primary/10 hover:to-theme-accent/10 hover:text-theme-primary"
+                          }`}
+                        >
+                          <span className="absolute inset-0 bg-gradient-to-r from-theme-primary/20 to-theme-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                          <span className="relative z-10 text-lg transition-transform duration-300 group-hover:scale-110">{item.icon}</span>
+                          <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">{item.label}</span>
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </div>
 
-              {/* Mobile Menu */}
-              <ul className="flex flex-col gap-2 mt-6">
-                {menuItems.map((item) => (
-                  <li key={item.href}>
-                    <Link
-                      href={item.href}
-                      className={`flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-semibold transition-all duration-200 ${
-                        (pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)))
-                          ? "bg-gradient-to-r from-theme-primary to-theme-accent text-white shadow-md"
-                          : "text-gray-700 hover:bg-gradient-to-r hover:from-theme-primary/5 hover:to-theme-accent/5 hover:text-theme-primary"
-                      }`}
-                    >
-                      <span className="text-xl">{item.icon}</span>
-                      {item.label}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-
-              {/* Mobile Actions */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="flex flex-col gap-3">
-                  {user ? (
-                    <>
-                      <div className="flex items-center gap-3 px-4 py-3 rounded-xl bg-gradient-to-br from-theme-primary/10 to-theme-accent/10 border border-theme-primary/20">
-                        <Avatar className="w-12 h-12 ring-2 ring-theme-primary/30">
-                          <AvatarFallback className="bg-gradient-to-br from-theme-primary to-theme-accent text-white font-bold">
-                            {getUserInitials()}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div className="flex-1">
-                          <p className="text-sm font-bold text-gray-900">{getUserFullName()}</p>
-                          <p className="text-xs text-gray-500 mt-0.5">{user.email}</p>
+                {/* Mobile Actions */}
+                <div className="px-4 pt-4 pb-6 border-t border-gray-200/50 bg-gradient-to-br from-white via-gray-50/50 to-white backdrop-blur-sm sticky bottom-0">
+                  <div className="flex flex-col gap-2.5">
+                    {user ? (
+                      <>
+                        <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gradient-to-br from-theme-primary/10 via-theme-primary/5 to-theme-accent/10 border border-theme-primary/20 shadow-sm">
+                          <Avatar className="w-10 h-10 ring-2 ring-theme-primary/30 shadow-md flex-shrink-0">
+                            <AvatarFallback className="bg-gradient-to-br from-theme-primary to-theme-accent text-white font-bold text-xs">
+                              {getUserInitials()}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold text-gray-900 truncate">{getUserFullName()}</p>
+                            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                          </div>
                         </div>
-                      </div>
-                      <Link href="/admin/dashboard">
-                        <Button variant="outline" className="w-full justify-start rounded-xl hover:bg-theme-primary/5 hover:border-theme-primary/30 transition-all">
-                          <RiUserLine className="w-4 h-4 mr-2 text-theme-primary" />
-                          <span className="font-medium">Mon compte</span>
+                        <Link href="/admin/dashboard">
+                          <Button variant="outline" className="group w-full justify-start rounded-xl hover:bg-gradient-to-r hover:from-theme-primary/5 hover:to-theme-accent/5 hover:border-theme-primary/40 transition-all duration-300 hover:shadow-md text-sm py-2.5">
+                            <RiUserLine className="w-4 h-4 mr-2 text-theme-primary group-hover:scale-110 transition-transform duration-200 flex-shrink-0" />
+                            <span className="font-medium group-hover:text-theme-primary transition-colors">Mon compte</span>
+                          </Button>
+                        </Link>
+                        <Link href="/favoris">
+                          <Button variant="outline" className="group w-full justify-start rounded-xl hover:bg-gradient-to-r hover:from-red-50/50 hover:to-pink-50/50 hover:border-red-300 transition-all duration-300 hover:shadow-md text-sm py-2.5">
+                            <RiHeartLine className="w-4 h-4 mr-2 text-red-500 group-hover:scale-110 transition-transform duration-200 flex-shrink-0" />
+                            <span className="font-medium group-hover:text-red-600 transition-colors">Mes favoris</span>
+                          </Button>
+                        </Link>
+                        <Button 
+                          variant="outline" 
+                          className="group w-full justify-start rounded-xl text-red-600 hover:text-red-700 hover:bg-gradient-to-r hover:from-red-50 hover:to-red-100/50 hover:border-red-300 transition-all duration-300 hover:shadow-md text-sm py-2.5"
+                          onClick={handleLogout}
+                        >
+                          <RiLogoutBoxLine className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-200 flex-shrink-0" />
+                          <span className="font-medium">Se déconnecter</span>
                         </Button>
-                      </Link>
-                      <Link href="/favoris">
-                        <Button variant="outline" className="w-full justify-start rounded-xl hover:bg-red-50 hover:border-red-200 transition-all">
-                          <RiHeartLine className="w-4 h-4 mr-2 text-red-500" />
-                          <span className="font-medium">Mes favoris</span>
-                        </Button>
-                      </Link>
-                      <Button 
-                        variant="outline" 
-                        className="w-full justify-start rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50 hover:border-red-200 transition-all"
-                        onClick={handleLogout}
-                      >
-                        <RiLogoutBoxLine className="w-4 h-4 mr-2" />
-                        <span className="font-medium">Se déconnecter</span>
-                      </Button>
-                    </>
-                  ) : (
-                    <>
-                      <Link href="/favoris">
-                        <Button variant="outline" className="w-full justify-start rounded-xl hover:bg-gray-50 transition-all">
-                          <RiHeartLine className="w-4 h-4 mr-2 text-red-500" />
-                          <span className="font-medium">Mes favoris</span>
-                        </Button>
-                      </Link>
-                      <Link href="/auth/sign-in" className="w-full">
-                        <Button className="w-full bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 font-semibold">
-                          <RiUserLine className="w-4 h-4 mr-2" />
-                          Se connecter
-                        </Button>
-                      </Link>
-                    </>
-                  )}
+                      </>
+                    ) : (
+                      <>
+                        <Link href="/favoris">
+                          <Button variant="outline" className="group w-full justify-start rounded-xl hover:bg-gray-50/80 transition-all duration-300 hover:shadow-md text-sm py-2.5">
+                            <RiHeartLine className="w-4 h-4 mr-2 text-red-500 group-hover:scale-110 transition-transform duration-200 flex-shrink-0" />
+                            <span className="font-medium group-hover:text-red-600 transition-colors">Mes favoris</span>
+                          </Button>
+                        </Link>
+                        <Link href="/auth/sign-in" className="w-full">
+                          <Button className="group relative w-full bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold overflow-hidden text-sm py-2.5">
+                            <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                            <span className="relative z-10 flex items-center justify-center">
+                              <RiUserLine className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
+                            Se connecter
+                            </span>
+                          </Button>
+                        </Link>
+                      </>
+                    )}
+                  </div>
                 </div>
               </div>
             </SheetContent>
           </Sheet>
         </div>
       </header>
-
-      {/* Mobile Search Overlay */}
-      {isSearchOpen && (
-        <div className="lg:hidden bg-white/95 backdrop-blur-sm border-t border-gray-200 px-4 py-4 shadow-inner">
-          <div className="relative group">
-            <RiSearchLine className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-theme-primary transition-colors" />
-            <Input
-              type="text"
-              placeholder="Rechercher un lieu, un hôtel, un restaurant..."
-              className="pl-11 pr-12 py-2.5 w-full rounded-full border-2 border-gray-200 bg-white focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 shadow-sm"
-              autoFocus
-            />
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setIsSearchOpen(false)}
-              className="absolute right-2 top-1/2 transform -translate-y-1/2 rounded-full hover:bg-gray-100 p-2"
-            >
-              <RiCloseFill className="w-4 h-4" />
-            </Button>
-          </div>
-        </div>
-      )}
     </section>
   );
 } 

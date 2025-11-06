@@ -89,6 +89,9 @@ export default function ResidencesPage() {
       bedrooms: residence.bedrooms || null,
       bathrooms: residence.bathrooms || null,
       area: residence.piece_number ? `${residence.piece_number} pièces` : null,
+      standing: residence.standing,
+      amenities: residence.amenities,
+      availability_status: residence.availability_status,
     }));
   }, [residencesData]);
 
@@ -223,10 +226,13 @@ export default function ResidencesPage() {
                 image={residence.image}
                 name={residence.name}
                 city={residence.location}
-                rating={residence.rating}
                 description={residence.description}
                 price={`${formatPrice(residence.price.toString())} FCFA`}
                 isPopular={residence.popular}
+                type={residence.type}
+                standing={residence.standing}
+                amenities={residence.amenities}
+                availability_status={residence.availability_status}
               />
             ))}
           </div>

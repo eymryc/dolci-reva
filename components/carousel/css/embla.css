@@ -1,4 +1,4 @@
-.embla {
+ .embla {
    /* max-width: 48rem; */
    /* margin: auto; */
    --slide-height: clamp(18rem, 40vw, 40rem);
@@ -7,6 +7,9 @@
  }
  .embla__viewport {
    overflow: hidden;
+   position: relative;
+   width: 100%;
+   min-height: 300px;
  }
  .embla__container {
    display: flex;
@@ -33,17 +36,24 @@
    user-select: none;
  }
  .embla__controls {
-   display: grid;
-   grid-template-columns: auto 1fr;
-   justify-content: space-between;
+   display: flex;
+   flex-direction: column;
+   align-items: center;
    gap: 1.2rem;
-   margin-top: 1rem;
-   margin-left: 10rem;
-   margin-right: 10rem;
+   position: absolute;
+   left: 2rem;
+   top: 50%;
+   transform: translateY(-50%);
+   z-index: 1000;
+   pointer-events: none;
+   width: auto;
+ }
+ .embla__controls > * {
+   pointer-events: auto;
  }
  .embla__buttons {
-   display: grid;
-   grid-template-columns: repeat(2, 1fr);
+   display: flex;
+   flex-direction: column;
    gap: 0.6rem;
    align-items: center;
  }
@@ -63,7 +73,7 @@
    box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);
    width: 3.6rem;
    height: 3.6rem;
-   z-index: 1;
+   z-index: 101;
    border-radius: 50%;
    color: black;
    /* color: var(--text-body); */
@@ -80,17 +90,15 @@
  }
  .embla__dots {
    display: flex;
-   flex-wrap: wrap;
-   justify-content: flex-end;
+   flex-direction: column;
    align-items: center;
-   margin-right: calc((2.6rem - 1.4rem) / 2 * -1);
+   gap: 0.1rem;
  }
  .embla__dot {
    -webkit-tap-highlight-color: rgba(var(--text-high-contrast-rgb-value), 0.5);
    -webkit-appearance: none;
    appearance: none;
    background-color: transparent;
-   /* background-color: black;  */
    touch-action: manipulation;
    display: inline-flex;
    text-decoration: none;
@@ -107,6 +115,7 @@
  }
  .embla__dot:after {
    box-shadow: inset 0 0 0 0.2rem #f08400;
+   background-color: #f08400;
    width: 1.4rem;
    height: 1.4rem;
    border-radius: 50%;
@@ -116,14 +125,14 @@
  }
  .embla__dot--selected:after {
    box-shadow: inset 0 0 0 0.2rem black;
+   background-color: black;
  }
  @media (max-width: 900px) {
    .embla {
      --slide-height: clamp(12rem, 40vw, 24rem);
    }
    .embla__controls {
-     margin-left: 2rem;
-     margin-right: 2rem;
+     left: 1rem;
    }
    .embla__button {
      width: 2.8rem;
@@ -139,8 +148,7 @@
      --slide-height: clamp(8rem, 50vw, 16rem);
    }
    .embla__controls {
-     margin-left: 0.5rem;
-     margin-right: 0.5rem;
+     left: 0.5rem;
      gap: 0.6rem;
    }
    .embla__button {

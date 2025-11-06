@@ -2,11 +2,6 @@ import React, { useEffect, useState } from 'react'
 import Image from "next/image";
 import { EmblaOptionsType } from 'embla-carousel'
 import { DotButton, useDotButton } from './EmblaCarouselDotButton'
-import {
-  PrevButton,
-  NextButton,
-  usePrevNextButtons
-} from './EmblaCarouselArrowButtons'
 import useEmblaCarousel from 'embla-carousel-react'
 
 type ImageType = { src: string; alt: string;}
@@ -23,13 +18,6 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
     useDotButton(emblaApi)
-
-  const {
-    prevBtnDisabled,
-    nextBtnDisabled,
-    onPrevButtonClick,
-    onNextButtonClick
-  } = usePrevNextButtons(emblaApi)
 
   // Ensure component only runs on client to prevent hydration mismatch
   useEffect(() => {
@@ -53,28 +41,23 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
                 </div>
               ))}
         </div>
+        
+        {mounted && (
+          <div className="embla__controls">
+            <div className="embla__dots">
+              {scrollSnaps.map((_, index) => (
+                <DotButton
+                  key={index}
+                  onClick={() => onDotButtonClick(index)}
+                  className={'embla__dot'.concat(
+                    index === selectedIndex ? ' embla__dot--selected' : ''
+                  )}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-
-      {mounted && (
-        <div className="embla__controls">
-          <div className="embla__buttons">
-            <PrevButton onClick={onPrevButtonClick} disabled={prevBtnDisabled} />
-            <NextButton onClick={onNextButtonClick} disabled={nextBtnDisabled} />
-          </div>
-
-          <div className="embla__dots">
-            {scrollSnaps.map((_, index) => (
-              <DotButton
-                key={index}
-                onClick={() => onDotButtonClick(index)}
-                className={'embla__dot'.concat(
-                  index === selectedIndex ? ' embla__dot--selected' : ''
-                )}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     </section>
   )
 }

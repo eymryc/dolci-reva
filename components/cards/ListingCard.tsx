@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { type Amenity } from "@/hooks/use-residences";
+import { type Amenity, type AvailabilityStatus } from "@/hooks/use-residences";
 
 export interface ListingCardProps {
   image: string;
@@ -17,6 +17,7 @@ export interface ListingCardProps {
   freeCancel?: boolean;
   id?: number;
   slug?: string;
+  availability_status?: AvailabilityStatus;
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -32,6 +33,7 @@ const ListingCard: React.FC<ListingCardProps> = ({
   isPopular = false,
   id,
   slug: providedSlug,
+  availability_status,
 }) => {
   const [isFavorited, setIsFavorited] = useState(false);
   const slug = providedSlug || name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -58,6 +60,11 @@ const ListingCard: React.FC<ListingCardProps> = ({
     <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl relative border border-gray-100">
       {/* Badges */}
       <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+        {type && (
+          <span className="bg-gradient-to-r from-theme-primary/90 to-orange-500/90 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm">
+            {type}
+          </span>
+        )}
         {isPopular && (
           <span className="bg-gradient-to-r from-theme-primary to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
             ⭐ Populaire
@@ -91,6 +98,17 @@ const ListingCard: React.FC<ListingCardProps> = ({
           unoptimized={imageSrc.startsWith('http://') || imageSrc.startsWith('https://')}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        
+        {/* Availability Status Badge */}
+        {availability_status?.message && (
+          <div className={`absolute bottom-4 left-4 z-20 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm ${
+            availability_status.status === 'available' 
+              ? 'bg-green-500/90 text-white' 
+              : 'bg-orange-500/90 text-white'
+          }`}>
+            {availability_status.message}
+          </div>
+        )}
       </div>
 
       {/* Contenu de la carte */}
@@ -98,27 +116,22 @@ const ListingCard: React.FC<ListingCardProps> = ({
         {/* Header avec nom et rating */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
-            <h3 className="text-xl font-bold text-gray-900 mb-1 line-clamp-1 group-hover:text-theme-primary transition-colors duration-200">
-              {name}
-            </h3>
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <h3 className="text-xl font-bold text-gray-900 line-clamp-1 group-hover:text-theme-primary transition-colors duration-200 flex-1">
+                {name}
+              </h3>
+              {standing && (
+                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-600 border border-purple-500/20 whitespace-nowrap flex-shrink-0">
+                  {standing}
+                </span>
+              )}
+            </div>
             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
               {city}
-            </div>
-            <div className="flex flex-wrap gap-2">
-              {type && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-theme-primary/10 to-orange-500/10 text-theme-primary border border-theme-primary/20">
-                  {type}
-                </span>
-              )}
-              {standing && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-600 border border-purple-500/20">
-                  {standing}
-                </span>
-              )}
             </div>
           </div>
           {rating !== undefined && (

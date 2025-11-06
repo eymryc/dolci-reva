@@ -1,6 +1,6 @@
 "use client";
 
-import { useParams, useSearchParams, useRouter } from 'next/navigation';
+import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { useBooking } from '@/hooks/use-bookings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,7 +12,6 @@ import { CheckCircle2, Calendar, Users, MapPin, CreditCard, ArrowLeft, FileText 
 export default function BookingDetailPage() {
   const params = useParams();
   const searchParams = useSearchParams();
-  const router = useRouter();
   const bookingId = params?.id ? parseInt(params.id as string) : null;
   
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
@@ -246,7 +245,7 @@ export default function BookingDetailPage() {
         <div className="mt-6 flex gap-4">
           <Link href="/residences" className="flex-1">
             <Button variant="outline" className="w-full">
-              Explorer d'autres lieux
+              Explorer d&apos;autres lieux
             </Button>
           </Link>
           <Link href="/bookings" className="flex-1">

@@ -1,7 +1,7 @@
 "use client";
 
-import { useSearchParams, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
+import { useEffect, useState, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { toast } from 'sonner';
@@ -22,7 +22,6 @@ interface Transaction {
 
 export default function WalletPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
   const { user, refreshUser } = useAuth();
   
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
@@ -32,6 +31,30 @@ export default function WalletPage() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [isLoadingTransactions, setIsLoadingTransactions] = useState(false);
   const [walletBalance, setWalletBalance] = useState<number>(0);
+
+  // Fetch wallet balance and transactions
+  const refreshWallet = useCallback(async () => {
+    try {
+      setIsLoadingTransactions(true);
+      
+      // Refresh user data to get updated wallet balance
+      await refreshUser();
+      
+      // Fetch transactions
+      const response = await api.get('/wallet/transactions');
+      setTransactions(response.data.data || []);
+      
+      // Update wallet balance from user data
+      if (user?.wallet) {
+        setWalletBalance(user.wallet.balance);
+      }
+    } catch (error) {
+      console.error('Error fetching wallet data:', error);
+      toast.error('Erreur lors du chargement des données du wallet');
+    } finally {
+      setIsLoadingTransactions(false);
+    }
+  }, [refreshUser, user?.wallet]);
 
   useEffect(() => {
     // Lire les paramètres de l'URL
@@ -58,31 +81,7 @@ export default function WalletPage() {
       // Rafraîchir le solde du wallet
       refreshWallet();
     }
-  }, [searchParams, refreshUser]);
-
-  // Fetch wallet balance and transactions
-  const refreshWallet = async () => {
-    try {
-      setIsLoadingTransactions(true);
-      
-      // Refresh user data to get updated wallet balance
-      await refreshUser();
-      
-      // Fetch transactions
-      const response = await api.get('/wallet/transactions');
-      setTransactions(response.data.data || []);
-      
-      // Update wallet balance from user data
-      if (user?.wallet) {
-        setWalletBalance(user.wallet.balance);
-      }
-    } catch (error) {
-      console.error('Error fetching wallet data:', error);
-      toast.error('Erreur lors du chargement des données du wallet');
-    } finally {
-      setIsLoadingTransactions(false);
-    }
-  };
+  }, [searchParams, refreshWallet]);
 
   useEffect(() => {
     if (user?.wallet) {
@@ -93,7 +92,7 @@ export default function WalletPage() {
   useEffect(() => {
     // Load transactions on mount
     refreshWallet();
-  }, []);
+  }, [refreshWallet]);
 
   // Format date
   const formatDate = (dateString: string) => {
@@ -168,7 +167,7 @@ export default function WalletPage() {
                   }`}>
                     {paymentStatus === 'success' 
                       ? 'Votre wallet a été crédité avec succès. Le solde a été mis à jour.'
-                      : 'Votre paiement n\'a pas pu être traité. Veuillez réessayer ou contacter le support si le problème persiste.'}
+                      : 'Votre paiement n&apos;a pas pu être traité. Veuillez réessayer ou contacter le support si le problème persiste.'}
                   </p>
                   {reference && (
                     <div className="mb-4">
@@ -215,7 +214,7 @@ export default function WalletPage() {
           <Link href="/">
             <Button variant="ghost" className="mb-4">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Retour à l'accueil
+              Retour à l&apos;accueil
             </Button>
           </Link>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Mon Wallet</h1>

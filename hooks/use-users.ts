@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import { usePermissions } from "./use-permissions";
 
 // Types
 export interface User {
@@ -10,6 +11,8 @@ export interface User {
   phone: string;
   email: string;
   type: string;
+  role: string;
+  permissions: string[];
   businessTypes?: Array<{
     id: number;
     name: string;
@@ -30,12 +33,19 @@ export interface UserFormData {
 
 // GET - Fetch all users
 export function useUsers() {
+  const { canManageUsers, canViewAll } = usePermissions();
+
   return useQuery({
     queryKey: ["users"],
     queryFn: async () => {
+      // Seuls les admins peuvent voir tous les utilisateurs
+      if (!canManageUsers() || !canViewAll()) {
+        return [] as User[];
+      }
       const response = await api.get("/users");
       return response.data.data as User[];
     },
+    enabled: canManageUsers() && canViewAll(),
   });
 }
 

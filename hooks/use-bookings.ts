@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { toast } from 'sonner';
+import { usePermissions } from './use-permissions';
 
 // Types
 export interface User {
@@ -102,12 +103,26 @@ export interface BookingFormData {
 
 // GET - Fetch all bookings with pagination
 export function useBookings(page: number = 1) {
+  const { canViewAll, getUserId, isOwner, isCustomer } = usePermissions();
+  const userId = getUserId();
+
   return useQuery({
-    queryKey: ['bookings', page],
+    queryKey: ['bookings', page, userId, canViewAll()],
     queryFn: async () => {
-      const response = await api.get('/bookings', {
-        params: { page },
-      });
+      const params: Record<string, any> = { page };
+      
+      // Si l'utilisateur n'est pas admin, filtrer selon son type
+      if (!canViewAll() && userId) {
+        if (isOwner()) {
+          // Les propriétaires voient leurs réservations en tant que propriétaire
+          params.owner_id = userId;
+        } else if (isCustomer()) {
+          // Les clients voient leurs réservations en tant que client
+          params.customer_id = userId;
+        }
+      }
+
+      const response = await api.get('/bookings', { params });
       return response.data as PaginatedBookingsResponse;
     },
   });

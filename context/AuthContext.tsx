@@ -20,8 +20,10 @@ export interface User {
   phone: string;
   email: string;
   type: string;
+  role: string;
+  permissions: string[];
   businessTypes: BusinessType[];
-  wallet?: Wallet;
+  wallet?: Wallet | null;
 }
 
 interface AuthContextType {

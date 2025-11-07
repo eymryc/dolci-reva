@@ -10,6 +10,7 @@ import {
   Plus,
   Loader2,
 } from "lucide-react";
+import { usePermissions } from "@/hooks/use-permissions";
 import {
   useBookings,
   useCreateBooking,
@@ -31,6 +32,7 @@ import { DeleteConfirmationDialog } from "@/components/admin/shared/DeleteConfir
 
 export default function ResidencesPage() {
   const router = useRouter();
+  const { isAnyAdmin, isOwner } = usePermissions();
   
   // Bookings - TanStack Query
   const { 
@@ -166,7 +168,11 @@ export default function ResidencesPage() {
             </h1>
           </div>
           <p className="text-gray-500 text-sm ml-14">
-            Gérez les réservations et les résidences
+            {isAnyAdmin() 
+              ? "Gérez les réservations et les résidences" 
+              : isOwner() 
+                ? "Gérez vos réservations et vos résidences"
+                : "Gérez vos réservations et résidences"}
           </p>
         </div>
       </div>

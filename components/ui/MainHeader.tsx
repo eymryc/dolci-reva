@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { RiMenuFoldFill, RiUserLine, RiHeartLine, RiLogoutBoxLine } from "react-icons/ri";
+import { RiMenuFoldFill, RiUserLine, RiLogoutBoxLine } from "react-icons/ri";
 import { Button } from "@/components/ui/button";
 import {
    Sheet,
@@ -23,12 +23,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/context/AuthContext";
+import { usePermissions } from "@/hooks/use-permissions";
 import { toast } from "sonner";
 
 export default function MainHeader() {
   const pathname = usePathname();
   const router = useRouter();
   const { user, logout } = useAuth();
+  const { isCustomer, isAnyAdmin, isOwner } = usePermissions();
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleLogout = () => {
@@ -45,6 +47,16 @@ export default function MainHeader() {
   const getUserFullName = () => {
     if (!user) return "Utilisateur";
     return `${user.first_name} ${user.last_name}`;
+  };
+
+  // Déterminer le lien du compte selon le type d'utilisateur
+  const getAccountLink = () => {
+    if (isCustomer()) {
+      return "/customer/dashboard";
+    } else if (isAnyAdmin() || isOwner()) {
+      return "/admin/dashboard";
+    }
+    return "/admin/dashboard"; // Par défaut
   };
 
   useEffect(() => {
@@ -149,21 +161,14 @@ export default function MainHeader() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-gray-300/50 to-transparent h-[1px]" />
                 <DropdownMenuItem asChild className="px-6 py-3.5 cursor-pointer hover:bg-gradient-to-r hover:from-theme-primary/10 hover:to-theme-accent/10 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-theme-primary">
-                  <Link href="/admin/dashboard" className="flex items-center w-full relative z-10">
+                  <Link href={getAccountLink()} className="flex items-center w-full relative z-10">
                     <div className="absolute inset-0 bg-gradient-to-r from-theme-primary/5 to-theme-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-theme-primary/10 group-hover:bg-theme-primary/20 transition-colors duration-300 mr-3 shadow-sm">
                       <RiUserLine className="w-4 h-4 text-theme-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
-                    <span className="font-semibold text-gray-800 group-hover:text-theme-primary transition-colors duration-300">Mon compte</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="px-6 py-3.5 cursor-pointer hover:bg-gradient-to-r hover:from-red-50/80 hover:to-pink-50/80 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-red-400">
-                  <Link href="/favoris" className="flex items-center w-full relative z-10">
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-50/50 to-pink-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors duration-300 mr-3 shadow-sm">
-                      <RiHeartLine className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform duration-300" />
-                    </div>
-                    <span className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors duration-300">Mes favoris</span>
+                    <span className="font-semibold text-gray-800 group-hover:text-theme-primary transition-colors duration-300">
+                      {isCustomer() ? "Mon espace client" : "Mon compte"}
+                    </span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-gray-300/50 to-transparent h-[1px]" />
@@ -230,21 +235,14 @@ export default function MainHeader() {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-gray-300/50 to-transparent h-[1px]" />
                 <DropdownMenuItem asChild className="px-6 py-3.5 cursor-pointer hover:bg-gradient-to-r hover:from-theme-primary/10 hover:to-theme-accent/10 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-theme-primary">
-                  <Link href="/admin/dashboard" className="flex items-center w-full relative z-10">
+                  <Link href={getAccountLink()} className="flex items-center w-full relative z-10">
                     <div className="absolute inset-0 bg-gradient-to-r from-theme-primary/5 to-theme-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-theme-primary/10 group-hover:bg-theme-primary/20 transition-colors duration-300 mr-3 shadow-sm">
                       <RiUserLine className="w-4 h-4 text-theme-primary group-hover:scale-110 transition-transform duration-300" />
                     </div>
-                    <span className="font-semibold text-gray-800 group-hover:text-theme-primary transition-colors duration-300">Mon compte</span>
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuItem asChild className="px-6 py-3.5 cursor-pointer hover:bg-gradient-to-r hover:from-red-50/80 hover:to-pink-50/80 transition-all duration-300 group relative overflow-hidden border-l-4 border-transparent hover:border-red-400">
-                  <Link href="/favoris" className="flex items-center w-full relative z-10">
-                    <div className="absolute inset-0 bg-gradient-to-r from-red-50/50 to-pink-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-red-50 group-hover:bg-red-100 transition-colors duration-300 mr-3 shadow-sm">
-                      <RiHeartLine className="w-4 h-4 text-red-500 group-hover:scale-110 transition-transform duration-300" />
-                    </div>
-                    <span className="font-semibold text-gray-800 group-hover:text-red-600 transition-colors duration-300">Mes favoris</span>
+                    <span className="font-semibold text-gray-800 group-hover:text-theme-primary transition-colors duration-300">
+                      {isCustomer() ? "Mon espace client" : "Mon compte"}
+                    </span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator className="bg-gradient-to-r from-transparent via-gray-300/50 to-transparent h-[1px]" />
@@ -332,16 +330,12 @@ export default function MainHeader() {
                             <p className="text-xs text-gray-500 truncate">{user.email}</p>
                           </div>
                         </div>
-                        <Link href="/admin/dashboard">
+                        <Link href={getAccountLink()}>
                           <Button variant="outline" className="group w-full justify-start rounded-xl hover:bg-gradient-to-r hover:from-theme-primary/5 hover:to-theme-accent/5 hover:border-theme-primary/40 transition-all duration-300 hover:shadow-md text-sm py-2.5">
                             <RiUserLine className="w-4 h-4 mr-2 text-theme-primary group-hover:scale-110 transition-transform duration-200 flex-shrink-0" />
-                            <span className="font-medium group-hover:text-theme-primary transition-colors">Mon compte</span>
-                          </Button>
-                        </Link>
-                        <Link href="/favoris">
-                          <Button variant="outline" className="group w-full justify-start rounded-xl hover:bg-gradient-to-r hover:from-red-50/50 hover:to-pink-50/50 hover:border-red-300 transition-all duration-300 hover:shadow-md text-sm py-2.5">
-                            <RiHeartLine className="w-4 h-4 mr-2 text-red-500 group-hover:scale-110 transition-transform duration-200 flex-shrink-0" />
-                            <span className="font-medium group-hover:text-red-600 transition-colors">Mes favoris</span>
+                            <span className="font-medium group-hover:text-theme-primary transition-colors">
+                              {isCustomer() ? "Mon espace client" : "Mon compte"}
+                            </span>
                           </Button>
                         </Link>
                         <Button 
@@ -355,12 +349,6 @@ export default function MainHeader() {
                       </>
                     ) : (
                       <>
-                        <Link href="/favoris">
-                          <Button variant="outline" className="group w-full justify-start rounded-xl hover:bg-gray-50/80 transition-all duration-300 hover:shadow-md text-sm py-2.5">
-                            <RiHeartLine className="w-4 h-4 mr-2 text-red-500 group-hover:scale-110 transition-transform duration-200 flex-shrink-0" />
-                            <span className="font-medium group-hover:text-red-600 transition-colors">Mes favoris</span>
-                          </Button>
-                        </Link>
                         <Link href="/auth/sign-in" className="w-full">
                           <Button className="group relative w-full bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold overflow-hidden text-sm py-2.5">
                             <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

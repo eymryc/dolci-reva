@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import { usePermissions } from "./use-permissions";
 
 // Types
 export interface Amenity {
@@ -101,10 +102,20 @@ export interface ResidenceFormData {
 
 // GET - Fetch all residences (admin)
 export function useResidences() {
+  const { canViewAll, getUserId } = usePermissions();
+  const userId = getUserId();
+
   return useQuery({
-    queryKey: ["residences"],
+    queryKey: ["residences", userId, canViewAll()],
     queryFn: async () => {
-      const response = await api.get("/residences");
+      const params: Record<string, any> = {};
+      
+      // Si l'utilisateur n'est pas admin, filtrer par owner_id
+      if (!canViewAll() && userId) {
+        params.owner_id = userId;
+      }
+
+      const response = await api.get("/residences", { params });
       // Handle Laravel paginated response
       if (response.data.data && Array.isArray(response.data.data)) {
         return response.data.data as Residence[];

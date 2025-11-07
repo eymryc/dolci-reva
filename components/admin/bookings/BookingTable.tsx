@@ -47,6 +47,8 @@ interface BookingTableProps {
   addButton?: React.ReactNode;
   onRefresh?: () => void;
   isRefreshing?: boolean;
+  canCancel?: boolean;
+  canDelete?: boolean;
 }
 
 export function BookingTable({
@@ -57,6 +59,8 @@ export function BookingTable({
   addButton,
   onRefresh,
   isRefreshing = false,
+  canCancel = true,
+  canDelete = true,
 }: BookingTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -323,6 +327,9 @@ export function BookingTable({
         cell: ({ row }) => {
           const booking = row.original;
           const isCancelled = booking.status === 'ANNULE';
+          const hasActions = canCancel || canDelete;
+          
+          if (!hasActions) return null;
           
           return (
             <DropdownMenu>
@@ -336,29 +343,33 @@ export function BookingTable({
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => onCancel(booking)}
-                  disabled={isCancelled}
-                  className="cursor-pointer"
-                >
-                  <XCircle className="mr-2 h-4 w-4" />
-                  Annuler
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => onDelete(booking)}
-                  variant="destructive"
-                  className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
-                >
-                  <Trash2 className="mr-2 h-4 w-4" />
-                  Supprimer
-                </DropdownMenuItem>
+                {canCancel && (
+                  <DropdownMenuItem
+                    onClick={() => onCancel(booking)}
+                    disabled={isCancelled}
+                    className="cursor-pointer"
+                  >
+                    <XCircle className="mr-2 h-4 w-4" />
+                    Annuler
+                  </DropdownMenuItem>
+                )}
+                {canDelete && (
+                  <DropdownMenuItem
+                    onClick={() => onDelete(booking)}
+                    variant="destructive"
+                    className="cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50"
+                  >
+                    <Trash2 className="mr-2 h-4 w-4" />
+                    Supprimer
+                  </DropdownMenuItem>
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
           );
         },
       },
     ],
-    [onCancel, onDelete]
+    [onCancel, onDelete, canCancel, canDelete]
   );
 
   const table = useReactTable({

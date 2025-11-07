@@ -3,9 +3,11 @@
 import React, { useMemo } from "react";
 import { Search, TrendingUp, ArrowRight, Calendar, DollarSign, Users, Sparkles, Activity, Loader2 } from "lucide-react";
 import { useBookings } from "@/hooks/use-bookings";
+import { usePermissions } from "@/hooks/use-permissions";
 import { BookingTable } from "@/components/admin/bookings/BookingTable";
 
 export default function DashboardPage() {
+  const { isAnyAdmin, isOwner, isCustomer } = usePermissions();
   const { 
     data: bookingsResponse, 
     isLoading: isLoadingBookings,
@@ -44,9 +46,17 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold text-[#101828] mb-2">
-            Tableau de bord des réservations
+            {isAnyAdmin() ? "Tableau de bord des réservations" : "Mes réservations"}
           </h1>
-          <p className="text-gray-500 text-sm">Bienvenue ! Voici ce qui se passe aujourd&apos;hui.</p>
+          <p className="text-gray-500 text-sm">
+            {isAnyAdmin() 
+              ? "Bienvenue ! Voici ce qui se passe aujourd'hui." 
+              : isOwner() 
+                ? "Gérez vos réservations et vos résidences."
+                : isCustomer()
+                  ? "Bienvenue ! Voici vos réservations."
+                  : "Bienvenue ! Voici vos réservations."}
+          </p>
         </div>
         <div className="relative group">
           <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 group-focus-within:text-[#f08400] transition-colors" />

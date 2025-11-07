@@ -16,6 +16,7 @@ import {
   Home,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
+import { usePermissions } from "@/hooks/use-permissions";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -29,11 +30,12 @@ interface NavItem {
   name: string;
   icon: React.ComponentType<{ className?: string }>;
   href: string;
+  permission?: () => boolean;
 }
 
-const navItems: NavItem[] = [
+const allNavItems: NavItem[] = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
-  { name: "Résidences", icon: Home, href: "/admin/residences" },
+  { name: "Résidences", icon: Home, href: "/admin/residences", permission: () => true }, // Accessible à tous les utilisateurs connectés
 ];
 
 // Fonction pour obtenir les initiales du nom
@@ -68,8 +70,19 @@ export default function AdminLayout({
   const pathname = usePathname();
   const router = useRouter();
   const { user, loading, logout } = useAuth();
+  const { canManageUsers, isAnyAdmin, isOwner } = usePermissions();
   const isSidebarOpen = true;
   const isLoginPage = pathname === "/admin/login";
+
+  // Filtrer les items de navigation selon les permissions
+  const navItems = allNavItems.filter((item) => {
+    if (!item.permission) return true;
+    return item.permission();
+  });
+
+  // Vérifier si l'utilisateur a accès à l'interface admin
+  // Seuls les admins, super admins et propriétaires ont accès
+  const hasAdminAccess = isAnyAdmin() || isOwner();
 
   // Fonction pour déconnecter l'utilisateur
   const handleLogout = () => {
@@ -80,12 +93,15 @@ export default function AdminLayout({
     }, 0);
   };
 
-  // Rediriger vers la page de login si pas d'utilisateur (après le chargement)
+  // Rediriger vers la page de login si pas d'utilisateur ou si l'utilisateur n'a pas accès (après le chargement)
   useEffect(() => {
     if (!loading && !user && !isLoginPage) {
       router.push("/admin/login");
+    } else if (!loading && user && !isLoginPage && !hasAdminAccess) {
+      // Si l'utilisateur est un client, rediriger vers la page d'accueil
+      router.push("/");
     }
-  }, [loading, user, isLoginPage, router]);
+  }, [loading, user, isLoginPage, router, hasAdminAccess]);
 
   // Si c'est la page de login, ne pas afficher le layout avec sidebar
   if (isLoginPage) {
@@ -168,37 +184,38 @@ export default function AdminLayout({
           {/* Preferences Section */}
           {isSidebarOpen && (
             <div className="pt-8 mt-8 border-t border-gray-200/50">
-              <div className="px-4 mb-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">
-                Preferences
-              </div>
-              <Link
-                href="/admin/settings"
-                className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                  pathname === "/admin/settings"
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]"
-                    : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
-                }`}
-              >
-                <Settings className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/settings" ? "rotate-90" : "group-hover:rotate-90"}`} />
-                <span className="text-sm font-medium">Settings</span>
-                {pathname === "/admin/settings" && (
-                  <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
-                )}
-              </Link>
-              <Link
-                href="/admin/users"
-                className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                  pathname === "/admin/users"
-                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]"
-                    : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
-                }`}
-              >
-                <HelpCircle className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/users" ? "scale-110" : "group-hover:scale-110"}`} />
-                <span className="text-sm font-medium">Utilisateurs</span>
-                {pathname === "/admin/users" && (
-                  <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
-                )}
-              </Link>
+              {isAnyAdmin() && (
+                <Link
+                  href="/admin/settings"
+                  className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                    pathname === "/admin/settings"
+                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]"
+                      : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
+                  }`}
+                >
+                  <Settings className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/settings" ? "rotate-90" : "group-hover:rotate-90"}`} />
+                  <span className="text-sm font-medium">Settings</span>
+                  {pathname === "/admin/settings" && (
+                    <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                  )}
+                </Link>
+              )}
+              {canManageUsers() && (
+                <Link
+                  href="/admin/users"
+                  className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
+                    pathname === "/admin/users"
+                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]"
+                      : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
+                  }`}
+                >
+                  <HelpCircle className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/users" ? "scale-110" : "group-hover:scale-110"}`} />
+                  <span className="text-sm font-medium">Utilisateurs</span>
+                  {pathname === "/admin/users" && (
+                    <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                  )}
+                </Link>
+              )}
             </div>
           )}
         </nav>
@@ -238,13 +255,17 @@ export default function AdminLayout({
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/admin/settings" className="cursor-pointer">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Paramètres
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                {isAnyAdmin() && (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/settings" className="cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Paramètres
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
                   <LogOut className="mr-2 h-4 w-4" />
                   Déconnexion
@@ -314,13 +335,17 @@ export default function AdminLayout({
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <Link href="/admin/settings" className="cursor-pointer">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Paramètres
-                  </Link>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
+                {isAnyAdmin() && (
+                  <>
+                    <DropdownMenuItem asChild>
+                      <Link href="/admin/settings" className="cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Paramètres
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                  </>
+                )}
                 <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
                   <LogOut className="mr-2 h-4 w-4" />
                   Déconnexion

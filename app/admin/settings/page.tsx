@@ -51,28 +51,6 @@ export default function SettingsPage() {
   const { isAnyAdmin } = usePermissions();
   const { loading } = useAuth();
 
-  // Rediriger si l'utilisateur n'est pas un admin
-  useEffect(() => {
-    if (!loading && !isAnyAdmin()) {
-      router.push("/admin/dashboard");
-    }
-  }, [loading, isAnyAdmin, router]);
-
-  // Afficher un loader pendant la vérification des permissions
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-16">
-        <div className="w-12 h-12 border-4 border-[#f08400] border-t-transparent rounded-full animate-spin mb-4"></div>
-        <p className="text-gray-500 text-sm">Vérification des permissions...</p>
-      </div>
-    );
-  }
-
-  // Si l'utilisateur n'est pas un admin, ne rien afficher (redirection en cours)
-  if (!isAnyAdmin()) {
-    return null;
-  }
-
   // Business Types - TanStack Query
   const { 
     data: businessTypes = [], 
@@ -123,6 +101,28 @@ export default function SettingsPage() {
   const [editingCommission, setEditingCommission] = useState<Commission | null>(null);
   const [isCommissionDeleteDialogOpen, setIsCommissionDeleteDialogOpen] = useState(false);
   const [commissionToDelete, setCommissionToDelete] = useState<Commission | null>(null);
+
+  // Rediriger si l'utilisateur n'est pas un admin
+  useEffect(() => {
+    if (!loading && !isAnyAdmin()) {
+      router.push("/admin/dashboard");
+    }
+  }, [loading, isAnyAdmin, router]);
+
+  // Afficher un loader pendant la vérification des permissions
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-16">
+        <div className="w-12 h-12 border-4 border-[#f08400] border-t-transparent rounded-full animate-spin mb-4"></div>
+        <p className="text-gray-500 text-sm">Vérification des permissions...</p>
+      </div>
+    );
+  }
+
+  // Si l'utilisateur n'est pas un admin, ne rien afficher (redirection en cours)
+  if (!isAnyAdmin()) {
+    return null;
+  }
 
   // Business Type Handlers
   const handleCreateBusinessType = () => {

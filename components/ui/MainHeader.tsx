@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { RiMenuFoldFill, RiUserLine, RiLogoutBoxLine } from "react-icons/ri";
+import { RiMenuFoldFill, RiUserLine, RiLogoutBoxLine, RiAddLine } from "react-icons/ri";
 import { Button } from "@/components/ui/button";
 import {
    Sheet,
@@ -67,77 +67,101 @@ export default function MainHeader() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const menuItems: Array<{ label: string; href: string; icon: string }> = [
-    // { label: "Résidences", href: "/residences", icon: "🏠" },
-    // { label: "Hôtels", href: "/hotels", icon: "🏨" },
-    // { label: "Restaurants", href: "/restaurants", icon: "🍽️" },
-    // { label: "Lounges", href: "/lounges", icon: "🍸" },
-    // { label: "Night Clubs", href: "/nightclubs", icon: "🎵" },
-    // { label: "Circuits", href: "/circuits-touristiques", icon: "🗺️" },
-    // { label: "Enfants", href: "/espaces-enfants", icon: "🎠" },
-    // { label: "Événements", href: "/evenements", icon: "🎉" },
+  const menuItems: Array<{ label: string; href: string }> = [
+    { label: "Home", href: "/" },
+    { label: "Résidences", href: "/residences" },
+    { label: "À propos", href: "/about" },
+    { label: "Contact", href: "/contact" },
+    { label: "FAQ", href: "/faq" },
+    { label: "Centre d'aide", href: "/help" },
   ];
 
   return (
-    <section className={`sticky top-0 z-50 transition-all duration-500 ease-out ${
+    <section className={`sticky top-0 z-50 transition-all duration-700 ease-out ${
       isScrolled 
-        ? 'bg-gradient-to-r from-theme-primary/95 to-theme-accent/95 backdrop-blur-xl shadow-[0_8px_30px_rgb(240,132,0,0.2)] border-b border-theme-primary/30' 
-        : 'bg-gradient-to-r from-theme-primary to-theme-accent backdrop-blur-md shadow-[0_4px_20px_rgb(240,132,0,0.15)] border-b border-theme-primary/20'
+        ? 'bg-gradient-to-r from-theme-primary/98 via-theme-primary/95 to-theme-accent/98 backdrop-blur-2xl shadow-[0_10px_40px_rgb(240,132,0,0.25)]' 
+        : 'bg-gradient-to-r from-theme-primary via-theme-primary/95 to-theme-accent backdrop-blur-lg shadow-[0_4px_25px_rgb(240,132,0,0.18)]'
     }`}>
-      <header className="container mx-auto flex flex-wrap md:flex-nowrap flex-row justify-between items-center py-3 md:py-4 px-4 md:px-6 lg:px-8">
+      {/* Effet de brillance animé */}
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer-slide pointer-events-none"></div>
+      
+      <header className="relative container mx-auto flex flex-wrap md:flex-nowrap flex-row justify-between items-center py-4 md:py-5 px-4 md:px-6 lg:px-8">
         {/* Logo */}
-        <div className="flex-shrink-0 relative">
+        <div className="flex-shrink-0 relative z-10">
           <Link href="/" className="group flex items-center relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-theme-primary/20 to-theme-accent/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
+            <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-white/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10 scale-150" />
+            <div className="absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
             <Image 
               src="/logo/logo-custom.png" 
               alt="Dolci Rêva Logo" 
               width={120} 
               height={60} 
-              className="w-28 md:w-36 h-auto transition-all duration-500 group-hover:scale-110 group-hover:drop-shadow-2xl relative z-10" 
+              className="w-28 md:w-36 h-auto transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] relative z-10 filter brightness-110" 
             />
           </Link>
         </div>
 
         {/* Navigation - Desktop */}
-        <div className="hidden lg:flex items-center justify-center">
-          <ul className="flex flex-row items-center justify-center gap-1.5">
-            {menuItems.slice(0, 6).map((item) => (
-              <li key={item.href}>
-                <Link
-                  href={item.href}
-                  className={`relative flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-300 group overflow-hidden ${
-                    (pathname === item.href || (item.href !== "/" && pathname.startsWith(item.href)))
-                      ? "bg-white text-theme-primary shadow-lg shadow-white/30 scale-105"
-                      : "text-white/90 hover:text-white hover:bg-white/20"
-                  }`}
-                >
-                  <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  <span className="relative z-10 text-lg transition-transform duration-300 group-hover:scale-110">{item.icon}</span>
-                  <span className="relative z-10 hidden xl:inline transition-transform duration-300 group-hover:translate-x-0.5">{item.label}</span>
-                </Link>
-              </li>
-            ))}
+        <nav className="hidden lg:flex items-center justify-center flex-1 mx-8">
+          <ul className="flex flex-row items-center justify-center gap-2">
+            {menuItems.slice(0, 6).map((item) => {
+              const isActive = pathname === item.href || 
+                (item.href !== "/" && pathname.startsWith(item.href));
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    className={`relative flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm font-semibold transition-all duration-400 group overflow-hidden ${
+                      isActive
+                        ? "bg-white/95 text-theme-primary shadow-[0_4px_20px_rgba(255,255,255,0.4)] scale-105"
+                        : "text-white/95 hover:text-white hover:bg-white/15 hover:shadow-[0_2px_15px_rgba(255,255,255,0.2)]"
+                    }`}
+                  >
+                    {/* Effet de brillance au survol */}
+                    <span className={`absolute inset-0 bg-gradient-to-r from-white/20 via-white/30 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${isActive ? 'opacity-100' : ''}`} />
+                    {/* Indicateur actif */}
+                    {isActive && (
+                      <span className="absolute bottom-0 left-1/2 -translate-x-1/2 w-8 h-1 bg-white rounded-full shadow-[0_0_10px_rgba(255,255,255,0.6)]" />
+                    )}
+                    <span className="relative z-10 transition-all duration-300 group-hover:scale-105">{item.label}</span>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
-        </div>
+        </nav>
 
         {/* Actions - Desktop */}
-        <div className="hidden lg:flex flex-row gap-3 items-center">
+        <div className="hidden lg:flex flex-row gap-3 items-center z-10">
+          <Link href="/auth/sign-up">
+            <Button 
+              variant="default" 
+              size="sm"
+              className="group relative bg-gradient-to-r from-theme-primary via-theme-primary/95 to-theme-accent text-white hover:from-theme-primary/90 hover:via-theme-primary/90 hover:to-theme-accent/90 transition-all duration-500 shadow-[0_4px_20px_rgba(240,132,0,0.3)] hover:shadow-[0_8px_30px_rgba(240,132,0,0.4)] px-5 py-2.5 rounded-xl font-bold overflow-hidden border-2 border-white/30 hover:border-white/50 hover:scale-105"
+            >
+              <span className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <span className="relative z-10 flex items-center gap-2">
+                <RiAddLine className="w-4 h-4 group-hover:scale-110 transition-transform duration-500" />
+                <span className="hidden xl:inline group-hover:tracking-wide transition-all duration-500">Publier mes services</span>
+                <span className="xl:hidden">Publier</span>
+              </span>
+            </Button>
+          </Link>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="group relative flex items-center gap-2.5 px-3 py-2 rounded-full bg-white/20 transition-all duration-300 border border-white/30 shadow-lg shadow-white/10 hover:bg-white/30 hover:shadow-xl hover:shadow-white/20"
+                  className="group relative flex items-center gap-3 px-4 py-2.5 rounded-xl bg-white/25 backdrop-blur-sm transition-all duration-400 border border-white/40 shadow-[0_4px_20px_rgba(255,255,255,0.2)] hover:bg-white/35 hover:shadow-[0_6px_25px_rgba(255,255,255,0.3)] hover:scale-105"
                 >
-                  <div className="absolute inset-0 bg-white/10 rounded-full blur-md opacity-100 transition-opacity duration-500" />
-                  <Avatar className="relative z-10 w-9 h-9 ring-2 ring-white/50 transition-all duration-300 group-hover:scale-110">
-                    <AvatarFallback className="bg-white text-theme-primary text-xs font-bold shadow-lg">
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/20 to-white/10 rounded-full blur-lg opacity-50 group-hover:opacity-100 transition-opacity duration-500" />
+                  <Avatar className="relative z-10 w-9 h-9 ring-2 ring-white/60 shadow-lg transition-all duration-400 group-hover:scale-110 group-hover:ring-white/80">
+                    <AvatarFallback className="bg-gradient-to-br from-white to-white/90 text-theme-primary text-xs font-bold shadow-md">
                       {getUserInitials()}
                     </AvatarFallback>
                   </Avatar>
-                  <span className="relative z-10 hidden xl:inline text-sm font-semibold text-white transition-colors duration-300">
+                  <span className="relative z-10 hidden xl:inline text-sm font-semibold text-white drop-shadow-sm transition-all duration-300 group-hover:drop-shadow-md">
                     {getUserFullName()}
                   </span>
                 </Button>
@@ -184,14 +208,15 @@ export default function MainHeader() {
           ) : (
             <Link href="/auth/sign-in">
               <Button 
-                variant="outline" 
+                variant="default" 
                 size="sm"
-                className="group relative border-2 border-white/50 text-white hover:text-theme-primary transition-all duration-300 shadow-md hover:shadow-xl px-5 py-2.5 rounded-full font-semibold overflow-hidden bg-white/10 hover:bg-white"
+                className="group relative bg-gradient-to-r from-white via-white/95 to-white text-theme-primary hover:from-white hover:via-white hover:to-white transition-all duration-500 shadow-[0_4px_20px_rgba(255,255,255,0.3)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.4)] px-6 py-2.5 rounded-xl font-bold overflow-hidden border-2 border-white/80 hover:border-white hover:scale-105"
               >
-                <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10 flex items-center">
-                  <RiUserLine className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300" />
-                Se connecter
+                <span className="absolute inset-0 bg-gradient-to-r from-theme-primary/10 via-theme-accent/10 to-theme-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="absolute inset-0 bg-gradient-to-r from-theme-primary/5 to-theme-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <span className="relative z-10 flex items-center gap-2">
+                  <RiUserLine className="w-4 h-4 group-hover:scale-110 transition-transform duration-500" />
+                  <span className="group-hover:tracking-wide transition-all duration-500">Se connecter</span>
                 </span>
               </Button>
             </Link>
@@ -200,13 +225,26 @@ export default function MainHeader() {
 
         {/* Mobile Actions */}
         <div className="flex lg:hidden flex-row gap-2 items-center">
+          <Link href="/admin/residences/new">
+            <Button 
+              variant="default" 
+              size="sm"
+              className="group relative bg-gradient-to-r from-theme-primary via-theme-primary/95 to-theme-accent text-white hover:from-theme-primary/90 hover:via-theme-primary/90 hover:to-theme-accent/90 transition-all duration-500 shadow-[0_4px_20px_rgba(240,132,0,0.3)] hover:shadow-[0_8px_30px_rgba(240,132,0,0.4)] px-4 py-2 rounded-xl font-bold overflow-hidden border-2 border-white/30 hover:border-white/50 hover:scale-105 text-xs"
+            >
+              <span className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <span className="relative z-10 flex items-center gap-1.5">
+                <RiAddLine className="w-3.5 h-3.5 group-hover:scale-110 transition-transform duration-500" />
+                <span className="hidden sm:inline group-hover:tracking-wide transition-all duration-500">Publier</span>
+              </span>
+            </Button>
+          </Link>
           {user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button 
                   variant="ghost" 
                   size="sm"
-                  className="group relative p-2 rounded-full bg-white/20 transition-all duration-300 border border-white/30 shadow-lg shadow-white/10 hover:bg-white/30 hover:shadow-xl hover:shadow-white/20"
+                  className="group relative p-2 rounded-xl bg-white/20 transition-all duration-300 border border-white/30 shadow-lg shadow-white/10 hover:bg-white/30 hover:shadow-xl hover:shadow-white/20"
                 >
                   <div className="absolute inset-0 bg-white/10 rounded-full blur-md opacity-100 transition-opacity duration-300" />
                   <Avatar className="relative z-10 w-9 h-9 ring-2 ring-white/50 group-hover:scale-110 transition-all duration-300">
@@ -260,7 +298,7 @@ export default function MainHeader() {
               <Button 
                 variant="outline" 
                 size="sm"
-                className="group relative border-2 border-white/50 text-white hover:text-theme-primary text-xs px-4 py-2 rounded-full font-semibold transition-all duration-300 shadow-md hover:shadow-xl overflow-hidden bg-white/10 hover:bg-white"
+                className="group relative border-2 border-white/50 text-white hover:text-theme-primary text-xs px-4 py-2 rounded-xl font-semibold transition-all duration-300 shadow-md hover:shadow-xl overflow-hidden bg-white/10 hover:bg-white"
               >
                 <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 <span className="relative z-10">Connexion</span>
@@ -270,9 +308,9 @@ export default function MainHeader() {
           {/* Burger menu */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="sm" className="group relative text-white/80 hover:text-white hover:bg-white/20 rounded-full p-2.5 transition-all duration-300">
-                <div className="absolute inset-0 bg-white/10 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <RiMenuFoldFill className="relative z-10 w-6 h-6 group-hover:scale-110 transition-transform duration-300" />
+              <Button variant="ghost" size="sm" className="group relative text-white/90 hover:text-white hover:bg-white/25 rounded-xl p-2.5 transition-all duration-400 border border-white/30 shadow-[0_2px_10px_rgba(255,255,255,0.1)] hover:shadow-[0_4px_15px_rgba(255,255,255,0.2)] hover:scale-110">
+                <div className="absolute inset-0 bg-white/15 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-400" />
+                <RiMenuFoldFill className="relative z-10 w-6 h-6 group-hover:scale-110 transition-transform duration-400" />
               </Button>
             </SheetTrigger>
             <SheetContent className="w-[85vw] max-w-sm bg-gradient-to-br from-white via-gray-50/50 to-white backdrop-blur-xl border-l border-gray-200/50 p-0 overflow-y-auto">
@@ -306,7 +344,6 @@ export default function MainHeader() {
                           }`}
                         >
                           <span className="absolute inset-0 bg-gradient-to-r from-theme-primary/20 to-theme-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                          <span className="relative z-10 text-lg transition-transform duration-300 group-hover:scale-110">{item.icon}</span>
                           <span className="relative z-10 transition-transform duration-300 group-hover:translate-x-0.5">{item.label}</span>
                         </Link>
                       </li>
@@ -317,6 +354,15 @@ export default function MainHeader() {
                 {/* Mobile Actions */}
                 <div className="px-4 pt-4 pb-6 border-t border-gray-200/50 bg-gradient-to-br from-white via-gray-50/50 to-white backdrop-blur-sm sticky bottom-0">
                   <div className="flex flex-col gap-2.5">
+                    <Link href="/admin/residences/new" className="w-full">
+                      <Button className="group relative w-full bg-gradient-to-r from-theme-primary via-theme-primary/95 to-theme-accent text-white hover:from-theme-primary/90 hover:via-theme-primary/90 hover:to-theme-accent/90 rounded-xl shadow-[0_4px_20px_rgba(240,132,0,0.3)] hover:shadow-[0_8px_30px_rgba(240,132,0,0.4)] transition-all duration-500 font-bold overflow-hidden text-sm py-2.5 border-2 border-white/30 hover:border-white/50 hover:scale-[1.02]">
+                        <span className="absolute inset-0 bg-gradient-to-r from-white/20 via-white/10 to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                        <span className="relative z-10 flex items-center justify-center gap-2">
+                          <RiAddLine className="w-4 h-4 group-hover:scale-110 transition-transform duration-500 flex-shrink-0" />
+                          <span className="group-hover:tracking-wide transition-all duration-500">Publier mes services</span>
+                        </span>
+                      </Button>
+                    </Link>
                     {user ? (
                       <>
                         <div className="flex items-center gap-3 px-3 py-3 rounded-xl bg-gradient-to-br from-theme-primary/10 via-theme-primary/5 to-theme-accent/10 border border-theme-primary/20 shadow-sm">
@@ -350,11 +396,12 @@ export default function MainHeader() {
                     ) : (
                       <>
                         <Link href="/auth/sign-in" className="w-full">
-                          <Button className="group relative w-full bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 font-semibold overflow-hidden text-sm py-2.5">
-                            <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                            <span className="relative z-10 flex items-center justify-center">
-                              <RiUserLine className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform duration-300 flex-shrink-0" />
-                            Se connecter
+                          <Button className="group relative w-full bg-gradient-to-r from-white via-white/95 to-white text-theme-primary hover:from-white hover:via-white hover:to-white rounded-xl shadow-[0_4px_20px_rgba(255,255,255,0.3)] hover:shadow-[0_8px_30px_rgba(255,255,255,0.4)] transition-all duration-500 font-bold overflow-hidden text-sm py-2.5 border-2 border-white/80 hover:border-white hover:scale-[1.02]">
+                            <span className="absolute inset-0 bg-gradient-to-r from-theme-primary/10 via-theme-accent/10 to-theme-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <span className="absolute inset-0 bg-gradient-to-r from-theme-primary/5 to-theme-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <span className="relative z-10 flex items-center justify-center gap-2">
+                              <RiUserLine className="w-4 h-4 group-hover:scale-110 transition-transform duration-500 flex-shrink-0" />
+                              <span className="group-hover:tracking-wide transition-all duration-500">Se connecter</span>
                             </span>
                           </Button>
                         </Link>
@@ -367,6 +414,11 @@ export default function MainHeader() {
           </Sheet>
         </div>
       </header>
+      {/* Séparateur blanc élégant */}
+      <div className="relative w-full overflow-hidden">
+        <div className="h-[1px] bg-gradient-to-r from-transparent via-white/60 to-transparent w-full"></div>
+        <div className="absolute inset-0 h-[1px] bg-white/30 blur-[1px]"></div>
+      </div>
     </section>
   );
 } 

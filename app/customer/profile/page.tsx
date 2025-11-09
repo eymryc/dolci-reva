@@ -97,8 +97,9 @@ export default function CustomerProfilePage() {
       await refreshUser();
       setIsEditing(false);
       toast.success("Profil mis à jour avec succès !");
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Erreur lors de la mise à jour du profil");
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      toast.error(axiosError.response?.data?.message || "Erreur lors de la mise à jour du profil");
     } finally {
       setIsLoading(false);
     }
@@ -149,8 +150,9 @@ export default function CustomerProfilePage() {
         notes: "",
         document_file: null,
       });
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Erreur lors de la soumission du document");
+    } catch (error: unknown) {
+      const axiosError = error as { response?: { data?: { message?: string } } };
+      toast.error(axiosError.response?.data?.message || "Erreur lors de la soumission du document");
     } finally {
       setUploadingDocument(null);
       if (fileInputRef.current) {
@@ -177,7 +179,7 @@ export default function CustomerProfilePage() {
   };
 
   const getStatusBadge = (status: string) => {
-    const statusConfig: Record<string, { label: string; className: string; icon: any }> = {
+    const statusConfig: Record<string, { label: string; className: string; icon: React.ComponentType<{ className?: string }> }> = {
       PENDING: { label: "En attente", className: "bg-yellow-100 text-yellow-800 border-yellow-200", icon: Clock },
       SUBMITTED: { label: "Soumis", className: "bg-blue-100 text-blue-800 border-blue-200", icon: Clock },
       UNDER_REVIEW: { label: "En révision", className: "bg-purple-100 text-purple-800 border-purple-200", icon: AlertCircle },
@@ -216,21 +218,6 @@ export default function CustomerProfilePage() {
     );
   };
 
-  const getDocumentTypeLabel = (type: string): string => {
-    const labels: Record<string, string> = {
-      IDENTITY: "Document d'identité",
-      ADDRESS_PROOF: "Justificatif de domicile",
-      PROPERTY_TITLE: "Titre de propriété",
-      BANK_STATEMENT: "Relevé bancaire",
-      INSURANCE: "Assurance",
-    };
-    return labels[type] || type;
-  };
-
-  const isVerified = verificationStatus?.verification?.verification_status === "APPROVED";
-  const isUnderReview = verificationStatus?.verification?.verification_status === "UNDER_REVIEW";
-  const isPending = verificationStatus?.verification?.verification_status === "PENDING" || 
-                    verificationStatus?.verification?.verification_status === "SUBMITTED";
 
   if (!isCustomer() && !isOwner()) {
     return (
@@ -491,7 +478,7 @@ export default function CustomerProfilePage() {
                           (doc) => doc.document_type === docType.type
                         );
                         const Icon = docType.icon;
-                        const statusConfig: Record<string, { border: string; bg: string; badge: string; icon: any }> = {
+                        const statusConfig: Record<string, { border: string; bg: string; badge: string; icon: React.ComponentType<{ className?: string }> }> = {
                           APPROVED: {
                             border: "border-green-300",
                             bg: "bg-gradient-to-br from-green-50 via-white to-green-50/50",
@@ -639,7 +626,7 @@ export default function CustomerProfilePage() {
                                             </div>
                                             <div className="space-y-2">
                                               <Label htmlFor="document_issue_date">
-                                                Date d'émission <span className="text-red-500">*</span>
+                                                Date d&apos;émission <span className="text-red-500">*</span>
                                               </Label>
                                               <Input
                                                 id="document_issue_date"
@@ -651,7 +638,7 @@ export default function CustomerProfilePage() {
                                             </div>
                                             <div className="space-y-2">
                                               <Label htmlFor="document_expiry_date">
-                                                Date d'expiration <span className="text-red-500">*</span>
+                                                Date d&apos;expiration <span className="text-red-500">*</span>
                                               </Label>
                                               <Input
                                                 id="document_expiry_date"

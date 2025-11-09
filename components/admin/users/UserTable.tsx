@@ -544,7 +544,7 @@ export function UserTable({
         },
       },
     ],
-    [onEdit, onDelete]
+    [onEdit, onDelete, router]
   );
 
   const table = useReactTable({

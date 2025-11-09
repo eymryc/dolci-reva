@@ -30,7 +30,6 @@ import {
   XCircle,
   Clock,
   AlertCircle,
-  ShieldCheck,
   ShieldOff,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";

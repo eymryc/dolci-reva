@@ -44,7 +44,7 @@ export function VerificationModal({
               <span className="font-medium">Type de document: {documentType}</span>
             )}
             <br />
-            Examinez le document et décidez de l'approuver ou de le rejeter.
+            Examinez le document et décidez de l&apos;approuver ou de le rejeter.
           </DialogDescription>
         </DialogHeader>
         <VerificationForm

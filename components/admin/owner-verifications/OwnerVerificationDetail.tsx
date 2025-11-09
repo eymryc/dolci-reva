@@ -22,7 +22,6 @@ import {
   ShieldCheck,
   ShieldOff,
   FileText,
-  Download,
   Eye,
   User,
   Mail,
@@ -56,7 +55,7 @@ interface OwnerVerificationDetailProps {
 }
 
 const getStatusBadge = (status: string) => {
-  const statusConfig: Record<string, { label: string; className: string; icon: any }> = {
+  const statusConfig: Record<string, { label: string; className: string; icon: React.ComponentType<{ className?: string }> }> = {
     PENDING: { label: "En attente", className: "bg-yellow-100 text-yellow-800 border-yellow-200", icon: Clock },
     SUBMITTED: { label: "Soumis", className: "bg-blue-100 text-blue-800 border-blue-200", icon: Clock },
     UNDER_REVIEW: { label: "En révision", className: "bg-purple-100 text-purple-800 border-purple-200", icon: AlertCircle },
@@ -107,7 +106,7 @@ const getDocumentTypeLabel = (type: DocumentType): string => {
 };
 
 const getDocumentStatusBadge = (status: DocumentStatus) => {
-  const statusConfig: Record<DocumentStatus, { label: string; className: string; icon: any }> = {
+  const statusConfig: Record<DocumentStatus, { label: string; className: string; icon: React.ComponentType<{ className?: string }> }> = {
     PENDING: { label: "En attente", className: "bg-yellow-100 text-yellow-800 border-yellow-200", icon: Clock },
     APPROVED: { label: "Approuvé", className: "bg-green-100 text-green-800 border-green-200", icon: CheckCircle2 },
     REJECTED: { label: "Rejeté", className: "bg-red-100 text-red-800 border-red-200", icon: XCircle },
@@ -339,7 +338,7 @@ export function OwnerVerificationDetail({
 
         {ownerVerification.admin_notes && (
           <div className="mt-4 p-3 bg-gray-50 rounded-lg">
-            <p className="text-sm font-medium text-gray-700 mb-1">Notes de l'administrateur:</p>
+            <p className="text-sm font-medium text-gray-700 mb-1">Notes de l&apos;administrateur:</p>
             <p className="text-sm text-gray-600">{ownerVerification.admin_notes}</p>
           </div>
         )}

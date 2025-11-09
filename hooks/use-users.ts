@@ -4,6 +4,35 @@ import { toast } from "sonner";
 import { usePermissions } from "./use-permissions";
 
 // Types
+export interface VerificationDocument {
+  id: number;
+  user_id: number;
+  document_type: string;
+  identity_document_type?: string | null;
+  document_number: string;
+  document_issue_date?: string | null;
+  document_expiry_date?: string | null;
+  issuing_authority?: string | null;
+  status: string;
+  rejection_reason?: string | null;
+  reviewed_by?: number | null;
+  reviewed_at?: string | null;
+  notes?: string | null;
+  created_at: string;
+  updated_at: string;
+  deleted_at?: string | null;
+  document_file?: {
+    id: number;
+    name: string;
+    file_name: string;
+    mime_type: string;
+    size: number;
+    collection_name: string;
+    url: string;
+    created_at: string;
+  } | null;
+}
+
 export interface User {
   id: number;
   first_name: string;
@@ -17,8 +46,55 @@ export interface User {
     id: number;
     name: string;
   }>;
+  id_document_number?: string | null;
+  date_of_birth?: string | null;
+  address_line1?: string | null;
+  address_line2?: string | null;
+  postal_code?: string | null;
+  verification_status?: string;
+  verification_level?: string;
+  phone_verified?: boolean;
+  phone_verified_at?: string | null;
+  verified_by?: number | null;
+  verified_at?: string | null;
+  reputation_score?: string;
+  is_premium?: boolean;
+  is_verified?: boolean;
+  total_bookings?: number;
+  cancelled_bookings?: number;
+  cancellation_rate?: string;
+  has_insurance?: boolean;
+  security_deposit?: number | null;
+  email_verified_at?: string | null;
+  admin_notes?: string | null;
+  verifications?: VerificationDocument[];
   created_at?: string;
   updated_at?: string;
+  deleted_at?: string | null;
+}
+
+export interface PaginatedUsersResponse {
+  data: User[];
+  links: {
+    first: string | null;
+    last: string | null;
+    prev: string | null;
+    next: string | null;
+  };
+  meta: {
+    current_page: number;
+    from: number;
+    last_page: number;
+    links: Array<{
+      url: string | null;
+      label: string;
+      active: boolean;
+    }>;
+    path: string;
+    per_page: number;
+    to: number;
+    total: number;
+  };
 }
 
 export interface UserFormData {
@@ -31,19 +107,37 @@ export interface UserFormData {
   business_type_ids?: number[];
 }
 
-// GET - Fetch all users
-export function useUsers() {
+// GET - Fetch all users with pagination
+export function useUsers(page: number = 1) {
   const { canManageUsers, canViewAll } = usePermissions();
 
   return useQuery({
-    queryKey: ["users"],
+    queryKey: ["users", page],
     queryFn: async () => {
       // Seuls les admins peuvent voir tous les utilisateurs
       if (!canManageUsers() || !canViewAll()) {
-        return [] as User[];
+        return {
+          data: [],
+          links: {
+            first: null,
+            last: null,
+            prev: null,
+            next: null,
+          },
+          meta: {
+            current_page: 1,
+            from: 0,
+            last_page: 1,
+            links: [],
+            path: "",
+            per_page: 15,
+            to: 0,
+            total: 0,
+          },
+        } as PaginatedUsersResponse;
       }
-      const response = await api.get("/users");
-      return response.data.data as User[];
+      const response = await api.get("/users", { params: { page } });
+      return response.data as PaginatedUsersResponse;
     },
     enabled: canManageUsers() && canViewAll(),
   });

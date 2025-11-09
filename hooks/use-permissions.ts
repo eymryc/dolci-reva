@@ -273,6 +273,41 @@ export function usePermissions() {
     return user.businessTypes.map((bt) => bt.id);
   };
 
+  /**
+   * Vérifie si l'utilisateur peut réviser les documents de vérification
+   */
+  const canReviewDocuments = (): boolean => {
+    return isAnyAdmin() || hasPermission(PERMISSIONS.MANAGE_ALL_RESOURCES);
+  };
+
+  /**
+   * Vérifie si l'utilisateur peut approuver un propriétaire
+   */
+  const canApproveOwner = (): boolean => {
+    return isAnyAdmin() || hasPermission(PERMISSIONS.MANAGE_ALL_RESOURCES);
+  };
+
+  /**
+   * Vérifie si l'utilisateur peut rejeter un propriétaire
+   */
+  const canRejectOwner = (): boolean => {
+    return isAnyAdmin() || hasPermission(PERMISSIONS.MANAGE_ALL_RESOURCES);
+  };
+
+  /**
+   * Vérifie si l'utilisateur peut suspendre un propriétaire
+   */
+  const canSuspendOwner = (): boolean => {
+    return isAnyAdmin() || hasPermission(PERMISSIONS.MANAGE_ALL_RESOURCES);
+  };
+
+  /**
+   * Vérifie si l'utilisateur peut gérer les vérifications de propriétaires
+   */
+  const canManageOwnerVerifications = (): boolean => {
+    return isAnyAdmin() || hasPermission(PERMISSIONS.MANAGE_ALL_RESOURCES);
+  };
+
   return {
     user,
     hasRole,
@@ -290,6 +325,11 @@ export function usePermissions() {
     canCreateResidences,
     canCreateBookings,
     canAccessAdminPanel,
+    canReviewDocuments,
+    canApproveOwner,
+    canRejectOwner,
+    canSuspendOwner,
+    canManageOwnerVerifications,
     getUserId,
     getUserBusinessTypes,
   };

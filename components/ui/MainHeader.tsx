@@ -25,6 +25,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
 import { toast } from "sonner";
+import { AlertCircle, X } from "lucide-react";
 
 export default function MainHeader() {
   const pathname = usePathname();
@@ -32,6 +33,40 @@ export default function MainHeader() {
   const { user, logout } = useAuth();
   const { isCustomer, isAnyAdmin, isOwner } = usePermissions();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [showVerificationAlert, setShowVerificationAlert] = useState(true);
+
+  // Vérifier le statut de vérification pour les propriétaires
+  // Utiliser directement user.verification_status depuis le contexte d'authentification
+  const verificationStatus = user?.verification_status?.trim().toUpperCase();
+  const isOwnerVerified = verificationStatus === "APPROVED";
+  // Afficher l'alerte uniquement si :
+  // 1. L'utilisateur est un owner
+  // 2. Le statut existe et n'est pas "APPROVED"
+  // 3. L'utilisateur n'est pas vérifié
+  const isOwnerNotVerified = isOwner() && verificationStatus !== undefined && verificationStatus !== null && !isOwnerVerified;
+  
+  // Réinitialiser showVerificationAlert quand l'utilisateur devient vérifié
+  useEffect(() => {
+    if (isOwnerVerified) {
+      setShowVerificationAlert(false);
+    }
+  }, [isOwnerVerified]);
+  
+  // Debug: afficher les valeurs pour déboguer
+  useEffect(() => {
+    if (isOwner()) {
+      console.log("Owner verification status debug:", {
+        rawVerificationStatus: user?.verification_status,
+        verificationStatus,
+        isOwnerVerified,
+        isOwnerNotVerified,
+        userType: user?.type,
+        showVerificationAlert,
+        pathname,
+        shouldShowAlert: isOwnerNotVerified && showVerificationAlert && pathname.startsWith("/admin"),
+      });
+    }
+  }, [verificationStatus, isOwnerVerified, isOwnerNotVerified, isOwner, user, showVerificationAlert, pathname]);
 
   const handleLogout = () => {
     logout();
@@ -84,6 +119,42 @@ export default function MainHeader() {
     }`}>
       {/* Effet de brillance animé */}
       <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full animate-shimmer-slide pointer-events-none"></div>
+      
+      {/* Alerte de vérification pour les propriétaires non vérifiés (uniquement dans l'admin) */}
+      {isOwnerNotVerified && showVerificationAlert && pathname.startsWith("/admin") && (
+        <div className="relative bg-yellow-500 border-b border-yellow-600 shadow-lg">
+          <div className="container mx-auto px-4 md:px-6 lg:px-8 py-3">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-3 flex-1">
+                <AlertCircle className="w-5 h-5 text-yellow-900 flex-shrink-0" />
+                <p className="text-sm font-medium text-yellow-900">
+                  <span className="font-bold">Votre compte n&apos;est pas encore vérifié.</span>{" "}
+                  Vérifiez votre compte pour publier vos résidences et gagner la confiance des clients.
+                </p>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link href="/customer/profile?tab=verification">
+                  <Button
+                    size="sm"
+                    className="bg-yellow-900 hover:bg-yellow-950 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+                    onClick={() => setShowVerificationAlert(false)}
+                  >
+                    Vérifier mon compte
+                  </Button>
+                </Link>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setShowVerificationAlert(false)}
+                  className="text-yellow-900 hover:bg-yellow-600/20 h-8 w-8 p-0"
+                >
+                  <X className="w-4 h-4" />
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       
       <header className="relative container mx-auto flex flex-wrap md:flex-nowrap flex-row justify-between items-center py-4 md:py-5 px-4 md:px-6 lg:px-8">
         {/* Logo */}

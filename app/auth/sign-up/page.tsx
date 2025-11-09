@@ -25,7 +25,7 @@ const signUpSchema = z.object({
   lastName: z.string().min(2, { message: "Le nom doit contenir au moins 2 caractères" }),
   email: z.string().email({ message: "Email invalide" }),
   phone: z.string().min(8, { message: "Le numéro de téléphone est invalide" }),
-  password: z.string().min(6, { message: "Le mot de passe doit contenir au moins 6 caractères" }),
+  password: z.string().min(4, { message: "Le mot de passe doit contenir au moins 4 caractères" }),
   confirmPassword: z.string(),
   type: z.enum(["OWNER", "CUSTOMER"]),
   businessTypeIds: z.array(z.number()).optional(),

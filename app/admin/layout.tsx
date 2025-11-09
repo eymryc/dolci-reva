@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -14,9 +14,13 @@ import {
   Menu,
   LogOut,
   Home,
+  AlertCircle,
+  X,
+  User,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,6 +39,7 @@ interface NavItem {
 
 const allNavItems: NavItem[] = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
+  { name: "Profil", icon: User, href: "/admin/profile", permission: () => true }, // Accessible à tous les utilisateurs connectés
   { name: "Résidences", icon: Home, href: "/admin/residences", permission: () => true }, // Accessible à tous les utilisateurs connectés
 ];
 
@@ -72,7 +77,21 @@ export default function AdminLayout({
   const { user, loading, logout } = useAuth();
   const { canManageUsers, isAnyAdmin, isOwner } = usePermissions();
   const isSidebarOpen = true;
-  const isLoginPage = pathname === "/admin/login";
+  const isLoginPage = pathname === "auth/sign-in";
+  const [showVerificationAlert, setShowVerificationAlert] = useState(true);
+
+  // Vérifier le statut de vérification pour les propriétaires
+  // Utiliser directement user.verification_status depuis le contexte d'authentification
+  const verificationStatus = user?.verification_status?.trim().toUpperCase();
+  const isOwnerVerified = verificationStatus === "APPROVED";
+  const isOwnerNotVerified = isOwner() && verificationStatus !== undefined && verificationStatus !== null && !isOwnerVerified;
+  
+  // Réinitialiser showVerificationAlert quand l'utilisateur devient vérifié
+  useEffect(() => {
+    if (isOwnerVerified) {
+      setShowVerificationAlert(false);
+    }
+  }, [isOwnerVerified]);
 
   // Filtrer les items de navigation selon les permissions
   const navItems = allNavItems.filter((item) => {
@@ -89,14 +108,14 @@ export default function AdminLayout({
     logout();
     // Utiliser setTimeout pour éviter l'erreur de mise à jour pendant le rendu
     setTimeout(() => {
-      router.push("/admin/login");
+      router.push("auth/sign-in");
     }, 0);
   };
 
   // Rediriger vers la page de login si pas d'utilisateur ou si l'utilisateur n'a pas accès (après le chargement)
   useEffect(() => {
     if (!loading && !user && !isLoginPage) {
-      router.push("/admin/login");
+      router.push("auth/sign-in");
     } else if (!loading && user && !isLoginPage && !hasAdminAccess) {
       // Si l'utilisateur est un client, rediriger vers la page d'accueil
       router.push("/");
@@ -157,7 +176,7 @@ export default function AdminLayout({
         <nav className="relative z-10 flex-1 px-4 py-6 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
-            const isActive = pathname === item.href;
+            const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
             return (
               <Link
                 key={item.name}
@@ -188,14 +207,14 @@ export default function AdminLayout({
                 <Link
                   href="/admin/settings"
                   className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    pathname === "/admin/settings"
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]"
+                    pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")
+                      ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
                   }`}
                 >
-                  <Settings className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/settings" ? "rotate-90" : "group-hover:rotate-90"}`} />
-                  <span className="text-sm font-medium">Settings</span>
-                  {pathname === "/admin/settings" && (
+                  <Settings className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? "rotate-90" : "group-hover:rotate-90"}`} />
+                  <span className={`text-sm font-medium transition-all ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? 'text-white' : 'text-gray-700'}`}>Settings</span>
+                  {(pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")) && (
                     <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
                   )}
                 </Link>
@@ -204,14 +223,14 @@ export default function AdminLayout({
                 <Link
                   href="/admin/users"
                   className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    pathname === "/admin/users"
-                      ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-lg shadow-blue-500/25 scale-[1.02]"
+                    pathname === "/admin/users" || pathname.startsWith("/admin/users/")
+                      ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
                   }`}
                 >
-                  <HelpCircle className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/users" ? "scale-110" : "group-hover:scale-110"}`} />
-                  <span className="text-sm font-medium">Utilisateurs</span>
-                  {pathname === "/admin/users" && (
+                  <HelpCircle className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? "scale-110" : "group-hover:scale-110"}`} />
+                  <span className={`text-sm font-medium transition-all ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? 'text-white' : 'text-gray-700'}`}>Utilisateurs</span>
+                  {(pathname === "/admin/users" || pathname.startsWith("/admin/users/")) && (
                     <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
                   )}
                 </Link>
@@ -255,6 +274,12 @@ export default function AdminLayout({
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/admin/profile" className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    Mon Profil
+                  </Link>
+                </DropdownMenuItem>
                 {isAnyAdmin() && (
                   <>
                     <DropdownMenuItem asChild>
@@ -278,6 +303,42 @@ export default function AdminLayout({
 
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Alerte de vérification pour les propriétaires non vérifiés */}
+        {isOwnerNotVerified && showVerificationAlert && (
+          <div className="relative bg-yellow-500 border-b border-yellow-600 shadow-lg z-10">
+            <div className="px-6 py-3">
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3 flex-1">
+                  <AlertCircle className="w-5 h-5 text-yellow-900 flex-shrink-0" />
+                  <p className="text-sm font-medium text-yellow-900">
+                    <span className="font-bold">Votre compte n&apos;est pas encore vérifié.</span>{" "}
+                    Vérifiez votre compte pour publier vos résidences et gagner la confiance des clients.
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Link href="/admin/profile?tab=verification">
+                    <Button
+                      size="sm"
+                      className="bg-yellow-900 hover:bg-yellow-950 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+                      onClick={() => setShowVerificationAlert(false)}
+                    >
+                      Vérifier mon compte
+                    </Button>
+                  </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setShowVerificationAlert(false)}
+                    className="text-yellow-900 hover:bg-yellow-600/20 h-8 w-8 p-0"
+                  >
+                    <X className="w-4 h-4" />
+                  </Button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {/* Header */}
         <header className="h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-6 flex items-center justify-between shadow-sm">
           <div className="flex items-center gap-4 flex-1">
@@ -335,6 +396,12 @@ export default function AdminLayout({
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/admin/profile" className="cursor-pointer">
+                    <User className="mr-2 h-4 w-4" />
+                    Mon Profil
+                  </Link>
+                </DropdownMenuItem>
                 {isAnyAdmin() && (
                   <>
                     <DropdownMenuItem asChild>

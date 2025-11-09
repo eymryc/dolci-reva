@@ -22,7 +22,7 @@ import { createFieldLabels } from "@/lib/server-error-utils";
 // Schéma de validation
 const loginSchema = z.object({
   email: z.string().email({ message: "Email invalide" }),
-  password: z.string().min(6, { message: "Le mot de passe doit contenir au moins 6 caractères" }),
+  password: z.string().min(4, { message: "Le mot de passe doit contenir au moins 4 caractères" }),
   rememberMe: z.boolean().optional(),
 });
 

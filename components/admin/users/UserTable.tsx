@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   useReactTable,
   getCoreRowModel,
@@ -18,6 +19,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import {
   ChevronLeft,
   ChevronRight,
   ChevronsLeft,
@@ -29,6 +38,15 @@ import {
   ArrowUp,
   ArrowDown,
   RefreshCw,
+  CheckCircle2,
+  XCircle,
+  Star,
+  Shield,
+  MoreVertical,
+  Eye,
+  Copy,
+  UserCog,
+  Ban,
 } from "lucide-react";
 
 interface UserTableProps {
@@ -50,6 +68,7 @@ export function UserTable({
   onRefresh,
   isRefreshing = false,
 }: UserTableProps) {
+  const router = useRouter();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
@@ -97,9 +116,12 @@ export function UserTable({
           );
         },
         cell: ({ row }) => (
-          <div className="font-medium text-blue-700">
+          <button
+            onClick={() => router.push(`/admin/users/${row.original.id}`)}
+            className="font-medium text-blue-700 hover:text-blue-900 hover:underline cursor-pointer text-left"
+          >
             {row.original.first_name}
-          </div>
+          </button>
         ),
       },
       {
@@ -123,9 +145,12 @@ export function UserTable({
           );
         },
         cell: ({ row }) => (
-          <div className="font-medium text-purple-700">
+          <button
+            onClick={() => router.push(`/admin/users/${row.original.id}`)}
+            className="font-medium text-purple-700 hover:text-purple-900 hover:underline cursor-pointer text-left"
+          >
             {row.original.last_name}
-          </div>
+          </button>
         ),
       },
       {
@@ -181,17 +206,282 @@ export function UserTable({
         },
         cell: ({ row }) => {
           const type = row.getValue("type") as string;
-          const isAdmin = type === "ADMIN";
+          const typeMap: Record<string, { label: string; color: string; bg: string }> = {
+            SUPER_ADMIN: { label: "Super Admin", color: "text-red-700", bg: "bg-red-100 border-red-200" },
+            ADMIN: { label: "Admin", color: "text-purple-700", bg: "bg-purple-100 border-purple-200" },
+            OWNER: { label: "Propriétaire", color: "text-blue-700", bg: "bg-blue-100 border-blue-200" },
+            CUSTOMER: { label: "Client", color: "text-green-700", bg: "bg-green-100 border-green-200" },
+          };
+          const typeInfo = typeMap[type] || { label: type, color: "text-gray-700", bg: "bg-gray-100 border-gray-200" };
           return (
             <span
-              className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                isAdmin
-                  ? "bg-purple-100 text-purple-700 border border-purple-200"
-                  : "bg-blue-100 text-blue-700 border border-blue-200"
-              }`}
+              className={`px-3 py-1 rounded-full text-xs font-semibold border ${typeInfo.bg} ${typeInfo.color}`}
             >
-              {isAdmin ? "Administrateur" : "Propriétaire"}
+              {typeInfo.label}
             </span>
+          );
+        },
+      },
+      {
+        accessorKey: "role",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="h-8 px-2 hover:bg-transparent"
+            >
+              Rôle
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              ) : column.getIsSorted() === "desc" ? (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              )}
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const role = row.getValue("role") as string;
+          return (
+            <div className="text-gray-700 font-medium text-sm">{role}</div>
+          );
+        },
+      },
+      {
+        accessorKey: "verification_status",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="h-8 px-2 hover:bg-transparent"
+            >
+              Statut Vérif.
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              ) : column.getIsSorted() === "desc" ? (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              )}
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const status = row.original.verification_status;
+          const statusMap: Record<string, { label: string; color: string; bg: string }> = {
+            PENDING: { label: "En attente", color: "text-yellow-700", bg: "bg-yellow-100 border-yellow-200" },
+            SUBMITTED: { label: "Soumis", color: "text-blue-700", bg: "bg-blue-100 border-blue-200" },
+            VERIFIED: { label: "Vérifié", color: "text-green-700", bg: "bg-green-100 border-green-200" },
+            REJECTED: { label: "Rejeté", color: "text-red-700", bg: "bg-red-100 border-red-200" },
+          };
+          const statusInfo = statusMap[status || "PENDING"] || { label: status || "N/A", color: "text-gray-700", bg: "bg-gray-100 border-gray-200" };
+          return (
+            <span
+              className={`px-2 py-1 rounded-full text-xs font-semibold border ${statusInfo.bg} ${statusInfo.color}`}
+            >
+              {statusInfo.label}
+            </span>
+          );
+        },
+      },
+      {
+        accessorKey: "verification_level",
+        header: "Niveau Vérif.",
+        cell: ({ row }) => {
+          const level = row.original.verification_level;
+          return (
+            <div className="text-gray-600 text-sm">{level || "N/A"}</div>
+          );
+        },
+      },
+      {
+        accessorKey: "phone_verified",
+        header: "Tél. Vérifié",
+        cell: ({ row }) => {
+          const verified = row.original.phone_verified;
+          return (
+            <div className="flex items-center gap-1">
+              {verified ? (
+                <>
+                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                  <span className="text-green-600 text-sm">Oui</span>
+                </>
+              ) : (
+                <>
+                  <XCircle className="w-4 h-4 text-red-600" />
+                  <span className="text-red-600 text-sm">Non</span>
+                </>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "is_verified",
+        header: "Vérifié",
+        cell: ({ row }) => {
+          const verified = row.original.is_verified;
+          return (
+            <div className="flex items-center gap-1">
+              {verified ? (
+                <>
+                  <Shield className="w-4 h-4 text-green-600" />
+                  <span className="text-green-600 text-sm">Oui</span>
+                </>
+              ) : (
+                <>
+                  <XCircle className="w-4 h-4 text-gray-400" />
+                  <span className="text-gray-500 text-sm">Non</span>
+                </>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "is_premium",
+        header: "Premium",
+        cell: ({ row }) => {
+          const premium = row.original.is_premium;
+          return (
+            <div className="flex items-center gap-1">
+              {premium ? (
+                <>
+                  <Star className="w-4 h-4 text-yellow-600 fill-yellow-600" />
+                  <span className="text-yellow-600 text-sm">Oui</span>
+                </>
+              ) : (
+                <>
+                  <Star className="w-4 h-4 text-gray-400" />
+                  <span className="text-gray-500 text-sm">Non</span>
+                </>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "reputation_score",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="h-8 px-2 hover:bg-transparent"
+            >
+              Score
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              ) : column.getIsSorted() === "desc" ? (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              )}
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const score = row.original.reputation_score;
+          return (
+            <div className="text-gray-700 font-medium text-sm">
+              {score ? parseFloat(score).toFixed(2) : "0.00"}
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "total_bookings",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="h-8 px-2 hover:bg-transparent"
+            >
+              Réservations
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              ) : column.getIsSorted() === "desc" ? (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              )}
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const bookings = row.original.total_bookings || 0;
+          return (
+            <div className="text-gray-700 font-medium text-sm">{bookings}</div>
+          );
+        },
+      },
+      {
+        accessorKey: "cancellation_rate",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="h-8 px-2 hover:bg-transparent"
+            >
+              Taux Annul.
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              ) : column.getIsSorted() === "desc" ? (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              )}
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const rate = row.original.cancellation_rate;
+          const rateValue = rate ? parseFloat(rate) : 0;
+          return (
+            <div className={`font-medium text-sm ${rateValue > 10 ? "text-red-600" : rateValue > 5 ? "text-yellow-600" : "text-green-600"}`}>
+              {rateValue.toFixed(2)}%
+            </div>
+          );
+        },
+      },
+      {
+        id: "businessTypes",
+        header: "Types Business",
+        cell: ({ row }) => {
+          const businessTypes = row.original.businessTypes || [];
+          return (
+            <div className="flex flex-wrap gap-1">
+              {businessTypes.length > 0 ? (
+                businessTypes.map((bt) => (
+                  <span
+                    key={bt.id}
+                    className="px-2 py-1 rounded text-xs font-medium bg-indigo-100 text-indigo-700 border border-indigo-200"
+                  >
+                    {bt.name}
+                  </span>
+                ))
+              ) : (
+                <span className="text-gray-400 text-xs">Aucun</span>
+              )}
+            </div>
+          );
+        },
+      },
+      {
+        id: "permissions",
+        header: "Permissions",
+        cell: ({ row }) => {
+          const permissions = row.original.permissions || [];
+          return (
+            <div className="flex items-center gap-1">
+              <Shield className="w-4 h-4 text-gray-500" />
+              <span className="text-gray-700 text-sm font-medium">{permissions.length}</span>
+            </div>
           );
         },
       },
@@ -201,24 +491,55 @@ export function UserTable({
         cell: ({ row }) => {
           const user = row.original;
           return (
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onEdit(user)}
-                className="hover:bg-blue-50 hover:text-blue-600"
-              >
-                <Edit2 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDelete(user)}
-                className="hover:bg-red-50 hover:text-red-600"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 hover:bg-gray-100"
+                >
+                  <span className="sr-only">Ouvrir le menu</span>
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => onEdit(user)}>
+                  <Edit2 className="mr-2 h-4 w-4" />
+                  Modifier
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push(`/admin/users/${user.id}`)}>
+                  <Eye className="mr-2 h-4 w-4" />
+                  Voir les détails
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Copy className="mr-2 h-4 w-4" />
+                  Dupliquer
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>
+                  <UserCog className="mr-2 h-4 w-4" />
+                  Gérer les permissions
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Shield className="mr-2 h-4 w-4" />
+                  Vérifier le compte
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Ban className="mr-2 h-4 w-4" />
+                  Suspendre
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  variant="destructive"
+                  onClick={() => onDelete(user)}
+                >
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Supprimer
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           );
         },
       },

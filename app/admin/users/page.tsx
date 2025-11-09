@@ -25,13 +25,15 @@ import { DeleteConfirmationDialog } from "@/components/admin/shared/DeleteConfir
 export default function UsersPage() {
   const router = useRouter();
   const { canManageUsers } = usePermissions();
+
   // Users - TanStack Query
   const {
-    data: users = [],
+    data: usersResponse,
     isLoading: isLoadingUsers,
     refetch: refetchUsers,
     isRefetching: isRefetchingUsers,
   } = useUsers();
+  const users = usersResponse?.data || [];
   const createMutation = useCreateUser();
   const updateMutation = useUpdateUser();
   const deleteMutation = useDeleteUser();

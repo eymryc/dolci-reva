@@ -9,8 +9,10 @@ import {
   Home,
   Plus,
   Loader2,
+  AlertCircle,
 } from "lucide-react";
 import { usePermissions } from "@/hooks/use-permissions";
+import { useAuth } from "@/context/AuthContext";
 import {
   useBookings,
   useCreateBooking,
@@ -33,6 +35,15 @@ import { DeleteConfirmationDialog } from "@/components/admin/shared/DeleteConfir
 export default function ResidencesPage() {
   const router = useRouter();
   const { isAnyAdmin, isOwner } = usePermissions();
+  const { user } = useAuth();
+  
+  // Vérifier le statut de vérification pour les propriétaires
+  // Utiliser directement user.verification_status depuis le contexte d'authentification
+  const verificationStatus = user?.verification_status?.trim().toUpperCase();
+  const isOwnerVerified = verificationStatus === "APPROVED";
+  const isOwnerApproved = isOwner() 
+    ? isOwnerVerified
+    : true; // Les admins peuvent toujours ajouter des résidences
   
   // Bookings - TanStack Query
   const { 
@@ -216,20 +227,6 @@ export default function ResidencesPage() {
                 isLoading={deleteBookingMutation.isPending || cancelBookingMutation.isPending}
                 onRefresh={() => refetchBookings()}
                 isRefreshing={isRefetchingBookings}
-                addButton={
-                  <Button
-                    onClick={handleCreateBooking}
-                    className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
-                    disabled={isLoadingBookings}
-                  >
-                    {isLoadingBookings ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Plus className="w-4 h-4 mr-2" />
-                    )}
-                    Ajouter une réservation
-                  </Button>
-                }
               />
             )}
 
@@ -267,6 +264,31 @@ export default function ResidencesPage() {
 
           {/* Residences Tab */}
           <TabsContent value="residences" className="space-y-6">
+            {/* Alerte pour les propriétaires non vérifiés */}
+            {isOwner() && !isOwnerApproved && (
+              <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
+                <div className="flex items-start">
+                  <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+                  <div className="flex-1">
+                    <h3 className="text-sm font-semibold text-yellow-800 mb-1">
+                      Vérification requise
+                    </h3>
+                    <p className="text-sm text-yellow-700">
+                      Votre compte doit être vérifié et approuvé avant de pouvoir ajouter une résidence. 
+                      Veuillez compléter votre vérification dans votre profil.
+                    </p>
+                    <Button
+                      variant="link"
+                      className="mt-2 p-0 h-auto text-yellow-800 hover:text-yellow-900 underline"
+                      onClick={() => router.push("/admin/profile?tab=verification")}
+                    >
+                      Vérifier mon compte
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
+
             {/* Residences Table */}
             {isLoadingResidences ? (
               <div className="flex flex-col items-center justify-center py-16">
@@ -284,8 +306,9 @@ export default function ResidencesPage() {
                 addButton={
                   <Button
                     onClick={handleCreateResidence}
-                    className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
-                    disabled={isLoadingResidences}
+                    className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                    disabled={isLoadingResidences || (isOwner() && !isOwnerApproved)}
+                    title={isOwner() && !isOwnerApproved ? "Votre compte doit être vérifié pour ajouter une résidence" : undefined}
                   >
                     {isLoadingResidences ? (
                       <Loader2 className="w-4 h-4 mr-2 animate-spin" />

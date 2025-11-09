@@ -77,7 +77,7 @@ export default function AdminLayout({
   const { user, loading, logout } = useAuth();
   const { canManageUsers, isAnyAdmin, isOwner } = usePermissions();
   const isSidebarOpen = true;
-  const isLoginPage = pathname === "auth/sign-in";
+  const isLoginPage = pathname === "/auth/sign-in";
   const [showVerificationAlert, setShowVerificationAlert] = useState(true);
 
   // Vérifier le statut de vérification pour les propriétaires
@@ -108,7 +108,7 @@ export default function AdminLayout({
     logout();
     // Utiliser setTimeout pour éviter l'erreur de mise à jour pendant le rendu
     setTimeout(() => {
-      router.push("auth/sign-in");
+      router.push("/auth/sign-in");
     }, 0);
   };
 

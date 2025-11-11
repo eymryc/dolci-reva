@@ -8,8 +8,10 @@ import SectionHeader from '@/components/ui/SectionHeader';
 import AnimatedSection from '@/components/ui/AnimatedSection';
 import AnimatedButton from '@/components/ui/AnimatedButton';
 import ListingCard from '@/components/cards/ListingCard';
+import HebergementListingCard from '@/components/cards/HebergementListingCard';
 import React from 'react';
 import { usePublicResidences } from '@/hooks/use-residences';
+import { usePublicDwellings } from '@/hooks/use-dwellings';
 import Link from 'next/link';
 // import GenericCarousel from '@/components/carousel/GenericCarousel';
 
@@ -26,6 +28,7 @@ const IMAGES = [
 
 export default function Home() {
   const { data: residences, isLoading, error } = usePublicResidences();
+  const { data: dwellings, isLoading: isLoadingDwellings, error: errorDwellings } = usePublicDwellings();
 
   // Format price with space separator
   const formatPrice = (price: string) => {
@@ -172,7 +175,7 @@ export default function Home() {
               </div>
               <Link
                 href="/residences"
-                className="group flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-theme-primary to-orange-500 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:from-orange-500 hover:to-theme-primary whitespace-nowrap"
+                className="group flex items-center gap-2 text-theme-primary font-semibold hover:text-orange-500 transition-colors duration-300 whitespace-nowrap"
               >
                 <span>Voir plus de sélections</span>
                 <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -201,26 +204,129 @@ export default function Home() {
             </div>
           ) : residences && residences.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {residences.slice(0, 4).map((residence) => (
-                <ListingCard
-                  key={residence.id}
-                  id={residence.id}
-                  image={residence.main_image_url || residence.main_image_thumb_url || "/media/hotels/hotel1.jpg"}
-                  name={residence.name}
-                  city={`${residence.city}, ${residence.country}`}
-                  description={residence.description || "Aucune description disponible."}
-                  price={`${formatPrice(residence.price)} FCFA`}
-                  type={residence.type}
-                  standing={residence.standing}
-                  amenities={residence.amenities}
-                  availability_status={residence.availability_status}
-                  isPopular={residence.has_ratings || residence.rating_count > 0}
-                />
-              ))}
+              {residences.slice(0, 4).map((residence) => {
+                // Préparer les images
+                const allImages = residence.all_images?.map((img) => img.url) || 
+                                 (residence.main_image_url ? [residence.main_image_url] : []);
+                const galleryImages = residence.gallery_images?.map((img) => img.url) || [];
+                const images = [...allImages, ...galleryImages].filter(Boolean);
+
+                return (
+                  <ListingCard
+                    key={residence.id}
+                    id={residence.id}
+                    image={residence.main_image_url || residence.main_image_thumb_url || "/media/hotels/hotel1.jpg"}
+                    images={images}
+                    name={residence.name}
+                    city={`${residence.city}, ${residence.country}`}
+                    description={residence.description || "Aucune description disponible."}
+                    price={`${formatPrice(residence.price)} FCFA`}
+                    type={residence.type}
+                    standing={residence.standing}
+                    amenities={residence.amenities}
+                    availability_status={residence.availability_status}
+                    isPopular={residence.has_ratings || residence.rating_count > 0}
+                  />
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-12">
               <p className="text-gray-600">Aucune résidence disponible pour le moment.</p>
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Section Hébergements */}
+      <section className="py-20 bg-gradient-to-br from-orange-50 via-white to-yellow-50">
+        <div className="container mx-auto px-4">
+          <div className="mb-12">
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
+              <div className="flex-1">
+                <SectionHeader
+                  title="Hébergements disponibles"
+                  subtitle="Trouvez le logement parfait pour votre séjour"
+                />
+              </div>
+              <Link
+                href="/se-loger"
+                className="group flex items-center gap-2 text-theme-primary font-semibold hover:text-orange-500 transition-colors duration-300 whitespace-nowrap"
+              >
+                <span>Voir tous les hébergements</span>
+                <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </Link>
+            </div>
+          </div>
+          {isLoadingDwellings ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <div key={idx} className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse">
+                  <div className="h-64 bg-gray-200"></div>
+                  <div className="p-6 space-y-4">
+                    <div className="h-4 bg-gray-200 rounded w-3/4"></div>
+                    <div className="h-4 bg-gray-200 rounded w-1/2"></div>
+                    <div className="h-4 bg-gray-200 rounded w-full"></div>
+                    <div className="h-4 bg-gray-200 rounded w-2/3"></div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : errorDwellings ? (
+            <div className="text-center py-12">
+              <p className="text-gray-600">Une erreur s&apos;est produite lors du chargement des hébergements.</p>
+            </div>
+          ) : dwellings && dwellings.length > 0 ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {dwellings.slice(0, 4).map((dwelling) => {
+                // Préparer les images
+                const allImages = dwelling.all_images?.map((img) => img.url) || 
+                                 (dwelling.main_image_url ? [dwelling.main_image_url] : []);
+                const galleryImages = dwelling.gallery_images?.map((img) => 
+                  typeof img === 'string' ? img : img.url
+                ) || [];
+                const images = [...allImages, ...galleryImages].filter(Boolean);
+
+                // Préparer les équipements (amenities) - les hébergements n'ont pas d'amenities dans le type
+                const amenities: string[] = [];
+
+                return (
+                  <HebergementListingCard
+                    key={dwelling.id}
+                    id={dwelling.id}
+                    image={dwelling.main_image_url || dwelling.main_image_thumb_url || "/media/hotels/hotel1.jpg"}
+                    images={images}
+                    name={`${dwelling.type || 'Hébergement'} à ${dwelling.city}`}
+                    location={`${dwelling.city}, ${dwelling.country}`}
+                    city={dwelling.city}
+                    country={dwelling.country}
+                    address={dwelling.address}
+                    type={dwelling.type}
+                    structureType={dwelling.structure_type}
+                    structureTypeLabel={dwelling.structure_type_label}
+                    constructionType={dwelling.construction_type}
+                    constructionTypeLabel={dwelling.construction_type_label}
+                    rooms={dwelling.rooms ?? undefined}
+                    bedrooms={dwelling.rooms ?? undefined}
+                    bathrooms={dwelling.bathrooms ?? undefined}
+                    living_room={dwelling.living_room ?? undefined}
+                    pieceNumber={dwelling.piece_number ?? undefined}
+                    amenities={amenities}
+                    price={dwelling.rent}
+                    rentAdvanceAmountNumber={dwelling.rent_advance_amount_number}
+                    securityDepositMonthNumber={dwelling.security_deposit_month_number}
+                    agencyFeesMonthNumber={dwelling.agency_fees_month_number}
+                    visitePrice={dwelling.visite_price}
+                    isPopular={dwelling.is_available}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-gray-600">Aucun hébergement disponible pour le moment.</p>
             </div>
           )}
         </div>

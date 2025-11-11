@@ -157,19 +157,19 @@ export default function MainHeader() {
         </div>
       )}
       
-      <header className="relative container mx-auto flex flex-wrap md:flex-nowrap flex-row justify-between items-center py-4 md:py-5 px-4 md:px-6 lg:px-8">
+      <header className="relative container mx-auto flex flex-wrap md:flex-nowrap flex-row justify-between items-center py-2 md:py-3 px-4 md:px-6 lg:px-8">
         {/* Logo */}
         <div className="flex-shrink-0 relative z-10">
           <Link href="/" className="group flex items-center relative">
-            <div className="absolute inset-0 bg-gradient-to-r from-white/30 to-white/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700 -z-10 scale-150" />
-            <div className="absolute inset-0 bg-white/10 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10" />
-            <Image 
-              src="/logo/logo-custom.png" 
-              alt="Dolci Rêva Logo" 
-              width={120} 
-              height={60} 
-              className="w-28 md:w-36 h-auto transition-all duration-500 group-hover:scale-105 group-hover:drop-shadow-[0_0_20px_rgba(255,255,255,0.5)] relative z-10 filter brightness-110" 
-            />
+            <div className="bg-white rounded-xl p-2 border-2 border-white/80 shadow-lg transition-all duration-300 group-hover:shadow-xl group-hover:scale-105">
+              <Image 
+                src="/logo/logo-custom.png" 
+                alt="Dolci Rêva Logo" 
+                width={120} 
+                height={60} 
+                className="w-24 md:w-32 h-auto transition-all duration-300" 
+              />
+            </div>
           </Link>
         </div>
 

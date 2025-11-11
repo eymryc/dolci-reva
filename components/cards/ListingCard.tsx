@@ -18,6 +18,7 @@ export interface ListingCardProps {
   id?: number;
   slug?: string;
   availability_status?: AvailabilityStatus;
+  images?: string[];
 }
 
 const ListingCard: React.FC<ListingCardProps> = ({
@@ -34,11 +35,13 @@ const ListingCard: React.FC<ListingCardProps> = ({
   id,
   slug: providedSlug,
   availability_status,
+  images = [],
 }) => {
-  const [isFavorited, setIsFavorited] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const slug = providedSlug || name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
   // Utiliser l'ID si disponible, sinon le slug
   const linkHref = id ? `/residences/${id}` : `/details/${slug}`;
+  const allImages = images.length > 0 ? images : [image];
   const imageSrc = !image ? "/media/hotels/hotel1.jpg" : image;
 
   const renderStars = (rating: number) => {
@@ -73,29 +76,10 @@ const ListingCard: React.FC<ListingCardProps> = ({
           )}
         </div>
 
-        {/* Bouton Favori */}
-        <button 
-          className={`absolute top-4 right-4 z-20 rounded-full p-2.5 shadow-lg transition-all duration-200 ${
-            isFavorited 
-              ? "bg-red-500 text-white" 
-              : "bg-white/90 text-gray-600 hover:bg-red-50 hover:text-red-500"
-          }`}
-          onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            setIsFavorited(!isFavorited);
-          }}
-          aria-label={isFavorited ? "Retirer des favoris" : "Ajouter aux favoris"}
-        >
-          <svg className="w-5 h-5" fill={isFavorited ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-          </svg>
-        </button>
-
       {/* Image avec overlay gradient */}
       <div className="relative overflow-hidden">
         <Image 
-          src={imageSrc} 
+          src={allImages[currentImageIndex] || imageSrc} 
           alt={name} 
           width={600} 
           height={400} 
@@ -104,14 +88,36 @@ const ListingCard: React.FC<ListingCardProps> = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
         
-        {/* Availability Status Badge */}
+        {/* Availability Status Badge - En haut à droite */}
         {availability_status?.message && (
-          <div className={`absolute bottom-4 left-4 z-20 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm ${
+          <div className={`absolute top-4 right-4 z-20 px-3 py-1.5 rounded-full text-xs font-semibold shadow-lg backdrop-blur-sm ${
             availability_status.status === 'available' 
               ? 'bg-green-500/90 text-white' 
               : 'bg-orange-500/90 text-white'
           }`}>
             {availability_status.message}
+          </div>
+        )}
+        
+        {/* Pagination dots (si plusieurs images) */}
+        {allImages.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+            {allImages.map((_, index) => (
+              <button
+                key={index}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setCurrentImageIndex(index);
+                }}
+                className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                  index === currentImageIndex 
+                    ? 'bg-white w-6' 
+                    : 'bg-white/50 hover:bg-white/75'
+                }`}
+                aria-label={`Image ${index + 1}`}
+              />
+            ))}
           </div>
         )}
       </div>
@@ -121,16 +127,9 @@ const ListingCard: React.FC<ListingCardProps> = ({
         {/* Header avec nom et rating */}
         <div className="flex items-start justify-between mb-3">
           <div className="flex-1">
-            <div className="flex items-center justify-between gap-2 mb-1">
-              <h3 className="text-xl font-bold text-gray-900 line-clamp-1 group-hover:text-theme-primary transition-colors duration-200 flex-1">
-                {name}
-              </h3>
-              {standing && (
-                <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-500/10 to-pink-500/10 text-purple-600 border border-purple-500/20 whitespace-nowrap flex-shrink-0">
-                  {standing}
-                </span>
-              )}
-            </div>
+            <h3 className="text-xl font-normal text-theme-primary line-clamp-1 transition-colors duration-200 mb-1">
+              {name}
+            </h3>
             <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
@@ -171,17 +170,24 @@ const ListingCard: React.FC<ListingCardProps> = ({
           </div>
         )}
 
-        {/* Footer avec prix et CTA */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+        {/* Footer avec prix et CTA - Fond orange */}
+        <div className="flex items-center justify-between pt-4 px-6 pb-6 -mx-6 -mb-6 bg-theme-primary mt-auto">
           <div className="flex flex-col">
-            <span className="text-2xl font-bold text-theme-primary">{price}</span>
-            <span className="text-xs text-gray-500">La nuitée</span>
+            <span className="text-2xl font-bold text-white">{price}</span>
+            <span className="text-xs text-white/80">La nuitée</span>
           </div>
-          <div className="group/btn flex items-center gap-2 text-theme-primary text-sm font-semibold">
-            Découvrir
-            <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
+          <div className="flex flex-col items-end gap-1">
+            {standing && (
+              <span className="text-black text-lg font-semibold whitespace-nowrap">
+                {standing}
+              </span>
+            )}
+            <div className="group/btn flex items-center gap-2 text-white text-sm font-semibold">
+              Découvrir
+              <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </div>
           </div>
         </div>
       </div>

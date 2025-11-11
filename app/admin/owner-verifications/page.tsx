@@ -7,9 +7,7 @@ import {
   ShieldCheck,
   Loader2,
   ShieldOff,
-  CheckCircle2,
   AlertCircle,
-  Eye,
 } from "lucide-react";
 import {
   useOwnerVerifications,

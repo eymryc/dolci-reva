@@ -37,11 +37,12 @@ const documentVerificationSchema = z.object({
   document_issue_date: z.string().optional(),
   document_expiry_date: z.string().optional(),
   identity_document_type: z.string().optional(),
-  document_file: z.instanceof(File, {
-    message: "Le fichier du document est requis",
-  }).refine((file) => file.size > 0, {
-    message: "Le fichier ne peut pas être vide",
-  }),
+  document_file: z.union([
+    z.instanceof(File).refine((file) => file.size > 0, {
+      message: "Le fichier ne peut pas être vide",
+    }),
+    z.null(),
+  ]),
 }).refine((data) => {
   if (data.document_type === "IDENTITY") {
     return data.identity_document_type !== undefined && data.identity_document_type !== "";
@@ -103,7 +104,7 @@ export function DocumentVerificationForm({
       document_issue_date: "",
       document_expiry_date: "",
       identity_document_type: "",
-      document_file: undefined as File | undefined,
+      document_file: null,
     },
   });
 
@@ -135,6 +136,15 @@ export function DocumentVerificationForm({
     clearServerErrors();
     clearErrors();
 
+    // Vérifier que le fichier est présent
+    if (!data.document_file) {
+      setError("document_file", {
+        type: "manual",
+        message: "Le fichier du document est requis",
+      });
+      return;
+    }
+
     const formData: DocumentVerificationFormData = {
       document_type: data.document_type,
       document_file: data.document_file,
@@ -162,7 +172,7 @@ export function DocumentVerificationForm({
     setValue("document_issue_date", "");
     setValue("document_expiry_date", "");
     setValue("identity_document_type", "");
-    setValue("document_file", undefined as File | undefined);
+    setValue("document_file", null);
     onCancel();
   };
 
@@ -292,17 +302,21 @@ export function DocumentVerificationForm({
           <Controller
             name="document_file"
             control={control}
-            render={({ field: { onChange, ...field } }) => (
+            render={({ field: { onChange, onBlur, name, ref } }) => (
               <>
                 <Input
                   id="document_file"
                   type="file"
                   accept="image/*,.pdf"
-                  {...field}
+                  name={name}
+                  ref={ref}
+                  onBlur={onBlur}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                     const file = e.target.files?.[0];
                     if (file) {
                       onChange(file);
+                    } else {
+                      onChange(null);
                     }
                   }}
                   className={`cursor-pointer h-12 ${errors.document_file ? "border-red-500" : ""}`}

@@ -80,10 +80,10 @@ export default function ResidencesPage() {
   const [residenceToDelete, setResidenceToDelete] = useState<Residence | null>(null);
 
   // Booking Handlers
-  const handleCreateBooking = () => {
-    setEditingBooking(null);
-    setIsBookingModalOpen(true);
-  };
+  // const handleCreateBooking = () => {
+  //   setEditingBooking(null);
+  //   setIsBookingModalOpen(true);
+  // };
 
   const handleCancelBooking = (booking: Booking) => {
     setBookingToCancel(booking);

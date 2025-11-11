@@ -84,7 +84,6 @@ export function CustomerSignUpModal({ open, onOpenChange }: CustomerSignUpModalP
     phone: "phone",
     password: "password",
     password_confirmation: "confirmPassword",
-    type: "type",
   };
 
   // Labels personnalisés pour les champs

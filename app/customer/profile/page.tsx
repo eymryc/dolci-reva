@@ -10,7 +10,6 @@ import {
   ArrowLeft,
   Save,
   Loader2,
-  ShieldCheck,
   ShieldOff,
   FileText,
   Upload,
@@ -18,9 +17,6 @@ import {
   XCircle,
   Clock,
   AlertCircle,
-  MapPin,
-  Calendar,
-  TrendingUp,
   Award,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -34,7 +30,6 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import api from "@/lib/axios";

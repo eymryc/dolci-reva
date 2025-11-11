@@ -3,6 +3,7 @@
 import { useRef, forwardRef, useImperativeHandle } from "react";
 import dynamic from "next/dynamic";
 import { UseFormRegisterReturn } from "react-hook-form";
+import type { IntlTelInputRef as LibraryIntlTelInputRef } from "intl-tel-input/reactWithUtils";
 
 // Import dynamique pour éviter les problèmes SSR
 const IntlTelInput = dynamic(
@@ -21,29 +22,17 @@ interface PhoneInputProps {
   onBlur?: () => void;
   className?: string;
   placeholder?: string;
-  defaultCountry?: string;
+  defaultCountry?: "ci" | "fr" | "sn" | "ml" | "bf" | "ne" | "bj" | "tg" | string;
   register?: UseFormRegisterReturn;
   error?: boolean;
   disabled?: boolean;
-}
-
-interface IntlTelInputInstance {
-  getNumber: () => string;
-  getNumberType: () => number;
-  isValidNumber: () => boolean;
-  getSelectedCountryData: () => { iso2: string; dialCode: string; name: string } | null;
-}
-
-interface IntlTelInputRef {
-  getInstance: () => IntlTelInputInstance | null;
-  getInput: () => HTMLInputElement | null;
 }
 
 export interface PhoneInputRef {
   getNumber: () => string;
   getNumberType: () => number;
   isValidNumber: () => boolean;
-  getSelectedCountryData: () => { iso2: string; dialCode: string; name: string } | null;
+  getSelectedCountryData: () => { iso2: string; dialCode: string; name: string } | Record<string, never> | null;
 }
 
 const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
@@ -61,7 +50,7 @@ const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
     },
     ref
   ) => {
-    const componentRef = useRef<IntlTelInputRef | null>(null);
+    const componentRef = useRef<LibraryIntlTelInputRef | null>(null);
     const currentNumberRef = useRef<string>("");
 
     // Gestionnaire pour onChangeNumber - retourne le numéro au format E.164
@@ -74,11 +63,13 @@ const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
     };
 
     // Gestionnaire pour onChangeValidity (optionnel, pour validation)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleChangeValidity = (_isValid: boolean) => {
       // Vous pouvez utiliser cette info pour la validation si nécessaire
     };
 
     // Gestionnaire pour onChangeErrorCode (optionnel)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const handleChangeErrorCode = (_errorCode: number | null) => {
       // Vous pouvez utiliser cette info pour afficher des erreurs si nécessaire
     };
@@ -109,7 +100,12 @@ const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
       getSelectedCountryData: () => {
         if (componentRef.current) {
           const instance = componentRef.current.getInstance();
-          return instance?.getSelectedCountryData() || null;
+          const data = instance?.getSelectedCountryData();
+          // Vérifier si c'est un EmptyObject (objet vide)
+          if (data && Object.keys(data).length > 0 && 'iso2' in data) {
+            return data as { iso2: string; dialCode: string; name: string };
+          }
+          return null;
         }
         return null;
       },
@@ -137,8 +133,8 @@ const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
           onChangeValidity={handleChangeValidity}
           onChangeErrorCode={handleChangeErrorCode}
           initOptions={{
-            initialCountry: defaultCountry,
-            preferredCountries: ["ci", "fr", "sn", "ml", "bf", "ne", "bj", "tg"],
+            initialCountry: defaultCountry as "ci" | "fr" | "sn" | "ml" | "bf" | "ne" | "bj" | "tg" | undefined,
+            countryOrder: ["ci", "fr", "sn", "ml", "bf", "ne", "bj", "tg"],
             separateDialCode: true,
             autoPlaceholder: "polite",
             formatOnDisplay: false,

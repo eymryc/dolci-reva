@@ -103,7 +103,7 @@ export function DocumentVerificationForm({
       document_issue_date: "",
       document_expiry_date: "",
       identity_document_type: "",
-      document_file: undefined as any,
+      document_file: undefined as File | undefined,
     },
   });
 
@@ -162,7 +162,7 @@ export function DocumentVerificationForm({
     setValue("document_issue_date", "");
     setValue("document_expiry_date", "");
     setValue("identity_document_type", "");
-    setValue("document_file", undefined as any);
+    setValue("document_file", undefined as File | undefined);
     onCancel();
   };
 
@@ -292,7 +292,7 @@ export function DocumentVerificationForm({
           <Controller
             name="document_file"
             control={control}
-            render={({ field: { onChange, value, ...field } }) => (
+            render={({ field: { onChange, ...field } }) => (
               <>
                 <Input
                   id="document_file"

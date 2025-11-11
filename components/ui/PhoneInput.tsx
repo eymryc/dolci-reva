@@ -27,11 +27,23 @@ interface PhoneInputProps {
   disabled?: boolean;
 }
 
+interface IntlTelInputInstance {
+  getNumber: () => string;
+  getNumberType: () => number;
+  isValidNumber: () => boolean;
+  getSelectedCountryData: () => { iso2: string; dialCode: string; name: string } | null;
+}
+
+interface IntlTelInputRef {
+  getInstance: () => IntlTelInputInstance | null;
+  getInput: () => HTMLInputElement | null;
+}
+
 export interface PhoneInputRef {
   getNumber: () => string;
   getNumberType: () => number;
   isValidNumber: () => boolean;
-  getSelectedCountryData: () => any;
+  getSelectedCountryData: () => { iso2: string; dialCode: string; name: string } | null;
 }
 
 const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
@@ -49,7 +61,7 @@ const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
     },
     ref
   ) => {
-    const componentRef = useRef<any>(null);
+    const componentRef = useRef<IntlTelInputRef | null>(null);
     const currentNumberRef = useRef<string>("");
 
     // Gestionnaire pour onChangeNumber - retourne le numéro au format E.164
@@ -62,12 +74,12 @@ const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
     };
 
     // Gestionnaire pour onChangeValidity (optionnel, pour validation)
-    const handleChangeValidity = (isValid: boolean) => {
+    const handleChangeValidity = (_isValid: boolean) => {
       // Vous pouvez utiliser cette info pour la validation si nécessaire
     };
 
     // Gestionnaire pour onChangeErrorCode (optionnel)
-    const handleChangeErrorCode = (errorCode: number | null) => {
+    const handleChangeErrorCode = (_errorCode: number | null) => {
       // Vous pouvez utiliser cette info pour afficher des erreurs si nécessaire
     };
 
@@ -110,7 +122,7 @@ const PhoneInput = forwardRef<PhoneInputRef, PhoneInputProps>(
       if (register?.onBlur) {
         const input = componentRef.current?.getInput();
         if (input) {
-          register.onBlur({ target: input } as any);
+          register.onBlur({ target: input } as React.FocusEvent<HTMLInputElement>);
         }
       }
     };

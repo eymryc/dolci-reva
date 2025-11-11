@@ -15,7 +15,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RiEyeLine, RiEyeOffLine, RiMailLine, RiLockLine, RiUserLine, RiPhoneLine } from "react-icons/ri";
+import { RiEyeLine, RiEyeOffLine, RiMailLine, RiLockLine, RiUserLine } from "react-icons/ri";
+import PhoneInput from "@/components/ui/PhoneInput";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -137,7 +138,7 @@ export function CustomerSignUpModal({ open, onOpenChange }: CustomerSignUpModalP
           onOpenChange(false);
           reset();
         }
-      } catch (loginError) {
+      } catch {
         // Si la connexion automatique échoue, rediriger vers la page de connexion
         toast.info("Inscription réussie ! Veuillez vous connecter.");
         setTimeout(() => {

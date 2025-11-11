@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowLeft, Home } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +11,7 @@ import { toast } from "sonner";
 export default function NewResidencePage() {
   const router = useRouter();
   const createResidenceMutation = useCreateResidence();
+  const handleServerErrorRef = useRef<((error: unknown) => { errorMessage: string; hasDetailedErrors: boolean }) | null>(null);
 
   const handleSubmit = (
     data: ResidenceFormData,
@@ -24,11 +25,21 @@ export default function NewResidencePage() {
           router.push("/admin/residences");
         },
         onError: (error: unknown) => {
-          const errorMessage =
-            (error as { response?: { data?: { message?: string; error?: string } } })?.response?.data?.message ||
-            (error as { response?: { data?: { message?: string; error?: string } } })?.response?.data?.error ||
-            "Erreur lors de la création de la résidence";
-          toast.error(errorMessage);
+          // Utiliser handleServerError du formulaire si disponible
+          if (handleServerErrorRef.current) {
+            const { errorMessage, hasDetailedErrors } = handleServerErrorRef.current(error);
+            // Afficher le toast seulement s'il n'y a pas d'erreurs détaillées
+            if (!hasDetailedErrors) {
+              toast.error(errorMessage);
+            }
+          } else {
+            // Fallback si handleServerError n'est pas disponible
+            const errorMessage =
+              (error as { response?: { data?: { message?: string; error?: string } } })?.response?.data?.message ||
+              (error as { response?: { data?: { message?: string; error?: string } } })?.response?.data?.error ||
+              "Erreur lors de la création de la résidence";
+            toast.error(errorMessage);
+          }
         },
       }
     );
@@ -72,6 +83,9 @@ export default function NewResidencePage() {
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           isLoading={createResidenceMutation.isPending}
+          onServerError={(handleServerError) => {
+            handleServerErrorRef.current = handleServerError;
+          }}
         />
       </div>
     </div>

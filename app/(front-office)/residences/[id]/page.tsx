@@ -14,6 +14,7 @@ import Link from "next/link";
 import { usePublicResidence, useBookResidence } from '@/hooks/use-residences';
 import { usePublicOpinions, useCreateOpinion } from '@/hooks/use-opinions';
 import { useAuth } from '@/context/AuthContext';
+import { CustomerSignUpModal } from '@/components/auth/CustomerSignUpModal';
 import { toast } from 'sonner';
 import { Calendar } from 'lucide-react';
 import { 
@@ -175,6 +176,7 @@ export default function DetailPage() {
   const [isFavorite, setIsFavorite] = useState(false);
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [reviewForm, setReviewForm] = useState({
     note: 0,
     comment: ''
@@ -201,6 +203,11 @@ export default function DetailPage() {
 
   // Handle booking
   const handleBooking = () => {
+    // Vérifier si l'utilisateur est connecté
+    if (!user) {
+      setShowSignUpModal(true);
+      return;
+    }
     if (!residence) {
       toast.error("Erreur : résidence introuvable");
       return;
@@ -223,11 +230,6 @@ export default function DetailPage() {
 
     if (guests > residence.max_guests) {
       toast.error(`Le nombre maximum de voyageurs est ${residence.max_guests}`);
-      return;
-    }
-
-    if (!user) {
-      toast.error("Veuillez vous connecter pour effectuer une réservation");
       return;
     }
 
@@ -730,20 +732,82 @@ export default function DetailPage() {
               </Button>
             </Card>
 
-            {/* Carte améliorée */}
+            {/* Localisation */}
             <Card className="p-4 lg:p-6 shadow-md border border-gray-100 bg-white overflow-hidden">
               <h2 className="text-xl lg:text-2xl font-bold mb-4 text-gray-900 border-b border-gray-100 pb-3">Localisation</h2>
-              <div className="w-full h-64 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 rounded-xl flex items-center justify-center relative overflow-hidden border border-gray-200">
-                <div className="absolute inset-0 bg-gradient-to-br from-theme-primary/10 via-theme-primary/5 to-theme-accent/10" />
-                <div className="text-center z-10 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50">
-                  <MapPin className="w-14 h-14 text-theme-primary mx-auto mb-3 drop-shadow-lg" />
-                  <p className="text-gray-800 font-bold text-lg mb-1">{residence.city}</p>
-                  <p className="text-sm text-gray-600 mb-2">{residence.country}</p>
-                  {residence.address && (
-                    <p className="text-xs text-gray-500 mt-2 max-w-xs">{residence.address}</p>
-                  )}
+              
+              {/* Informations de localisation */}
+              <div className="mb-4 space-y-2">
+                <div className="flex items-center gap-2 text-gray-700">
+                  <MapPin className="w-5 h-5 text-theme-primary flex-shrink-0" />
+                  <div>
+                    <p className="font-semibold text-gray-900">{residence.city || 'Localisation'}</p>
+                    <p className="text-sm text-gray-600">{residence.country}</p>
+                  </div>
                 </div>
+                {residence.address && (
+                  <p className="text-sm text-gray-600 pl-7">{residence.address}</p>
+                )}
               </div>
+
+              {/* Carte */}
+              {residence.latitude && residence.longitude ? (
+                <div className="w-full h-96 rounded-xl overflow-hidden border border-gray-200 shadow-lg relative">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://www.google.com/maps?q=${residence.latitude},${residence.longitude}&hl=fr&z=15&output=embed`}
+                    className="w-full h-full"
+                  />
+                  <a
+                    href={`https://www.google.com/maps?q=${residence.latitude},${residence.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute bottom-2 right-2 bg-white px-3 py-2 rounded-lg shadow-md text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-1"
+                  >
+                    <MapPin className="w-3 h-3" />
+                    Ouvrir dans Google Maps
+                  </a>
+                </div>
+              ) : residence.address ? (
+                <div className="w-full h-96 rounded-xl overflow-hidden border border-gray-200 shadow-lg relative">
+                  <iframe
+                    width="100%"
+                    height="100%"
+                    style={{ border: 0 }}
+                    loading="lazy"
+                    allowFullScreen
+                    referrerPolicy="no-referrer-when-downgrade"
+                    src={`https://www.google.com/maps?q=${encodeURIComponent(residence.address + ', ' + residence.city + ', ' + residence.country)}&hl=fr&z=15&output=embed`}
+                    className="w-full h-full"
+                  />
+                  <a
+                    href={`https://www.google.com/maps?q=${encodeURIComponent(residence.address + ', ' + residence.city + ', ' + residence.country)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute bottom-2 right-2 bg-white px-3 py-2 rounded-lg shadow-md text-xs font-medium text-gray-700 hover:bg-gray-50 transition-colors flex items-center gap-1"
+                  >
+                    <MapPin className="w-3 h-3" />
+                    Ouvrir dans Google Maps
+                  </a>
+                </div>
+              ) : (
+                <div className="w-full h-96 bg-gradient-to-br from-gray-100 via-gray-50 to-gray-100 rounded-xl flex items-center justify-center relative overflow-hidden border border-gray-200">
+                  <div className="absolute inset-0 bg-gradient-to-br from-theme-primary/10 via-theme-primary/5 to-theme-accent/10" />
+                  <div className="text-center z-10 p-6 bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/50">
+                    <MapPin className="w-14 h-14 text-theme-primary mx-auto mb-3 drop-shadow-lg" />
+                    <p className="text-gray-800 font-bold text-lg mb-1">{residence.city || 'Localisation'}</p>
+                    <p className="text-sm text-gray-600 mb-2">{residence.country}</p>
+                    <p className="text-xs text-gray-500 mt-2">Carte non disponible</p>
+                  </div>
+                </div>
+              )}
+
+              {/* Informations supplémentaires */}
               <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:border-theme-primary/20 transition-all">
                   <div className="w-10 h-10 bg-theme-primary/10 rounded-lg flex items-center justify-center">
@@ -773,8 +837,8 @@ export default function DetailPage() {
                     <div>
                       <p className="text-xs text-gray-500 uppercase tracking-wide">Standing</p>
                       <p className="font-semibold text-gray-900">{residence.standing}</p>
-                </div>
-                </div>
+                    </div>
+                  </div>
                 )}
               </div>
             </Card>
@@ -931,6 +995,9 @@ export default function DetailPage() {
           </aside>
         </div>
       </div>
+
+      {/* Modal d'inscription Customer */}
+      <CustomerSignUpModal open={showSignUpModal} onOpenChange={setShowSignUpModal} />
     </div>
   );
 } 

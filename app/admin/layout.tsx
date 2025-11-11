@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
@@ -41,6 +42,7 @@ const allNavItems: NavItem[] = [
   { name: "Dashboard", icon: LayoutDashboard, href: "/admin/dashboard" },
   { name: "Profil", icon: User, href: "/admin/profile", permission: () => true }, // Accessible à tous les utilisateurs connectés
   { name: "Résidences", icon: Home, href: "/admin/residences", permission: () => true }, // Accessible à tous les utilisateurs connectés
+  { name: "Hebergements", icon: Home, href: "/admin/hebergements", permission: () => true }, // Accessible à tous les utilisateurs connectés
 ];
 
 // Fonction pour obtenir les initiales du nom
@@ -115,7 +117,7 @@ export default function AdminLayout({
   // Rediriger vers la page de login si pas d'utilisateur ou si l'utilisateur n'a pas accès (après le chargement)
   useEffect(() => {
     if (!loading && !user && !isLoginPage) {
-      router.push("auth/sign-in");
+      router.push("/auth/sign-in");
     } else if (!loading && user && !isLoginPage && !hasAdminAccess) {
       // Si l'utilisateur est un client, rediriger vers la page d'accueil
       router.push("/");
@@ -167,9 +169,18 @@ export default function AdminLayout({
         
         {/* Logo */}
         <div className="relative z-10 h-20 flex items-center px-6 border-b border-gray-200/50">
-          <div className="font-bold text-2xl text-[#f08400]">
-            RomBok
-          </div>
+          {/* Trait de division avec accent */}
+          <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#f08400]/60 to-transparent shadow-[0_2px_8px_rgba(240,132,0,0.3)]"></div>
+          <Link href="/admin/dashboard" className="group flex items-center relative">
+            <div className="absolute inset-0 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
+            <Image 
+              src="/logo/logo-custom.png" 
+              alt="Dolci Rêva Logo" 
+              width={120} 
+              height={60} 
+              className="h-12 w-auto transition-all duration-300 group-hover:scale-105 relative z-10" 
+            />
+          </Link>
         </div>
 
         {/* Navigation */}

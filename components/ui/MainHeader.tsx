@@ -54,18 +54,18 @@ export default function MainHeader() {
   
   // Debug: afficher les valeurs pour déboguer
   useEffect(() => {
-    if (isOwner()) {
-      console.log("Owner verification status debug:", {
-        rawVerificationStatus: user?.verification_status,
-        verificationStatus,
-        isOwnerVerified,
-        isOwnerNotVerified,
-        userType: user?.type,
-        showVerificationAlert,
-        pathname,
-        shouldShowAlert: isOwnerNotVerified && showVerificationAlert && pathname.startsWith("/admin"),
-      });
-    }
+    // if (isOwner()) {
+    //   console.log("Owner verification status debug:", {
+    //     rawVerificationStatus: user?.verification_status,
+    //     verificationStatus,
+    //     isOwnerVerified,
+    //     isOwnerNotVerified,
+    //     userType: user?.type,
+    //     showVerificationAlert,
+    //     pathname,
+    //     shouldShowAlert: isOwnerNotVerified && showVerificationAlert && pathname.startsWith("/admin"),
+    //   });
+    // }
   }, [verificationStatus, isOwnerVerified, isOwnerNotVerified, isOwner, user, showVerificationAlert, pathname]);
 
   const handleLogout = () => {
@@ -105,6 +105,7 @@ export default function MainHeader() {
   const menuItems: Array<{ label: string; href: string }> = [
     { label: "Home", href: "/" },
     { label: "Résidences", href: "/residences" },
+    { label: "Se loger", href: "/se-loger" },
     { label: "À propos", href: "/about" },
     { label: "Contact", href: "/contact" },
     { label: "FAQ", href: "/faq" },

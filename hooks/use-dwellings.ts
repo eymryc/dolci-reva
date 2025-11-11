@@ -4,7 +4,7 @@ import api from "@/lib/axios";
 import { toast } from "sonner";
 import { usePermissions } from "./use-permissions";
 
-// Types
+// Types (réutilisés depuis use-residences)
 export interface Amenity {
   id: number;
   name: string;
@@ -17,10 +17,30 @@ export interface Owner {
   phone: string;
   email: string;
   type: string;
+  verification_status: string;
+  verification_level: string;
+  phone_verified: boolean;
+  phone_verified_at?: string | null;
+  id_document_number?: string | null;
+  date_of_birth?: string | null;
+  address_line1?: string | null;
+  address_line2?: string | null;
+  postal_code?: string | null;
+  reputation_score: string;
+  total_bookings: number;
+  cancelled_bookings: number;
+  cancellation_rate: string;
+  is_premium: boolean;
+  premium_until?: string | null;
+  security_deposit?: string | null;
+  has_insurance: boolean;
+  admin_notes?: string | null;
   email_verified_at?: string | null;
   deleted_at?: string | null;
   created_at: string;
   updated_at: string;
+  verified_by?: number | null;
+  verified_at?: string | null;
 }
 
 export interface GalleryImage {
@@ -43,37 +63,39 @@ export interface AvailabilityStatus {
   next_available_date: string;
 }
 
-export interface Residence {
+export interface Dwelling {
   id: number;
   owner_id: number;
-  name: string;
   description?: string | null;
   address: string;
   city: string;
   country: string;
   latitude?: string | null;
   longitude?: string | null;
-  type: string; // STUDIO, etc.
-  max_guests: number;
-  bedrooms?: number | null;
-  bathrooms?: number | null;
+  phone: string;
+  whatsapp: string;
+  type: string; // STUDIO, APPARTEMENT, VILLA, etc.
+  structure_type: string; // MAISON_BASSE, IMMEUBLE
+  structure_type_label: string;
+  construction_type: string; // NOUVELLE_CONSTRUCTION, ANCIENNE
+  construction_type_label: string;
+  rental_status: string; // PENDING, etc.
+  security_deposit_month_number: number;
+  security_deposit_amount: number;
+  visite_price: number;
+  rent_advance_amount_number: number;
+  rent_advance_amount: number;
+  agency_fees_month_number: number;
+  agency_fees: number;
+  rent: number;
   piece_number?: number | null;
-  price: string;
-  standing: string; // STANDARD, etc.
-  average_rating: string;
-  total_ratings: number;
-  rating_count: number;
-  rating_percentage: number;
-  stars: number;
-  has_ratings: boolean;
-  is_available: boolean;
+  bathrooms?: number | null;
+  rooms?: number | null;
+  living_room?: number | null;
+  is_available?: boolean;
   is_active: boolean;
-  availability_status: AvailabilityStatus;
-  next_available_date: string;
-  unavailable_dates: string[];
   created_at: string;
   updated_at: string;
-  amenities: Amenity[];
   main_image_url?: string | null;
   main_image_thumb_url?: string | null;
   gallery_images: GalleryImage[];
@@ -81,32 +103,38 @@ export interface Residence {
   owner: Owner;
 }
 
-export interface ResidenceFormData {
-  name: string;
-  description?: string;
+export interface DwellingFormData {
+  phone: string;
+  whatsapp: string;
+  security_deposit_month_number: number;
+  visite_price: string;
+  rent_advance_amount_number: number;
+  rent: string;
+  description: string;
   address: string;
   city: string;
   country: string;
   latitude?: string;
   longitude?: string;
   type: string; // STUDIO, APARTMENT, VILLA, etc.
-  max_guests: number;
-  bedrooms?: number | null;
+  rooms?: number | null;
   bathrooms?: number | null;
   piece_number?: number | null;
-  price: string;
-  standing: string; // STANDARD, PREMIUM, LUXURY, etc.
+  living_room?: number | null;
+  structure_type: string; // MAISON_BASSE, IMMEUBLE
+  construction_type: string; // NOUVELLE_CONSTRUCTION, ANCIENNE
+  agency_fees_month_number?: number;
+  agency_fees?: string;
   owner_id?: number;
-  amenities?: number[];
 }
 
-// GET - Fetch all residences (admin)
-export function useResidences() {
+// GET - Fetch all dwellings (admin)
+export function useDwellings() {
   const { canViewAll, getUserId } = usePermissions();
   const userId = getUserId();
 
   return useQuery({
-    queryKey: ["residences", userId, canViewAll()],
+    queryKey: ["dwellings", userId, canViewAll()],
     queryFn: async () => {
       const params: Record<string, string | number | boolean | undefined> = {};
       
@@ -115,18 +143,18 @@ export function useResidences() {
         params.owner_id = userId;
       }
 
-      const response = await api.get("/residences", { params });
+      const response = await api.get("/dwellings", { params });
       // Handle Laravel paginated response
       if (response.data.data && Array.isArray(response.data.data)) {
-        return response.data.data as Residence[];
+        return response.data.data as Dwelling[];
       }
-      return [] as Residence[];
+      return [] as Dwelling[];
     },
   });
 }
 
-// GET - Fetch public residences with filters
-export interface PublicResidencesFilters {
+// GET - Fetch public dwellings with filters
+export interface PublicDwellingsFilters {
   search?: string;
   city?: string;
   type?: string;
@@ -134,9 +162,9 @@ export interface PublicResidencesFilters {
   order_price?: 'asc' | 'desc';
 }
 
-export function usePublicResidences(filters?: PublicResidencesFilters) {
+export function usePublicDwellings(filters?: PublicDwellingsFilters) {
   return useQuery({
-    queryKey: ["public", "residences", filters],
+    queryKey: ["public", "dwellings", filters],
     queryFn: async () => {
       const params: Record<string, string> = {};
       
@@ -146,42 +174,42 @@ export function usePublicResidences(filters?: PublicResidencesFilters) {
       if (filters?.standing) params.standing = filters.standing.trim();
       if (filters?.order_price) params.order_price = filters.order_price.toLowerCase();
       
-      const response = await api.get("/public/residences", { params });
+      const response = await api.get("/public/dwellings", { params });
       // Handle Laravel response
       if (response.data.data && Array.isArray(response.data.data)) {
-        return response.data.data as Residence[];
+        return response.data.data as Dwelling[];
       }
-      return [] as Residence[];
+      return [] as Dwelling[];
     },
   });
 }
 
-// GET - Fetch single public residence
-export function usePublicResidence(id: number) {
+// GET - Fetch single public dwelling
+export function usePublicDwelling(id: number) {
   return useQuery({
-    queryKey: ["public", "residences", id],
+    queryKey: ["public", "dwellings", id],
     queryFn: async () => {
-      const response = await api.get(`/public/residences/${id}`);
-      return response.data.data as Residence;
-    },
-  });
-}
-
-
-// GET - Fetch single residence
-export function useResidence(id: number) {
-  return useQuery({
-    queryKey: ["residences", id],
-    queryFn: async () => {
-      const response = await api.get(`/residences/${id}`);
-      return response.data.data as Residence;
+      const response = await api.get(`/public/dwellings/${id}`);
+      return response.data.data as Dwelling;
     },
     enabled: !!id,
   });
 }
 
-// POST - Create residence
-export function useCreateResidence() {
+// GET - Fetch single dwelling
+export function useDwelling(id: number) {
+  return useQuery({
+    queryKey: ["dwellings", id],
+    queryFn: async () => {
+      const response = await api.get(`/dwellings/${id}`);
+      return response.data.data as Dwelling;
+    },
+    enabled: !!id,
+  });
+}
+
+// POST - Create dwelling
+export function useCreateDwelling() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -189,7 +217,7 @@ export function useCreateResidence() {
       data,
       images,
     }: {
-      data: ResidenceFormData;
+      data: DwellingFormData;
       images?: { mainImage?: File | null; galleryImages?: File[] };
     }) => {
       const formData = new FormData();
@@ -223,29 +251,29 @@ export function useCreateResidence() {
         });
       }
 
-      const response = await api.post("/residences", formData, {
+      const response = await api.post("/dwellings", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      return response.data.data as Residence;
+      return response.data.data as Dwelling;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["residences"] });
-      toast.success("Residence created successfully!");
+      queryClient.invalidateQueries({ queryKey: ["dwellings"] });
+      toast.success("Hébergement créé avec succès !");
     },
     onError: (error: AxiosError<{ message?: string; error?: string }>) => {
       toast.error(
         error.response?.data?.message ||
           error.response?.data?.error ||
-          "Failed to create residence"
+          "Échec de la création de l'hébergement"
       );
     },
   });
 }
 
-// PUT - Update residence
-export function useUpdateResidence() {
+// PUT - Update dwelling
+export function useUpdateDwelling() {
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -255,12 +283,11 @@ export function useUpdateResidence() {
       images,
     }: {
       id: number;
-      data: ResidenceFormData;
+      data: DwellingFormData;
       images?: { mainImage?: File | null; galleryImages?: File[] };
     }) => {
       const formData = new FormData();
       
-      console.log(data);
       // Add form data fields
       Object.entries(data).forEach(([key, value]) => {
         if (key === "amenities") {
@@ -290,77 +317,100 @@ export function useUpdateResidence() {
         });
       }
 
-      const response = await api.put(`/residences/${id}`, formData, {
+      const response = await api.put(`/dwellings/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      return response.data.data as Residence;
+      return response.data.data as Dwelling;
     },
     onSuccess: (_, variables) => {
-      queryClient.invalidateQueries({ queryKey: ["residences"] });
+      queryClient.invalidateQueries({ queryKey: ["dwellings"] });
       queryClient.invalidateQueries({
-        queryKey: ["residences", variables.id],
+        queryKey: ["dwellings", variables.id],
       });
-      toast.success("Residence updated successfully!");
+      toast.success("Hébergement modifié avec succès !");
     },
     onError: (error: AxiosError<{ message?: string; error?: string }>) => {
       toast.error(
         error.response?.data?.message ||
           error.response?.data?.error ||
-          "Failed to update residence"
+          "Échec de la modification de l'hébergement"
       );
     },
   });
 }
 
-// DELETE - Delete residence
-export function useDeleteResidence() {
+// DELETE - Delete dwelling
+export function useDeleteDwelling() {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (id: number) => {
-      await api.delete(`/residences/${id}`);
+      await api.delete(`/dwellings/${id}`);
       return id;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["residences"] });
-      toast.success("Residence deleted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["dwellings"] });
+      toast.success("Hébergement supprimé avec succès !");
     },
     onError: (error: AxiosError<{ message?: string; error?: string }>) => {
       toast.error(
         error.response?.data?.message ||
           error.response?.data?.error ||
-          "Failed to delete residence"
+          "Échec de la suppression de l'hébergement"
       );
     },
   });
 }
 
-// POST - Book residence
-export interface ResidenceBookingData {
+// PUT - Toggle dwelling availability
+export function useToggleDwellingAvailability() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const response = await api.put(`/dwellings/${id}/availability`);
+      return response.data.data as Dwelling;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["dwellings"] });
+      toast.success("Hébergement marqué comme indisponible avec succès !");
+    },
+    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
+      toast.error(
+        error.response?.data?.message ||
+          error.response?.data?.error ||
+          "Échec de la mise à jour de la disponibilité"
+      );
+    },
+  });
+}
+
+// POST - Book dwelling
+export interface DwellingBookingData {
   start_date: string; // Format: YYYY-MM-DD
   end_date: string; // Format: YYYY-MM-DD
   guests: number;
 }
 
-export interface ResidenceBookingResponse {
+export interface DwellingBookingResponse {
   data?: unknown;
   payment_url?: string;
   message?: string;
 }
 
-export function useBookResidence() {
+export function useBookDwelling() {
   return useMutation({
     mutationFn: async ({
-      residenceId,
+      dwellingId,
       data,
     }: {
-      residenceId: number;
-      data: ResidenceBookingData;
+      dwellingId: number;
+      data: DwellingBookingData;
     }) => {
-      const response = await api.post(`/residences/${residenceId}/book`, data);
-      return response.data as ResidenceBookingResponse;
+      const response = await api.post(`/dwellings/${dwellingId}/book`, data);
+      return response.data as DwellingBookingResponse;
     },
     onSuccess: (data) => {
       toast.success(data.message || "Réservation effectuée avec succès !");

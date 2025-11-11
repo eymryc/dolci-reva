@@ -101,6 +101,15 @@ export interface SuspendOwnerData {
   reason: string;
 }
 
+export interface SubmitDocumentData {
+  document_type: DocumentType;
+  document_file: File;
+  document_number?: string;
+  document_issue_date?: string;
+  document_expiry_date?: string;
+  identity_document_type?: string;
+}
+
 // GET - Fetch all pending verifications (Admin)
 export function usePendingVerifications() {
   return useQuery({
@@ -177,7 +186,7 @@ export function useReviewDocument() {
       );
       return response.data.data as OwnerVerificationDocument;
     },
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owner-verifications"] });
       queryClient.invalidateQueries({ queryKey: ["owner-documents"] });
       queryClient.invalidateQueries({ queryKey: ["owner-verification", "status"] });
@@ -292,6 +301,70 @@ export function useSuspendOwner() {
           axiosError.response?.data?.error ||
           "Échec de la suspension du propriétaire"
       );
+    },
+  });
+}
+
+// POST - Submit a document (Owner)
+export function useSubmitDocument() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (data: SubmitDocumentData) => {
+      const formData = new FormData();
+      formData.append("document_type", data.document_type);
+      formData.append("document_file", data.document_file);
+      if (data.document_number) {
+        formData.append("document_number", data.document_number);
+      }
+      if (data.document_issue_date) {
+        formData.append("document_issue_date", data.document_issue_date);
+      }
+      if (data.document_expiry_date) {
+        formData.append("document_expiry_date", data.document_expiry_date);
+      }
+      if (data.identity_document_type) {
+        formData.append("identity_document_type", data.identity_document_type);
+      }
+
+      const response = await api.post("/owner-verification/documents", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      return response.data.data as OwnerVerificationDocument;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["owner-verification", "status"] });
+      queryClient.invalidateQueries({ queryKey: ["owner-documents"] });
+      toast.success("Document soumis avec succès !");
+    },
+    onError: (error: unknown) => {
+      // Les erreurs seront gérées par le composant qui utilise le hook
+      // On ne montre pas de toast ici car les erreurs détaillées seront affichées dans le panneau
+      const axiosError = error as { 
+        response?: { 
+          data?: { 
+            message?: string; 
+            error?: string;
+            data?: unknown;
+          } 
+        } 
+      };
+      
+      // Afficher un toast seulement s'il n'y a pas d'erreurs détaillées
+      const hasDetailedErrors = axiosError.response?.data?.data && 
+        typeof axiosError.response.data.data === "object" && 
+        !Array.isArray(axiosError.response.data.data) &&
+        Object.keys(axiosError.response.data.data).length > 0;
+      
+      if (!hasDetailedErrors) {
+        toast.error(
+          axiosError.response?.data?.message ||
+            axiosError.response?.data?.error ||
+            "Erreur lors de la soumission du document"
+        );
+      }
     },
   });
 }

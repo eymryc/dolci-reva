@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
 import ListingCard from '@/components/cards/ListingCard';
+import HeroSection from '@/components/sections/HeroSection';
 import { usePublicResidences, type PublicResidencesFilters } from '@/hooks/use-residences';
 import { Search } from "lucide-react";
 
@@ -98,69 +99,67 @@ export default function ResidencesPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-theme-primary to-theme-accent py-16">
-        <div className="container mx-auto px-2 md:px-0">
-          <div className="text-center text-white">
-            <h1 className="text-5xl font-bold mb-4">Résidences d&apos;Exception</h1>
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Trouvez votre résidence idéale pour un séjour confortable et mémorable. 
-              Du studio moderne à la villa de luxe, découvrez notre sélection exclusive.
-            </p>
-            
-            {/* Barre de recherche */}
-            <div className="max-w-5xl mx-auto bg-white rounded-2xl p-6 shadow-2xl">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10 pointer-events-none" />
-                  <Input
-                    placeholder="Rechercher..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-12 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 text-gray-900 bg-white"
-                  />
-                </div>
-                <Select value={selectedCity || 'all'} onValueChange={(value) => setSelectedCity(value === 'all' ? '' : value)}>
-                  <SelectTrigger className="h-12 text-gray-900 bg-white border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20">
-                    <SelectValue placeholder="Ville" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Toutes les villes</SelectItem>
-                    {cities.map((city) => (
-                      <SelectItem key={city} value={city}>
-                        {city}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={selectedType || 'all'} onValueChange={(value) => setSelectedType(value === 'all' ? '' : value)}>
-                  <SelectTrigger className="h-12 text-gray-900 bg-white border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20">
-                    <SelectValue placeholder="Type" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {types.map((type) => (
-                      <SelectItem key={type.value} value={type.value}>
-                        {type.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={selectedStanding || 'all'} onValueChange={(value) => setSelectedStanding(value === 'all' ? '' : value)}>
-                  <SelectTrigger className="h-12 text-gray-900 bg-white border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20">
-                    <SelectValue placeholder="Standing" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {standings.map((standing) => (
-                      <SelectItem key={standing.value} value={standing.value}>
-                        {standing.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Button className="h-12 bg-theme-primary hover:bg-theme-primary/90">
-                  <Search className="w-5 h-5 mr-2" />
-                  Rechercher
-                </Button>
+      <HeroSection
+        title="Découvrez nos Résidences"
+        subtitle="Explorez une sélection exclusive de résidences de luxe pour votre séjour en Côte d'Ivoire"
+        backgroundImage="/media/slide/slide3.jpg"
+      />
+      
+      <div className="container mx-auto px-2 md:px-0 py-8">
+        <div className="text-center">
+          {/* Barre de recherche */}
+          <div className="max-w-5xl mx-auto bg-white rounded-2xl p-6 shadow-2xl">
+            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10 pointer-events-none" />
+                <Input
+                  placeholder="Rechercher..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 h-12 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 text-gray-900 bg-white"
+                />
               </div>
+              <Select value={selectedCity || 'all'} onValueChange={(value) => setSelectedCity(value === 'all' ? '' : value)}>
+                <SelectTrigger className="h-12 text-gray-900 bg-white border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20">
+                  <SelectValue placeholder="Ville" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">Toutes les villes</SelectItem>
+                  {cities.map((city) => (
+                    <SelectItem key={city} value={city}>
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedType || 'all'} onValueChange={(value) => setSelectedType(value === 'all' ? '' : value)}>
+                <SelectTrigger className="h-12 text-gray-900 bg-white border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  {types.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Select value={selectedStanding || 'all'} onValueChange={(value) => setSelectedStanding(value === 'all' ? '' : value)}>
+                <SelectTrigger className="h-12 text-gray-900 bg-white border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20">
+                  <SelectValue placeholder="Standing" />
+                </SelectTrigger>
+                <SelectContent>
+                  {standings.map((standing) => (
+                    <SelectItem key={standing.value} value={standing.value}>
+                      {standing.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Button className="h-12 bg-theme-primary hover:bg-theme-primary/90">
+                <Search className="w-5 h-5 mr-2" />
+                Rechercher
+              </Button>
             </div>
           </div>
         </div>

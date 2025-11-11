@@ -1,37 +1,38 @@
 "use client";
 
-import React, { useRef } from "react";
+import React from "react";
 import { useRouter, useParams } from "next/navigation";
 import { ArrowLeft, Home, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ResidenceForm } from "@/components/admin/residences/ResidenceForm";
-import { useResidence, useUpdateResidence, type ResidenceFormData } from "@/hooks/use-residences";
+import { DwellingForm } from "@/components/admin/hebergements/DwellingForm";
+import { useDwelling, useUpdateDwelling, type DwellingFormData } from "@/hooks/use-dwellings";
 import { toast } from "sonner";
 
-export default function EditResidencePage() {
+export default function EditDwellingPage() {
   const router = useRouter();
   const params = useParams();
   const id = parseInt(params.id as string);
   
-  const { data: residence, isLoading, error } = useResidence(id);
-  const updateResidenceMutation = useUpdateResidence();
-  const handleServerErrorRef = useRef<((error: unknown) => { errorMessage: string; hasDetailedErrors: boolean }) | null>(null);
+  const { data: dwelling, isLoading, error } = useDwelling(id);
+  const updateDwellingMutation = useUpdateDwelling();
 
   const handleSubmit = (
-    data: ResidenceFormData,
+    data: DwellingFormData,
     images?: { mainImage?: File | null; galleryImages?: File[] }
   ) => {
-    updateResidenceMutation.mutate(
+    updateDwellingMutation.mutate(
       { id, data, images },
       {
         onSuccess: () => {
-          toast.success("Résidence mise à jour avec succès !");
-          router.push("/admin/residences");
+          toast.success("Hébergement mis à jour avec succès !");
+          router.push("/admin/hebergements");
         },
         onError: (error: unknown) => {
           // Utiliser handleServerError du formulaire si disponible
-          if (handleServerErrorRef.current) {
-            const { errorMessage, hasDetailedErrors } = handleServerErrorRef.current(error);
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const handleServerError = (window as any).__dwellingFormHandleServerError;
+          if (handleServerError) {
+            const { errorMessage, hasDetailedErrors } = handleServerError(error);
             // Afficher le toast seulement s'il n'y a pas d'erreurs détaillées
             if (!hasDetailedErrors) {
               toast.error(errorMessage);
@@ -42,7 +43,7 @@ export default function EditResidencePage() {
             toast.error(
               axiosError.response?.data?.message ||
                 axiosError.response?.data?.error ||
-                "Erreur lors de la mise à jour de la résidence"
+                "Erreur lors de la mise à jour de l'hébergement"
             );
           }
         },
@@ -51,7 +52,7 @@ export default function EditResidencePage() {
   };
 
   const handleCancel = () => {
-    router.push("/admin/residences");
+    router.push("/admin/hebergements");
   };
 
   if (isLoading) {
@@ -62,13 +63,13 @@ export default function EditResidencePage() {
             <Loader2 className="w-16 h-16 animate-spin text-[#f08400] mb-6 mx-auto" />
             <div className="absolute inset-0 w-16 h-16 border-4 border-[#f08400]/20 rounded-full mx-auto animate-pulse"></div>
           </div>
-          <p className="text-gray-600 text-sm font-medium">Chargement de la résidence...</p>
+          <p className="text-gray-600 text-sm font-medium">Chargement de l&apos;hébergement...</p>
         </div>
       </div>
     );
   }
 
-  if (error || !residence) {
+  if (error || !dwelling) {
     return (
       <div className="space-y-6 pb-8">
         <div className="flex items-start justify-between gap-4 pb-6 border-b border-gray-200/50">
@@ -80,7 +81,7 @@ export default function EditResidencePage() {
               <h1 className="text-4xl font-bold text-[#101828] mb-1.5">
                 Erreur
               </h1>
-              <p className="text-gray-600 text-sm font-medium">Impossible de charger la résidence</p>
+              <p className="text-gray-600 text-sm font-medium">Impossible de charger l&apos;hébergement</p>
             </div>
           </div>
           <Button
@@ -94,7 +95,7 @@ export default function EditResidencePage() {
           </Button>
         </div>
         <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-red-200/60 text-center">
-          <p className="text-red-600 font-medium mb-6">Erreur lors du chargement de la résidence</p>
+          <p className="text-red-600 font-medium mb-6">Erreur lors du chargement de l&apos;hébergement</p>
           <Button 
             onClick={handleCancel} 
             className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg hover:shadow-xl transition-all duration-200"
@@ -116,10 +117,10 @@ export default function EditResidencePage() {
           </div>
           <div>
             <h1 className="text-4xl font-bold text-[#101828] mb-1.5">
-              Modifier la résidence
+              Modifier l&apos;hébergement
             </h1>
             <p className="text-gray-600 text-sm font-medium">
-              Mettez à jour les informations de la résidence ci-dessous
+              Mettez à jour les informations de l&apos;hébergement ci-dessous
             </p>
           </div>
         </div>
@@ -136,33 +137,36 @@ export default function EditResidencePage() {
 
       {/* Form */}
       <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-200/60 hover:shadow-2xl hover:shadow-gray-200/70 transition-all duration-300">
-        <ResidenceForm
+        <DwellingForm
           onSubmit={handleSubmit}
           onCancel={handleCancel}
+          onServerError={() => ({ errorMessage: "", hasDetailedErrors: false })}
           defaultValues={{
-            name: residence.name,
-            description: residence.description || "",
-            address: residence.address,
-            city: residence.city,
-            country: residence.country,
-            latitude: residence.latitude || "",
-            longitude: residence.longitude || "",
-            type: residence.type,
-            max_guests: residence.max_guests,
-            bedrooms: residence.bedrooms,
-            bathrooms: residence.bathrooms,
-            piece_number: residence.piece_number,
-            price: residence.price,
-            standing: residence.standing,
-            owner_id: residence.owner_id,
-            amenities: residence.amenities?.map((amenity) => amenity.id) || [],
-            main_image_url: residence.main_image_url || null,
-            gallery_images: residence.gallery_images || [],
+            phone: dwelling.phone || "",
+            whatsapp: dwelling.whatsapp || "",
+            security_deposit_month_number: dwelling.security_deposit_month_number ?? null,
+            visite_price: dwelling.visite_price ? String(dwelling.visite_price) : "",
+            rent_advance_amount_number: dwelling.rent_advance_amount_number ?? null,
+            rent: dwelling.rent ? String(dwelling.rent) : "",
+            description: dwelling.description || "",
+            address: dwelling.address,
+            city: dwelling.city,
+            country: dwelling.country,
+            latitude: dwelling.latitude || "",
+            longitude: dwelling.longitude || "",
+            type: dwelling.type,
+            rooms: dwelling.rooms,
+            bathrooms: dwelling.bathrooms,
+            piece_number: dwelling.piece_number,
+            living_room: dwelling.living_room ?? null,
+            structure_type: dwelling.structure_type,
+            construction_type: dwelling.construction_type,
+            agency_fees_month_number: dwelling.agency_fees_month_number ?? null,
+            owner_id: dwelling.owner_id,
+            main_image_url: dwelling.main_image_url || null,
+            gallery_images: dwelling.gallery_images || [],
           }}
-          isLoading={updateResidenceMutation.isPending}
-          onServerError={(handleServerError) => {
-            handleServerErrorRef.current = handleServerError;
-          }}
+          isLoading={updateDwellingMutation.isPending}
         />
       </div>
     </div>

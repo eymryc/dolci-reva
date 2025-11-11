@@ -73,6 +73,7 @@ interface ResidenceFormProps {
     gallery_images?: Array<{ url?: string } | string>;
   };
   isLoading?: boolean;
+  onServerError?: (handleServerError: (error: unknown) => { errorMessage: string; hasDetailedErrors: boolean }) => void;
 }
 
 export function ResidenceForm({
@@ -80,6 +81,7 @@ export function ResidenceForm({
   onCancel,
   defaultValues,
   isLoading = false,
+  onServerError,
 }: ResidenceFormProps) {
   const { data: amenities = [], isLoading: isLoadingAmenities } = useAmenities();
   
@@ -176,10 +178,17 @@ export function ResidenceForm({
   });
 
   // Hook pour gérer les erreurs du serveur
-  const { serverErrors, showErrorPanel, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<ResidenceFormValues>({
+  const { serverErrors, showErrorPanel, handleServerError, clearErrors: clearServerErrors, setShowErrorPanel } = useServerErrors<ResidenceFormValues>({
     setError,
     fieldMapping,
   });
+
+  // Exposer handleServerError au parent via callback
+  useEffect(() => {
+    if (onServerError) {
+      onServerError(handleServerError);
+    }
+  }, [handleServerError, onServerError]);
   
   // État local pour la valeur de l'adresse pour une mise à jour immédiate
   const [localAddressValue, setLocalAddressValue] = useState(defaultValues?.address || "");
@@ -695,12 +704,12 @@ export function ResidenceForm({
                               ? "bg-[#f08400]/10 border-[#f08400] text-[#f08400] shadow-sm shadow-[#f08400]/20"
                               : "bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50"
                           }
-                          focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2
+                          focus:outline-none
                           active:scale-95
                         `}
                       >
                         {isSelected && (
-                          <div className="flex items-center justify-center w-4 h-4 rounded-full bg-blue-500 text-white">
+                          <div className="flex items-center justify-center w-4 h-4 rounded-full bg-[#f08400] text-white">
                             <Check className="w-2.5 h-2.5" />
                           </div>
                         )}

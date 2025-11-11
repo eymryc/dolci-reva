@@ -57,35 +57,40 @@ const ListingCard: React.FC<ListingCardProps> = ({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl relative border border-gray-100">
-      {/* Badges */}
-      <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
-        {type && (
-          <span className="bg-gradient-to-r from-theme-primary/90 to-orange-500/90 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm">
-            {type}
-          </span>
-        )}
-        {isPopular && (
-          <span className="bg-gradient-to-r from-theme-primary to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
-            ⭐ Populaire
-          </span>
-        )}
-      </div>
+    <Link href={linkHref} className="block h-full">
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden flex flex-col h-full group transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl relative border border-gray-100 cursor-pointer">
+        {/* Badges */}
+        <div className="absolute top-4 left-4 z-20 flex flex-col gap-2">
+          {type && (
+            <span className="bg-gradient-to-r from-theme-primary/90 to-orange-500/90 text-white text-xs font-semibold px-3 py-1.5 rounded-full shadow-lg backdrop-blur-sm">
+              {type}
+            </span>
+          )}
+          {isPopular && (
+            <span className="bg-gradient-to-r from-theme-primary to-orange-500 text-white text-xs font-bold px-3 py-1 rounded-full shadow-lg">
+              ⭐ Populaire
+            </span>
+          )}
+        </div>
 
-      {/* Bouton Favori */}
-      <button 
-        className={`absolute top-4 right-4 z-20 rounded-full p-2.5 shadow-lg transition-all duration-200 ${
-          isFavorited 
-            ? "bg-red-500 text-white" 
-            : "bg-white/90 text-gray-600 hover:bg-red-50 hover:text-red-500"
-        }`}
-        onClick={() => setIsFavorited(!isFavorited)}
-        aria-label={isFavorited ? "Retirer des favoris" : "Ajouter aux favoris"}
-      >
-        <svg className="w-5 h-5" fill={isFavorited ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-        </svg>
-      </button>
+        {/* Bouton Favori */}
+        <button 
+          className={`absolute top-4 right-4 z-20 rounded-full p-2.5 shadow-lg transition-all duration-200 ${
+            isFavorited 
+              ? "bg-red-500 text-white" 
+              : "bg-white/90 text-gray-600 hover:bg-red-50 hover:text-red-500"
+          }`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setIsFavorited(!isFavorited);
+          }}
+          aria-label={isFavorited ? "Retirer des favoris" : "Ajouter aux favoris"}
+        >
+          <svg className="w-5 h-5" fill={isFavorited ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+        </button>
 
       {/* Image avec overlay gradient */}
       <div className="relative overflow-hidden">
@@ -172,18 +177,16 @@ const ListingCard: React.FC<ListingCardProps> = ({
             <span className="text-2xl font-bold text-theme-primary">{price}</span>
             <span className="text-xs text-gray-500">La nuitée</span>
           </div>
-          <Link 
-            href={linkHref} 
-            className="group/btn flex items-center gap-2 bg-gradient-to-r from-theme-primary to-orange-500 text-white px-6 py-3 rounded-xl text-sm font-semibold shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 hover:from-orange-500 hover:to-theme-primary"
-          >
+          <div className="group/btn flex items-center gap-2 text-theme-primary text-sm font-semibold">
             Découvrir
             <svg className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
-          </Link>
+          </div>
         </div>
       </div>
     </div>
+    </Link>
   );
 };
 

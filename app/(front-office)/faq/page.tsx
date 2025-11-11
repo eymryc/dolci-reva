@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import HeroSection from '@/components/sections/HeroSection';
 
 export default function FAQPage() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -46,18 +47,15 @@ export default function FAQPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+      <HeroSection
+        title="Questions Fréquentes"
+        subtitle="Trouvez rapidement les réponses à vos questions sur nos services et réservations"
+        backgroundImage="/media/slide/slide3.jpg"
+      />
+      
       <section className="relative py-20 lg:py-28 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-theme-primary rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-theme-accent rounded-full blur-3xl"></div>
-        </div>
-
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-3xl mx-auto">
-            <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 text-center">
-              Questions fréquentes
-            </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-theme-primary to-theme-accent mx-auto mb-12 rounded-full"></div>
 
             <p className="text-lg text-slate-600 leading-relaxed mb-12 text-center">

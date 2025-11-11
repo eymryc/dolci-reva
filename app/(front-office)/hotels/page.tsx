@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import HotelCard from '@/components/cards/ListingCard';
+import HeroSection from '@/components/sections/HeroSection';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -140,14 +141,14 @@ export default function HotelsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-theme-primary to-theme-warm py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center text-white">
-            <h1 className="text-5xl font-bold mb-4">Hôtels de Prestige</h1>
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Découvrez notre sélection d&apos;hôtels d&apos;exception en Côte d&apos;Ivoire. 
-              Du luxe urbain aux éco-lodges en passant par les resorts de plage.
-            </p>
+      <HeroSection
+        title="Hôtels de Prestige"
+        subtitle="Découvrez notre sélection d'hôtels d'exception en Côte d'Ivoire. Du luxe urbain aux éco-lodges en passant par les resorts de plage"
+        backgroundImage="/media/slide/slide3.jpg"
+      />
+      
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="text-center">
             
             {/* Barre de recherche */}
             <div className="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-2xl">

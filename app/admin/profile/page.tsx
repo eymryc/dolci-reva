@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { 
@@ -9,7 +9,6 @@ import {
   Phone, 
   Save,
   Loader2,
-  Camera,
   Edit2,
   Shield,
   Star,
@@ -23,6 +22,9 @@ import {
   TrendingUp,
   Ban,
   ArrowLeft,
+  ShieldCheck,
+  Upload,
+  Clock,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
@@ -33,22 +35,37 @@ import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { toast } from "sonner";
-import api from "@/lib/axios";
+import { DocumentVerificationModal, DocumentVerificationFormData } from "@/components/admin/owner-verifications/DocumentVerificationModal";
 import { useBusinessTypes } from "@/hooks/use-business-types";
 import { Check } from "lucide-react";
+import { useVerificationStatus, DocumentType, useSubmitDocument } from "@/hooks/use-owner-verifications";
+import { useUpdateProfile } from "@/hooks/use-profile";
 
 export default function AdminProfilePage() {
-  const { user, refreshUser } = useAuth();
+  const { user } = useAuth();
   const router = useRouter();
   const { isAnyAdmin } = usePermissions();
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  
   // Charger les business types
   const { data: businessTypes = [], isLoading: isLoadingBusinessTypes } = useBusinessTypes();
   const [selectedBusinessTypes, setSelectedBusinessTypes] = useState<number[]>([]);
+  
+  // Hook pour la mise à jour du profil
+  const updateProfile = useUpdateProfile();
+  
+  // Charger les informations de vérification (si OWNER)
+  const { 
+    data: verificationStatus, 
+    isLoading: isLoadingVerification,
+    refetch: refetchVerification
+  } = useVerificationStatus(user?.type === "OWNER");
+  
+  // États pour la soumission de documents
+  const [isDocumentModalOpen, setIsDocumentModalOpen] = useState(false);
+  const [defaultDocumentType, setDefaultDocumentType] = useState<DocumentType | undefined>(undefined);
+  
+  // Hook pour la soumission de documents
+  const submitDocument = useSubmitDocument();
 
   const [formData, setFormData] = useState({
     first_name: user?.first_name || "",
@@ -103,44 +120,53 @@ export default function AdminProfilePage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
     
-    try {
-      await api.put("/profile", {
+    updateProfile.mutate(
+      {
         ...formData,
         services: selectedBusinessTypes,
-      });
-      await refreshUser();
-      setIsEditing(false);
-      toast.success("Profil mis à jour avec succès !");
-    } catch (error: unknown) {
-      const axiosError = error as { response?: { data?: { message?: string } } };
-      toast.error(axiosError.response?.data?.message || "Erreur lors de la mise à jour du profil");
-    } finally {
-      setIsLoading(false);
-    }
+      },
+      {
+        onSuccess: () => {
+          setIsEditing(false);
+        },
+      }
+    );
   };
 
-  const handleProfilePictureChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const openDocumentDialog = (documentType: DocumentType) => {
+    setDefaultDocumentType(documentType);
+    setIsDocumentModalOpen(true);
+  };
 
-    try {
-      const formData = new FormData();
-      formData.append("profile_picture", file);
-      
-      await api.post("/profile/picture", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      
-      await refreshUser();
-      toast.success("Photo de profil mise à jour avec succès !");
-    } catch (error: unknown) {
-      const axiosError = error as { response?: { data?: { message?: string } } };
-      toast.error(axiosError.response?.data?.message || "Erreur lors de la mise à jour de la photo");
+  const handleDocumentSubmit = async (data: DocumentVerificationFormData): Promise<void> => {
+    if (!data.document_file) {
+      throw new Error("Le fichier du document est requis");
     }
+    
+    return new Promise((resolve, reject) => {
+      submitDocument.mutate(
+        {
+          document_type: data.document_type,
+          document_file: data.document_file as File,
+          document_number: data.document_number,
+          document_issue_date: data.document_issue_date,
+          document_expiry_date: data.document_expiry_date,
+          identity_document_type: data.identity_document_type,
+        },
+        {
+          onSuccess: () => {
+            refetchVerification();
+            setIsDocumentModalOpen(false);
+            setDefaultDocumentType(undefined);
+            resolve();
+          },
+          onError: (error) => {
+            reject(error);
+          },
+        }
+      );
+    });
   };
 
   const getUserInitials = () => {
@@ -223,20 +249,6 @@ export default function AdminProfilePage() {
                     <span className="text-3xl font-bold text-white">{getUserInitials()}</span>
                     )}
                   </div>
-                  <label
-                    htmlFor="profile-picture"
-                  className="absolute bottom-0 right-0 w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-blue-600 transition-all duration-200 border-2 border-white"
-                  >
-                  <Camera className="w-4 h-4 text-white" />
-                    <input
-                      id="profile-picture"
-                      type="file"
-                      accept="image/*"
-                      ref={fileInputRef}
-                      onChange={handleProfilePictureChange}
-                      className="hidden"
-                    />
-                  </label>
                 {user.is_verified && (
                   <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
                       <CheckCircle2 className="w-4 h-4 text-white" />
@@ -323,6 +335,12 @@ export default function AdminProfilePage() {
             <TabsTrigger value="business" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
               <Building2 className="w-4 h-4" />
               Business
+            </TabsTrigger>
+          )}
+          {user.type === "OWNER" && (
+            <TabsTrigger value="verification" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+              <ShieldCheck className="w-4 h-4" />
+              Vérification
             </TabsTrigger>
           )}
           {user.wallet && (
@@ -616,10 +634,10 @@ export default function AdminProfilePage() {
                       <div className="flex items-center gap-3 pt-4">
                         <Button
                           type="submit"
-                          disabled={isLoading}
+                          disabled={updateProfile.isPending}
                           className="bg-[#f08400] hover:bg-[#d87200] text-white h-12"
                         >
-                          {isLoading ? (
+                          {updateProfile.isPending ? (
                             <>
                               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                               Enregistrement...
@@ -912,6 +930,225 @@ export default function AdminProfilePage() {
                 </div>
               </div>
             </Card>
+          </TabsContent>
+        )}
+
+        {/* Verification */}
+        {user.type === "OWNER" && (
+          <TabsContent value="verification" className="space-y-6 mt-0">
+            {isLoadingVerification ? (
+              <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 p-12">
+                <div className="flex items-center justify-center">
+                  <Loader2 className="w-8 h-8 animate-spin text-[#f08400]" />
+                  <span className="ml-3 text-sm text-gray-500">Chargement des informations de vérification...</span>
+                </div>
+              </Card>
+            ) : (
+              <>
+                {/* Statut de vérification */}
+                <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-5 border-b border-gray-200/50">
+                    <div className="flex items-center gap-4">
+                      <div className="p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md">
+                        <ShieldCheck className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h2 className="text-lg font-bold text-gray-900">Statut de vérification</h2>
+                        <p className="text-xs text-gray-500 mt-0.5">Informations sur votre vérification</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="p-6">
+                    <div className="space-y-3">
+                      {/* Vérification d'identité - Ligne principale - Toujours affichée */}
+                      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50/50 to-white rounded-lg border border-gray-200/50 hover:border-gray-300 transition-all duration-200">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-blue-100 rounded-lg">
+                            <ShieldCheck className="w-5 h-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <label className="text-sm font-semibold text-gray-900 block">Vérification d&apos;identité pièce d&apos;identité</label>
+                            <p className="text-xs text-gray-500 mt-0.5">
+                              {(() => {
+                                const identityDoc = verificationStatus?.documents?.find(doc => doc.document_type === "IDENTITY");
+                                if (identityDoc) {
+                                  if (identityDoc.status === "APPROVED") {
+                                    return "Vérifiée";
+                                  } else if (identityDoc.status === "REJECTED") {
+                                    return "Rejetée";
+                                  } else {
+                                    return "En attente de vérification";
+                                  }
+                                }
+                                return "Non vérifiée";
+                              })()}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3">
+                          {(() => {
+                            const identityDoc = verificationStatus?.documents?.find(doc => doc.document_type === "IDENTITY");
+                            if (identityDoc) {
+                              if (identityDoc.status === "APPROVED") {
+                                return (
+                                  <Badge className="bg-green-100 text-green-700 border-green-200 px-3 py-1">
+                                    <CheckCircle2 className="w-3 h-3 mr-1 inline" />
+                                    Vérifiée
+                                  </Badge>
+                                );
+                              } else if (identityDoc.status === "REJECTED") {
+                                return (
+                                  <Badge className="bg-red-100 text-red-700 border-red-200 px-3 py-1">
+                                    <XCircle className="w-3 h-3 mr-1 inline" />
+                                    Rejetée
+                                  </Badge>
+                                );
+                              } else {
+                                return (
+                                  <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200 px-3 py-1">
+                                    <Clock className="w-3 h-3 mr-1 inline" />
+                                    En attente
+                                  </Badge>
+                                );
+                              }
+                            }
+                            return (
+                              <Badge className="bg-gray-100 text-gray-700 border-gray-200 px-3 py-1">
+                                <XCircle className="w-3 h-3 mr-1 inline" />
+                                Non vérifiée
+                              </Badge>
+                            );
+                          })()}
+                          {(() => {
+                            const identityDoc = verificationStatus?.documents?.find(doc => doc.document_type === "IDENTITY");
+                            if (!identityDoc || identityDoc.status === "REJECTED") {
+                              return (
+                                <Button
+                                  onClick={() => openDocumentDialog("IDENTITY")}
+                                  size="sm"
+                                  className="bg-[#f08400] hover:bg-[#d87200] text-white"
+                                >
+                                  <Upload className="w-4 h-4 mr-2" />
+                                  Initier la vérification
+                                </Button>
+                              );
+                            }
+                            return null;
+                          })()}
+                        </div>
+                      </div>
+
+                      {/* Autres informations en grille - Affichées seulement si verification existe */}
+                      {verificationStatus?.verification && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+                          <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Statut global</label>
+                            <div className="mt-1">{getStatusBadge(verificationStatus.verification.verification_status)}</div>
+                          </div>
+
+                          <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Niveau de vérification</label>
+                            <p className="text-sm font-semibold text-gray-900 mt-1">
+                              {verificationStatus.verification.verification_level || "N/A"}
+                            </p>
+                          </div>
+
+                          <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Téléphone vérifié</label>
+                            <div className="flex items-center gap-2 mt-1">
+                              {verificationStatus.verification.phone_verified ? (
+                                <>
+                                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                  <span className="text-sm text-green-600 font-semibold">Oui</span>
+                                </>
+                              ) : (
+                                <>
+                                  <XCircle className="w-4 h-4 text-red-600" />
+                                  <span className="text-sm text-red-600 font-semibold">Non</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          {verificationStatus.verification.phone_verified_at && (
+                            <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                              <label className="text-xs font-medium text-gray-500 mb-1.5 block">Date de vérification téléphone</label>
+                              <p className="text-sm font-semibold text-gray-900 mt-1">
+                                {new Date(verificationStatus.verification.phone_verified_at).toLocaleDateString('fr-FR')}
+                              </p>
+                            </div>
+                          )}
+
+                          {verificationStatus.verification.verified_at && (
+                            <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                              <label className="text-xs font-medium text-gray-500 mb-1.5 block">Date de vérification</label>
+                              <p className="text-sm font-semibold text-gray-900 mt-1">
+                                {new Date(verificationStatus.verification.verified_at).toLocaleDateString('fr-FR')}
+                              </p>
+                            </div>
+                          )}
+
+                          <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Assurance</label>
+                            <div className="flex items-center gap-2 mt-1">
+                              {verificationStatus.verification.has_insurance ? (
+                                <>
+                                  <CheckCircle2 className="w-4 h-4 text-green-600" />
+                                  <span className="text-sm text-green-600 font-semibold">Oui</span>
+                                </>
+                              ) : (
+                                <>
+                                  <XCircle className="w-4 h-4 text-red-600" />
+                                  <span className="text-sm text-red-600 font-semibold">Non</span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          {verificationStatus.verification.security_deposit !== null && verificationStatus.verification.security_deposit !== undefined && (
+                            <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                              <label className="text-xs font-medium text-gray-500 mb-1.5 block">Dépôt de garantie</label>
+                              <p className="text-sm font-semibold text-gray-900 mt-1">
+                                {verificationStatus.verification.security_deposit.toFixed(2)} €
+                              </p>
+                            </div>
+                          )}
+
+                          {verificationStatus.verification.reputation_score !== undefined && verificationStatus.verification.reputation_score !== null && (
+                            <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                              <label className="text-xs font-medium text-gray-500 mb-1.5 block">Score de réputation</label>
+                              <p className="text-sm font-semibold text-gray-900 mt-1">
+                                {verificationStatus.verification.reputation_score.toFixed(2)}
+                              </p>
+                            </div>
+                          )}
+
+                          {verificationStatus.verification.admin_notes && (
+                            <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50 md:col-span-2 lg:col-span-3">
+                              <label className="text-xs font-medium text-gray-500 mb-1.5 block">Notes administrateur</label>
+                              <p className="text-sm text-gray-900 mt-1 whitespace-pre-wrap">
+                                {verificationStatus.verification.admin_notes}
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+
+              </>
+            )}
+
+            {/* Dialog pour soumettre un document */}
+            <DocumentVerificationModal
+              open={isDocumentModalOpen}
+              onOpenChange={setIsDocumentModalOpen}
+              onSubmit={handleDocumentSubmit}
+              defaultDocumentType={defaultDocumentType}
+              isLoading={submitDocument.isPending}
+            />
           </TabsContent>
         )}
 

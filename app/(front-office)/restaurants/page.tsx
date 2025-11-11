@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import HeroSection from '@/components/sections/HeroSection';
 import Image from 'next/image';
 import Link from 'next/link';
 import { 
@@ -158,14 +159,14 @@ export default function RestaurantsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-theme-warm to-theme-primary py-16">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center text-white">
-            <h1 className="text-5xl font-bold mb-4">Gastronomie d&apos;Exception</h1>
-            <p className="text-xl mb-8 max-w-3xl mx-auto">
-              Découvrez les saveurs authentiques de Côte d&apos;Ivoire et du monde. 
-              De la cuisine traditionnelle aux créations contemporaines.
-            </p>
+      <HeroSection
+        title="Gastronomie d'Exception"
+        subtitle="Découvrez les saveurs authentiques de Côte d'Ivoire et du monde. De la cuisine traditionnelle aux créations contemporaines"
+        backgroundImage="/media/slide/slide3.jpg"
+      />
+      
+      <div className="max-w-6xl mx-auto px-4 py-8">
+        <div className="text-center">
             
             {/* Barre de recherche */}
             <div className="max-w-4xl mx-auto bg-white rounded-2xl p-6 shadow-2xl">

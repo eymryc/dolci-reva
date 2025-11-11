@@ -77,6 +77,8 @@ export default function SignUpPage() {
     clearErrors,
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
+    mode: "onSubmit",
+    reValidateMode: "onChange",
     defaultValues: {
       acceptTerms: false,
       acceptNewsletter: false,
@@ -530,7 +532,11 @@ export default function SignUpPage() {
                         type="text"
                         placeholder="Prénom"
                         {...register("firstName")}
-                        className="pl-12 h-14 border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-theme-primary focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md"
+                        className={`pl-12 h-14 border-2 bg-white/50 backdrop-blur-sm focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md ${
+                          errors.firstName 
+                            ? "border-red-500 focus:border-red-500" 
+                            : "border-gray-200 focus:border-theme-primary"
+                        }`}
                         aria-invalid={!!errors.firstName}
                       />
                     </div>
@@ -550,7 +556,11 @@ export default function SignUpPage() {
                         type="text"
                         placeholder="Nom"
                         {...register("lastName")}
-                        className="pl-12 h-14 border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-theme-primary focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md"
+                        className={`pl-12 h-14 border-2 bg-white/50 backdrop-blur-sm focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md ${
+                          errors.lastName 
+                            ? "border-red-500 focus:border-red-500" 
+                            : "border-gray-200 focus:border-theme-primary"
+                        }`}
                         aria-invalid={!!errors.lastName}
                       />
                     </div>
@@ -574,7 +584,11 @@ export default function SignUpPage() {
                         type="email"
                         placeholder="votre@email.com"
                         {...register("email")}
-                        className="pl-12 h-14 border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-theme-primary focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md"
+                        className={`pl-12 h-14 border-2 bg-white/50 backdrop-blur-sm focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md ${
+                          errors.email 
+                            ? "border-red-500 focus:border-red-500" 
+                            : "border-gray-200 focus:border-theme-primary"
+                        }`}
                         aria-invalid={!!errors.email}
                       />
                     </div>
@@ -594,7 +608,11 @@ export default function SignUpPage() {
                         type="tel"
                         placeholder="+225 XX XX XX XX"
                         {...register("phone")}
-                        className="pl-12 h-14 border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-theme-primary focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md"
+                        className={`pl-12 h-14 border-2 bg-white/50 backdrop-blur-sm focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md ${
+                          errors.phone 
+                            ? "border-red-500 focus:border-red-500" 
+                            : "border-gray-200 focus:border-theme-primary"
+                        }`}
                         aria-invalid={!!errors.phone}
                       />
                     </div>
@@ -618,7 +636,11 @@ export default function SignUpPage() {
                         type={showPassword ? "text" : "password"}
                         placeholder="Votre mot de passe"
                         {...register("password")}
-                        className="pl-12 pr-12 h-14 border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-theme-primary focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md"
+                        className={`pl-12 pr-12 h-14 border-2 bg-white/50 backdrop-blur-sm focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md ${
+                          errors.password 
+                            ? "border-red-500 focus:border-red-500" 
+                            : "border-gray-200 focus:border-theme-primary"
+                        }`}
                         aria-invalid={!!errors.password}
                       />
                       <button
@@ -649,7 +671,11 @@ export default function SignUpPage() {
                         type={showConfirmPassword ? "text" : "password"}
                         placeholder="Confirmer votre mot de passe"
                         {...register("confirmPassword")}
-                        className="pl-12 pr-12 h-14 border-2 border-gray-200 bg-white/50 backdrop-blur-sm focus:border-theme-primary focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md"
+                        className={`pl-12 pr-12 h-14 border-2 bg-white/50 backdrop-blur-sm focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md ${
+                          errors.confirmPassword 
+                            ? "border-red-500 focus:border-red-500" 
+                            : "border-gray-200 focus:border-theme-primary"
+                        }`}
                         aria-invalid={!!errors.confirmPassword}
                       />
                       <button

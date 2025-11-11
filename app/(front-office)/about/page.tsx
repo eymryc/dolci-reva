@@ -1,18 +1,17 @@
+import HeroSection from '@/components/sections/HeroSection';
+
 export default function AboutPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-50">
+      <HeroSection
+        title="À propos de nous"
+        subtitle="Bienvenue chez Dolci Rêva, votre guide de confiance pour découvrir les trésors cachés de la Côte d'Ivoire"
+        backgroundImage="/media/slide/slide3.jpg"
+      />
+      
       <section className="relative py-20 lg:py-28 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-96 h-96 bg-theme-primary rounded-full blur-3xl"></div>
-          <div className="absolute bottom-20 right-10 w-96 h-96 bg-theme-accent rounded-full blur-3xl"></div>
-        </div>
-
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6 text-center">
-              À propos de nous
-            </h1>
             <div className="w-24 h-1 bg-gradient-to-r from-theme-primary to-theme-accent mx-auto mb-12 rounded-full"></div>
 
             <div className="prose prose-lg max-w-none">

@@ -266,18 +266,25 @@ export function CustomerSignUpModal({ open, onOpenChange }: CustomerSignUpModalP
                 Numéro de téléphone
               </Label>
               <div className="relative">
-                <RiPhoneLine className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10" />
-                <Input
-                  id="phone"
-                  type="tel"
-                  placeholder="+225 XX XX XX XX"
-                  {...register("phone")}
-                  className={`pl-10 h-12 border-2 ${
+                <PhoneInput
+                  onChange={(value) => {
+                    if (value) {
+                      setValue("phone", value, { shouldValidate: false });
+                      // Valider seulement après un délai pour éviter les erreurs pendant la saisie
+                      setTimeout(() => {
+                        setValue("phone", value, { shouldValidate: true });
+                      }, 500);
+                    }
+                  }}
+                  register={register("phone")}
+                  placeholder="Entrez votre numéro"
+                  defaultCountry="ci"
+                  error={!!errors.phone}
+                  className={`h-12 border-2 ${
                     errors.phone 
                       ? "border-red-500 focus:border-red-500" 
-                      : "border-gray-200 focus:border-theme-primary"
+                      : "border-gray-200"
                   }`}
-                  aria-invalid={!!errors.phone}
                 />
               </div>
               {errors.phone && (

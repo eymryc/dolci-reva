@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import PhoneInput from "@/components/ui/PhoneInput";
 import {
   Select,
   SelectContent,
@@ -24,8 +25,8 @@ import { useServerErrors } from "@/hooks/use-server-errors";
 
 // Schema de validation
 const dwellingSchema = z.object({
-  phone: z.string().min(1, "Le numéro de téléphone est requis").max(20, "Le numéro de téléphone ne peut pas dépasser 20 caractères"),
-  whatsapp: z.string().min(1, "Le numéro WhatsApp est requis").max(20, "Le numéro WhatsApp ne peut pas dépasser 20 caractères"),
+  phone: z.string().min(8, "Le numéro de téléphone est invalide"),
+  whatsapp: z.string().min(8, "Le numéro WhatsApp est invalide"),
   security_deposit_month_number: z.number().int("Le nombre de mois de caution doit être un entier").min(0, "Le nombre de mois de caution doit être au moins 0").max(12, "Le nombre de mois de caution ne peut pas dépasser 12").nullable().optional(),
   visite_price: z.string().min(1, "Le prix de visite est requis").max(1000000000, "Le prix de visite ne peut pas dépasser 1000000000"),
   rent_advance_amount_number: z.number().int("Le nombre de mois d'avance doit être un entier").min(0, "Le nombre de mois d'avance doit être au moins 0").max(12, "Le nombre de mois d'avance ne peut pas dépasser 12").nullable().optional(),
@@ -385,11 +386,24 @@ export function DwellingForm({
               <Label htmlFor="phone" className="text-sm">
                 Téléphone <span className="text-red-500">*</span>
               </Label>
-              <Input
-                id="phone"
-                placeholder="Exemple : +225 07 12 34 56 78"
-                {...register("phone")}
-                className={errors.phone ? "border-red-500 h-12" : "h-12"}
+              <PhoneInput
+                onChange={(value) => {
+                  if (value) {
+                    setValue("phone", value, { shouldValidate: false });
+                    setTimeout(() => {
+                      setValue("phone", value, { shouldValidate: true });
+                    }, 500);
+                  }
+                }}
+                register={register("phone")}
+                placeholder="Entrez votre numéro"
+                defaultCountry="ci"
+                error={!!errors.phone}
+                className={`h-12 border-2 ${
+                  errors.phone
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-gray-200"
+                }`}
               />
               {errors.phone && (
                 <p className="text-sm text-red-500">{errors.phone.message}</p>
@@ -400,11 +414,24 @@ export function DwellingForm({
               <Label htmlFor="whatsapp" className="text-sm">
                 WhatsApp <span className="text-red-500">*</span>
               </Label>
-              <Input
-                id="whatsapp"
-                placeholder="Exemple : +225 07 12 34 56 78"
-                {...register("whatsapp")}
-                className={errors.whatsapp ? "border-red-500 h-12" : "h-12"}
+              <PhoneInput
+                onChange={(value) => {
+                  if (value) {
+                    setValue("whatsapp", value, { shouldValidate: false });
+                    setTimeout(() => {
+                      setValue("whatsapp", value, { shouldValidate: true });
+                    }, 500);
+                  }
+                }}
+                register={register("whatsapp")}
+                placeholder="Entrez votre numéro WhatsApp"
+                defaultCountry="ci"
+                error={!!errors.whatsapp}
+                className={`h-12 border-2 ${
+                  errors.whatsapp
+                    ? "border-red-500 focus:border-red-500"
+                    : "border-gray-200"
+                }`}
               />
               {errors.whatsapp && (
                 <p className="text-sm text-red-500">{errors.whatsapp.message}</p>

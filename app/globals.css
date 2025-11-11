@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "intl-tel-input/build/css/intlTelInput.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -413,4 +414,34 @@ body {
 
 .react-datepicker__triangle {
   display: none;
+}
+
+/* IntlTelInput Styles */
+.iti {
+  width: 100% !important;
+}
+
+.iti__flag-container {
+  width: auto;
+}
+
+.iti input,
+.iti input[type=tel],
+.iti input[type=text] {
+  width: 100% !important;
+  outline: none !important;
+}
+
+.iti input:focus,
+.iti input[type=tel]:focus,
+.iti input[type=text]:focus {
+  outline: none !important;
+}
+
+.iti--allow-dropdown .iti__flag-container:hover .iti__selected-flag {
+  background-color: transparent !important;
+}
+
+.iti__selected-flag:focus {
+  outline: none !important;
 }

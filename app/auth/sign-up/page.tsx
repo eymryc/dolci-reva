@@ -10,7 +10,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
-import { RiEyeLine, RiEyeOffLine, RiMailLine, RiLockLine, RiUserLine, RiPhoneLine, RiHomeLine, RiSearchLine, RiArrowLeftLine, RiCheckLine } from "react-icons/ri";
+import PhoneInput from "@/components/ui/PhoneInput";
+import { RiEyeLine, RiEyeOffLine, RiMailLine, RiLockLine, RiUserLine, RiHomeLine, RiSearchLine, RiArrowLeftLine, RiCheckLine } from "react-icons/ri";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -602,18 +603,25 @@ export default function SignUpPage() {
                     </Label>
                     <div className="relative">
                       <div className="absolute inset-0 bg-gradient-to-r from-theme-primary/0 via-theme-primary/5 to-theme-accent/0 rounded-lg opacity-0 group-focus-within:opacity-100 transition-opacity duration-300"></div>
-                      <RiPhoneLine className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 group-focus-within:text-theme-primary transition-colors duration-300 w-5 h-5 z-10" />
-                      <Input
-                        id="phone"
-                        type="tel"
-                        placeholder="+225 XX XX XX XX"
-                        {...register("phone")}
-                        className={`pl-12 h-14 border-2 bg-white/50 backdrop-blur-sm focus:ring-4 focus:ring-theme-primary/20 transition-all duration-300 rounded-xl shadow-sm hover:shadow-md ${
+                      <PhoneInput
+                        onChange={(value) => {
+                          if (value) {
+                            setValue("phone", value, { shouldValidate: false });
+                            // Valider seulement après un délai pour éviter les erreurs pendant la saisie
+                            setTimeout(() => {
+                              setValue("phone", value, { shouldValidate: true });
+                            }, 500);
+                          }
+                        }}
+                        register={register("phone")}
+                        placeholder="Entrez votre numéro"
+                        defaultCountry="ci"
+                        error={!!errors.phone}
+                        className={`h-14 border-2 bg-white/50 backdrop-blur-sm transition-all duration-300 rounded-xl shadow-sm hover:shadow-md ${
                           errors.phone 
                             ? "border-red-500 focus:border-red-500" 
-                            : "border-gray-200 focus:border-theme-primary"
+                            : "border-gray-200"
                         }`}
-                        aria-invalid={!!errors.phone}
                       />
                     </div>
                     {errors.phone && (

@@ -24,7 +24,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
   const variantClasses = {
     primary: "bg-gradient-to-r from-theme-primary to-orange-500 text-white hover:from-orange-500 hover:to-theme-primary shadow-lg hover:shadow-xl",
     secondary: "bg-gray-100 text-gray-900 hover:bg-gray-200",
-    outline: "border-2 border-theme-primary text-theme-primary hover:bg-theme-primary hover:text-white",
+    outline: "border-2 border-theme-primary text-theme-primary hover:bg-theme-primary/10 hover:text-theme-primary",
   };
   
   const sizeClasses = {

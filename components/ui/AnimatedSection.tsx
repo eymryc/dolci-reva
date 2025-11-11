@@ -16,7 +16,7 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
 }) => {
   const [mounted, setMounted] = useState(false);
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
+  const isInView = useInView(ref, { once: true, margin: "-50px" });
 
   // Ensure component only runs on client to prevent hydration mismatch
   useEffect(() => {
@@ -34,9 +34,9 @@ const AnimatedSection: React.FC<AnimatedSectionProps> = ({
   return (
     <motion.div
       ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.6, delay }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 1, y: 0 }}
+      transition={{ duration: 0.4, delay }}
       className={className}
     >
       {children}

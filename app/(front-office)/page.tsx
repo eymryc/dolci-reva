@@ -5,7 +5,6 @@ import { EmblaOptionsType } from 'embla-carousel'
 import '@/components/carousel/css/embla.css'
 import TrueFocus from '@/components/animations/textanimate/TextAnimations/TrueFocus/TrueFocus';
 import SectionHeader from '@/components/ui/SectionHeader';
-import AnimatedSection from '@/components/ui/AnimatedSection';
 import AnimatedButton from '@/components/ui/AnimatedButton';
 import ListingCard from '@/components/cards/ListingCard';
 import HebergementListingCard from '@/components/cards/HebergementListingCard';
@@ -13,6 +12,7 @@ import React from 'react';
 import { usePublicResidences } from '@/hooks/use-residences';
 import { usePublicDwellings } from '@/hooks/use-dwellings';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 // import GenericCarousel from '@/components/carousel/GenericCarousel';
 
 
@@ -27,14 +27,15 @@ const IMAGES = [
 ]
 
 export default function Home() {
+  const router = useRouter();
   const { data: residences, isLoading, error } = usePublicResidences();
   const { data: dwellings, isLoading: isLoadingDwellings, error: errorDwellings } = usePublicDwellings();
 
   // Format price with space separator
   const formatPrice = (price: string) => {
-    return parseFloat(price).toLocaleString('fr-FR', { 
+    return parseFloat(price).toLocaleString('fr-FR', {
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0 
+      maximumFractionDigits: 0
     });
   };
   return (
@@ -76,76 +77,39 @@ export default function Home() {
               Découvrez les trésors cachés de la{' '}
               <span className="font-semibold text-theme-primary">Côte d&apos;Ivoire</span>.
               <br className="hidden md:block" />
-              <span className="text-gray-700">
+              <span className="text-gray-700 text-justify">
                 Des hôtels d&apos;exception, une gastronomie raffinée, des lieux magiques qui vous feront vivre des moments inoubliables.
               </span>
             </p>
 
             {/* Enhanced CTA Buttons */}
-            <AnimatedSection delay={0.3}>
-              <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-12 md:mb-16">
-                <Link href="/residences">
-                  <AnimatedButton size="lg" variant="primary" className="w-full sm:w-auto min-w-[200px] shadow-xl hover:shadow-2xl">
-                    <span className="flex items-center justify-center gap-2">
-                      Explorer maintenant
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                      </svg>
-                    </span>
-                  </AnimatedButton>
-                </Link>
-                <Link href="/residences">
-                  <AnimatedButton size="lg" variant="outline" className="w-full sm:w-auto min-w-[200px] bg-white/90 backdrop-blur-sm border-2 hover:bg-white">
-                    <span className="flex items-center justify-center gap-2">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
-                      Découvrir les lieux
-                    </span>
-                  </AnimatedButton>
-                </Link>
-              </div>
-            </AnimatedSection>
-
-            {/* Enhanced Stats with Glassmorphism */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
-              <div className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/90">
-                <div className="absolute inset-0 bg-gradient-to-br from-theme-primary/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative">
-                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-theme-primary to-orange-500 bg-clip-text text-transparent mb-2">
-                    500+
-                  </div>
-                  <div className="text-xs md:text-sm text-gray-600 font-medium">Lieux découverts</div>
-                </div>
-              </div>
-              <div className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/90">
-                <div className="absolute inset-0 bg-gradient-to-br from-yellow-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative">
-                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-theme-primary to-orange-500 bg-clip-text text-transparent mb-2">
-                    50+
-                  </div>
-                  <div className="text-xs md:text-sm text-gray-600 font-medium">Villes couvertes</div>
-                </div>
-              </div>
-              <div className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/90">
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-300/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative">
-                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-theme-primary to-orange-500 bg-clip-text text-transparent mb-2">
-                    10K+
-                  </div>
-                  <div className="text-xs md:text-sm text-gray-600 font-medium">Visiteurs satisfaits</div>
-                </div>
-              </div>
-              <div className="group relative bg-white/70 backdrop-blur-md rounded-2xl p-6 md:p-8 border border-white/60 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 hover:bg-white/90">
-                <div className="absolute inset-0 bg-gradient-to-br from-pink-400/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                <div className="relative">
-                  <div className="text-3xl md:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-theme-primary to-orange-500 bg-clip-text text-transparent mb-2">
-                    4.9
-                    <span className="text-lg md:text-xl text-gray-500">/5</span>
-                  </div>
-                  <div className="text-xs md:text-sm text-gray-600 font-medium">Note moyenne</div>
-                </div>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-4 md:gap-6 justify-center items-center mb-12 md:mb-16">
+              <AnimatedButton 
+                size="lg" 
+                variant="primary" 
+                className="w-full sm:w-auto min-w-[200px] shadow-xl hover:shadow-2xl"
+                onClick={() => router.push("/residences")}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  Explorer maintenant
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </span>
+              </AnimatedButton>
+              <AnimatedButton 
+                size="lg" 
+                variant="outline" 
+                className="w-full sm:w-auto min-w-[200px] bg-white/90 backdrop-blur-sm border-2 hover:bg-white"
+                onClick={() => router.push("/residences")}
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Découvrir les lieux
+                </span>
+              </AnimatedButton>
             </div>
           </div>
         </div>
@@ -206,8 +170,8 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {residences.slice(0, 4).map((residence) => {
                 // Préparer les images
-                const allImages = residence.all_images?.map((img) => img.url) || 
-                                 (residence.main_image_url ? [residence.main_image_url] : []);
+                const allImages = residence.all_images?.map((img) => img.url) ||
+                  (residence.main_image_url ? [residence.main_image_url] : []);
                 const galleryImages = residence.gallery_images?.map((img) => img.url) || [];
                 const images = [...allImages, ...galleryImages].filter(Boolean);
 
@@ -282,9 +246,9 @@ export default function Home() {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
               {dwellings.slice(0, 4).map((dwelling) => {
                 // Préparer les images
-                const allImages = dwelling.all_images?.map((img) => img.url) || 
-                                 (dwelling.main_image_url ? [dwelling.main_image_url] : []);
-                const galleryImages = dwelling.gallery_images?.map((img) => 
+                const allImages = dwelling.all_images?.map((img) => img.url) ||
+                  (dwelling.main_image_url ? [dwelling.main_image_url] : []);
+                const galleryImages = dwelling.gallery_images?.map((img) =>
                   typeof img === 'string' ? img : img.url
                 ) || [];
                 const images = [...allImages, ...galleryImages].filter(Boolean);

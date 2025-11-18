@@ -21,6 +21,7 @@ const colors = {
 const styles = StyleSheet.create({
   page: {
     padding: 0,
+    margin: 0,
     fontFamily: 'Helvetica',
   },
   header: {
@@ -53,7 +54,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 25,
     paddingTop: 95, // Espace pour le header (70 + 25)
-    paddingBottom: 75, // Espace pour le footer
+    paddingBottom: 0, // Pas de padding en bas pour le footer
   },
   topSection: {
     flexDirection: 'row',
@@ -116,6 +117,7 @@ const styles = StyleSheet.create({
   },
   paymentSection: {
     marginTop: 20,
+    marginBottom: 0,
     alignItems: 'center',
   },
   totalBox: {
@@ -148,6 +150,9 @@ const styles = StyleSheet.create({
   footer: {
     backgroundColor: colors.primaryOrange,
     padding: 15,
+    paddingBottom: 15,
+    margin: 0,
+    marginTop: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -267,11 +272,7 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
               <Text style={styles.text}>Voyageurs: {receipt.booking.guests}</Text>
 
               <Text style={styles.sectionTitle}>CLIENT</Text>
-              <Text style={styles.text}>
-                Prénom: {receipt.customer.first_name}
-              </Text>
-              <Text style={styles.text}>Nom: {receipt.customer.last_name}</Text>
-              <Text style={styles.textSmall}>Numéro: {receipt.customer.id}</Text>
+              <Text style={styles.text}>Nom: {receipt.customer.full_name}</Text>
               <Text style={styles.textSmall}>Email: {receipt.customer.email}</Text>
               <Text style={styles.textSmall}>
                 Téléphone: {receipt.customer.phone}
@@ -306,15 +307,7 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
             {/* Propriétaire */}
             <View style={styles.column}>
               <Text style={styles.sectionTitle}>PROPRIÉTAIRE</Text>
-              <Text style={styles.text}>Numéro: {receipt.owner.id}</Text>
-              {receipt.owner.first_name && receipt.owner.last_name ? (
-                <>
-                  <Text style={styles.text}>
-                    Prénom: {receipt.owner.first_name}
-                  </Text>
-                  <Text style={styles.text}>Nom: {receipt.owner.last_name}</Text>
-                </>
-              ) : receipt.owner.full_name ? (
+              {receipt.owner.full_name ? (
                 <Text style={styles.text}>Nom: {receipt.owner.full_name}</Text>
               ) : (
                 <Text style={styles.text}>Nom: N/A</Text>

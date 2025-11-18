@@ -109,7 +109,7 @@ export function useBookings(page: number = 1) {
   return useQuery({
     queryKey: ['bookings', page, userId, canViewAll()],
     queryFn: async () => {
-      const params: Record<string, any> = { page };
+      const params: Record<string, string | number> = { page };
       
       // Si l'utilisateur n'est pas admin, filtrer selon son type
       if (!canViewAll() && userId) {
@@ -234,7 +234,9 @@ export interface ReceiptInfo {
 
 export interface ReceiptCustomer {
   id: number;
-  name: string;
+  first_name: string;
+  last_name: string;
+  full_name: string;
   email: string;
   phone: string;
 }
@@ -289,7 +291,9 @@ export interface ReceiptProperty {
 
 export interface ReceiptOwner {
   id: number;
-  name: string;
+  first_name: string | null;
+  last_name: string | null;
+  full_name: string | null;
   email: string | null;
   phone: string | null;
 }

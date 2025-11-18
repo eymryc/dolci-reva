@@ -67,9 +67,9 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   // ============================================
   // QR CODE EN HAUT À GAUCHE (1/4 de la page)
   // ============================================
-  const qrSectionWidth = contentWidth * 0.25; // 1/4 de la largeur
+  const sectionWidth = contentWidth * 0.25; // Largeur identique pour QR et détails
   const qrSectionX = margin;
-  const detailsSectionX = margin + qrSectionWidth + 15; // Espacement entre QR et détails
+  const detailsSectionX = margin + sectionWidth + 15; // Espacement entre QR et détails
 
   // QR Code (occupe la moitié de sa section)
   if (receipt.qr_code?.token) {
@@ -83,7 +83,7 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
         },
       });
 
-      const qrSize = qrSectionWidth - 8; // QR code occupe presque toute la section (agrandi)
+      const qrSize = sectionWidth - 8; // QR code occupe presque toute la section (agrandi)
       const qrX = qrSectionX + 4; // Légèrement décalé pour centrage
       const qrY = yPosition;
       
@@ -116,73 +116,65 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.text('REÇU', detailsSectionX, detailsY);
   detailsY += 8;
 
-  // Informations du reçu
+  // Informations du reçu (limité à la même largeur que la section QR)
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-  doc.text(`Référence: ${receipt.receipt_info.booking_reference}`, detailsSectionX, detailsY);
+  doc.text(`Référence: ${receipt.receipt_info.booking_reference}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 5;
-  doc.text(`Date: ${formatDateShort(receipt.receipt_info.payment_date)}`, detailsSectionX, detailsY);
+  doc.text(`Date: ${formatDateShort(receipt.receipt_info.payment_date)}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 5;
-  doc.text(`Transaction: ${receipt.receipt_info.payment_reference}`, detailsSectionX, detailsY);
+  doc.text(`Transaction: ${receipt.receipt_info.payment_reference}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 5;
   // Statut du paiement
   const paymentStatus = receipt.receipt_info.payment_status === 'PAYE' ? 'Payé' : 'En attente';
-  doc.text(`Statut: ${paymentStatus}`, detailsSectionX, detailsY);
+  doc.text(`Statut: ${paymentStatus}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 10;
 
   // Détails de la réservation
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
-  doc.text('DÉTAILS DE LA RÉSERVATION', detailsSectionX, detailsY);
+  doc.text('DÉTAILS DE LA RÉSERVATION', detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 7;
   
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-  doc.text(`Type: ${receipt.booking.booking_type}`, detailsSectionX, detailsY);
+  doc.text(`Type: ${receipt.booking.booking_type}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 5;
-  doc.text(`Référence: ${receipt.booking.booking_reference}`, detailsSectionX, detailsY);
+  doc.text(`Référence: ${receipt.booking.booking_reference}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 5;
-  doc.text(`Arrivée: ${formatDateShort(receipt.booking.start_date)}`, detailsSectionX, detailsY);
+  doc.text(`Arrivée: ${formatDateShort(receipt.booking.start_date)}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 5;
-  doc.text(`Départ: ${formatDateShort(receipt.booking.end_date)}`, detailsSectionX, detailsY);
+  doc.text(`Départ: ${formatDateShort(receipt.booking.end_date)}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 5;
-  doc.text(`Voyageurs: ${receipt.booking.guests}`, detailsSectionX, detailsY);
+  doc.text(`Voyageurs: ${receipt.booking.guests}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 10;
 
   // Informations du client (celui qui a passé la réservation)
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
-  doc.text('CLIENT', detailsSectionX, detailsY);
+  doc.text('CLIENT', detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 7;
   
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(textDark[0], textDark[1], textDark[2]);
   
-  // Séparer nom et prénom
-  const nameParts = receipt.customer.name.trim().split(/\s+/);
-  const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : '';
-  const lastName = nameParts.length > 0 ? nameParts[nameParts.length - 1] : receipt.customer.name;
-  
-  if (firstName) {
-    doc.text(`Prénom: ${firstName}`, detailsSectionX, detailsY);
-    detailsY += 5;
-    doc.text(`Nom: ${lastName}`, detailsSectionX, detailsY);
-  } else {
-    doc.text(`Nom: ${lastName}`, detailsSectionX, detailsY);
-  }
+  // Utiliser first_name et last_name directement
+  doc.text(`Prénom: ${receipt.customer.first_name}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
+  detailsY += 5;
+  doc.text(`Nom: ${receipt.customer.last_name}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 5;
   doc.setFontSize(8);
   doc.setTextColor(textLight[0], textLight[1], textLight[2]);
-  doc.text(`Numéro: ${receipt.customer.id}`, detailsSectionX, detailsY);
+  doc.text(`Numéro: ${receipt.customer.id}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 4;
-  doc.text(`Email: ${receipt.customer.email}`, detailsSectionX, detailsY);
+  doc.text(`Email: ${receipt.customer.email}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
   detailsY += 4;
-  doc.text(`Téléphone: ${receipt.customer.phone}`, detailsSectionX, detailsY);
+  doc.text(`Téléphone: ${receipt.customer.phone}`, detailsSectionX, detailsY, { maxWidth: sectionWidth });
 
   // Calculer la position Y après le QR code et les détails
   const qrEndY = yPosition + (contentWidth * 0.25) + 20; // Hauteur du QR + texte
@@ -227,20 +219,18 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(textDark[0], textDark[1], textDark[2]);
   
-  // Séparer nom et prénom du propriétaire
-  const ownerNameParts = receipt.owner.name.trim().split(/\s+/);
-  const ownerFirstName = ownerNameParts.length > 1 ? ownerNameParts.slice(0, -1).join(' ') : '';
-  const ownerLastName = ownerNameParts.length > 0 ? ownerNameParts[ownerNameParts.length - 1] : receipt.owner.name;
-  
   doc.text(`Numéro: ${receipt.owner.id}`, margin, yPosition);
   yPosition += 5;
   
-  if (ownerFirstName) {
-    doc.text(`Prénom: ${ownerFirstName}`, margin, yPosition);
+  // Utiliser first_name et last_name si disponibles, sinon full_name
+  if (receipt.owner.first_name && receipt.owner.last_name) {
+    doc.text(`Prénom: ${receipt.owner.first_name}`, margin, yPosition);
     yPosition += 5;
-    doc.text(`Nom: ${ownerLastName}`, margin, yPosition);
+    doc.text(`Nom: ${receipt.owner.last_name}`, margin, yPosition);
+  } else if (receipt.owner.full_name) {
+    doc.text(`Nom: ${receipt.owner.full_name}`, margin, yPosition);
   } else {
-    doc.text(`Nom: ${ownerLastName}`, margin, yPosition);
+    doc.text(`Nom: N/A`, margin, yPosition);
   }
   yPosition += 5;
   

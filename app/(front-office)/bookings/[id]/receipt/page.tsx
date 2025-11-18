@@ -201,8 +201,12 @@ function ReceiptContent() {
               </h2>
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
+                  <p className="text-sm text-gray-600">Prénom</p>
+                  <p className="font-semibold">{receipt.customer.first_name}</p>
+                </div>
+                <div>
                   <p className="text-sm text-gray-600">Nom</p>
-                  <p className="font-semibold">{receipt.customer.name}</p>
+                  <p className="font-semibold">{receipt.customer.last_name}</p>
                 </div>
                 <div>
                   <p className="text-sm text-gray-600">Email</p>
@@ -347,10 +351,28 @@ function ReceiptContent() {
             <div className="border-t-2 border-gray-200 pt-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4">Propriétaire</h2>
               <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <p className="text-sm text-gray-600">Nom</p>
-                  <p className="font-semibold">{receipt.owner.name}</p>
-                </div>
+                {receipt.owner.first_name && receipt.owner.last_name ? (
+                  <>
+                    <div>
+                      <p className="text-sm text-gray-600">Prénom</p>
+                      <p className="font-semibold">{receipt.owner.first_name}</p>
+                    </div>
+                    <div>
+                      <p className="text-sm text-gray-600">Nom</p>
+                      <p className="font-semibold">{receipt.owner.last_name}</p>
+                    </div>
+                  </>
+                ) : receipt.owner.full_name ? (
+                  <div>
+                    <p className="text-sm text-gray-600">Nom</p>
+                    <p className="font-semibold">{receipt.owner.full_name}</p>
+                  </div>
+                ) : (
+                  <div>
+                    <p className="text-sm text-gray-600">Nom</p>
+                    <p className="font-semibold">N/A</p>
+                  </div>
+                )}
                 {receipt.owner.email && (
                   <div>
                     <p className="text-sm text-gray-600">Email</p>

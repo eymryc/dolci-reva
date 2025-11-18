@@ -2,6 +2,16 @@ import jsPDF from 'jspdf';
 import QRCode from 'qrcode';
 import type { ReceiptData } from '@/hooks/use-bookings';
 
+// Format date pour le PDF
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('fr-FR', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
+
 // Format date courte
 const formatDateShort = (dateString: string) => {
   const date = new Date(dateString);
@@ -129,9 +139,9 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
   doc.text('DATE DE PAIEMENT', rightX, yPosition, { align: 'right' });
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
+  doc.setFontSize(8);
   doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-  doc.text(formatDateShort(receipt.receipt_info.payment_date), rightX, yPosition + 5, { align: 'right' });
+  doc.text(formatDate(receipt.receipt_info.payment_date), rightX, yPosition + 5, { align: 'right' });
 
   yPosition += summaryBoxHeight + 10;
 

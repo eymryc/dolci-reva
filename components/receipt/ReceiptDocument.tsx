@@ -107,45 +107,43 @@ const styles = StyleSheet.create({
     color: colors.textLight,
     marginBottom: 3,
   },
-  twoColumns: {
-    flexDirection: 'row',
+  table: {
     marginTop: 15,
+    border: `1px solid ${colors.textLight}`,
+    borderRadius: 4,
+    overflow: 'hidden',
   },
-  column: {
-    width: '48%',
-    marginRight: 20,
+  tableRow: {
+    flexDirection: 'row',
+    borderBottom: `1px solid ${colors.textLight}`,
   },
-  paymentSection: {
-    marginTop: 20,
-    marginBottom: 0,
-    alignItems: 'center',
+  tableRowLast: {
+    flexDirection: 'row',
   },
-  totalBox: {
+  tableCell: {
+    flex: 1,
+    padding: 8,
+    borderRight: `1px solid ${colors.textLight}`,
+  },
+  tableCellLast: {
+    flex: 1,
+    padding: 8,
+  },
+  tableHeader: {
     backgroundColor: colors.primaryOrange,
-    padding: 15,
-    borderRadius: 6,
-    width: '70%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
   },
-  totalLabel: {
+  tableHeaderText: {
     color: colors.white,
-    fontSize: 12,
+    fontSize: 10,
     fontWeight: 'bold',
   },
-  totalAmount: {
-    color: colors.white,
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  paymentDetails: {
-    marginTop: 10,
-    fontSize: 8,
+  tableCellText: {
+    fontSize: 9,
     color: colors.textDark,
-    width: '70%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  },
+  tableCellTextSmall: {
+    fontSize: 8,
+    color: colors.textLight,
   },
   footer: {
     backgroundColor: colors.primaryOrange,
@@ -193,15 +191,6 @@ const formatDateShort = (dateString: string) => {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
-  });
-};
-
-// Format price
-const formatPrice = (price: number | null) => {
-  if (price === null) return 'N/A';
-  return price.toLocaleString('fr-FR', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
   });
 };
 
@@ -277,35 +266,7 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
               <Text style={styles.textSmall}>
                 Téléphone: {receipt.customer.phone}
               </Text>
-            </View>
-          </View>
 
-          {/* Établissement et Propriétaire en deux colonnes */}
-          <View style={styles.twoColumns}>
-            {/* Établissement */}
-            <View style={styles.column}>
-              <Text style={styles.sectionTitle}>ÉTABLISSEMENT</Text>
-              <Text style={styles.text}>{receipt.property.details.name}</Text>
-              <Text style={styles.textSmall}>
-                {receipt.property.details.address.address}
-              </Text>
-              <Text style={styles.textSmall}>
-                {receipt.property.details.address.city},{' '}
-                {receipt.property.details.address.country}
-              </Text>
-              <Text style={styles.textSmall}>
-                Type: {receipt.property.details.residence.type}
-              </Text>
-              <Text style={styles.textSmall}>
-                Standing: {receipt.property.details.residence.standing}
-              </Text>
-              <Text style={styles.textSmall}>
-                Capacité: {receipt.property.details.residence.max_guests} personnes
-              </Text>
-            </View>
-
-            {/* Propriétaire */}
-            <View style={styles.column}>
               <Text style={styles.sectionTitle}>PROPRIÉTAIRE</Text>
               {receipt.owner.full_name ? (
                 <Text style={styles.text}>Nom: {receipt.owner.full_name}</Text>
@@ -323,20 +284,89 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
             </View>
           </View>
 
-          {/* Section Paiement */}
-          <View style={styles.paymentSection}>
-            <View style={styles.totalBox}>
-              <Text style={styles.totalLabel}>MONTANT TOTAL</Text>
-              <Text style={styles.totalAmount}>
-                {formatPrice(receipt.payment.total_price)}{' '}
-                {receipt.payment.payment_currency}
-              </Text>
+          {/* Tableau Établissement et Réservation */}
+          <View style={styles.table}>
+            {/* En-tête du tableau */}
+            <View style={[styles.tableRow, styles.tableHeader]}>
+              <View style={styles.tableCell}>
+                <Text style={styles.tableHeaderText}>ÉTABLISSEMENT</Text>
+              </View>
+              <View style={styles.tableCellLast}>
+                <Text style={styles.tableHeaderText}>RÉSERVATION</Text>
+              </View>
             </View>
-            <View style={styles.paymentDetails}>
-              <Text>Méthode: {receipt.payment.payment_method}</Text>
-              {receipt.payment.authorization_code && (
-                <Text>Code: {receipt.payment.authorization_code}</Text>
-              )}
+
+            {/* Nom */}
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell}>
+                <Text style={styles.tableCellText}>{receipt.property.details.name}</Text>
+              </View>
+              <View style={styles.tableCellLast}>
+                <Text style={styles.tableCellText}>Type: {receipt.booking.booking_type}</Text>
+              </View>
+            </View>
+
+            {/* Adresse / Référence */}
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell}>
+                <Text style={styles.tableCellTextSmall}>
+                  {receipt.property.details.address.address}
+                </Text>
+                <Text style={styles.tableCellTextSmall}>
+                  {receipt.property.details.address.city},{' '}
+                  {receipt.property.details.address.country}
+                </Text>
+              </View>
+              <View style={styles.tableCellLast}>
+                <Text style={styles.tableCellTextSmall}>
+                  Référence: {receipt.booking.booking_reference}
+                </Text>
+              </View>
+            </View>
+
+            {/* Type / Dates */}
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell}>
+                <Text style={styles.tableCellTextSmall}>
+                  Type: {receipt.property.details.residence.type}
+                </Text>
+              </View>
+              <View style={styles.tableCellLast}>
+                <Text style={styles.tableCellTextSmall}>
+                  Arrivée: {formatDateShort(receipt.booking.start_date)}
+                </Text>
+                <Text style={styles.tableCellTextSmall}>
+                  Départ: {formatDateShort(receipt.booking.end_date)}
+                </Text>
+              </View>
+            </View>
+
+            {/* Standing / Voyageurs */}
+            <View style={styles.tableRow}>
+              <View style={styles.tableCell}>
+                <Text style={styles.tableCellTextSmall}>
+                  Standing: {receipt.property.details.residence.standing}
+                </Text>
+              </View>
+              <View style={styles.tableCellLast}>
+                <Text style={styles.tableCellTextSmall}>
+                  Voyageurs: {receipt.booking.guests}
+                </Text>
+              </View>
+            </View>
+
+            {/* Capacité */}
+            <View style={styles.tableRowLast}>
+              <View style={styles.tableCell}>
+                <Text style={styles.tableCellTextSmall}>
+                  Capacité: {receipt.property.details.residence.max_guests} personnes
+                </Text>
+              </View>
+              <View style={styles.tableCellLast}>
+                <Text style={styles.tableCellTextSmall}>
+                  Statut: {receipt.booking.status}
+                </Text>
+              </View>
             </View>
           </View>
         </View>

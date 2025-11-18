@@ -2,12 +2,13 @@
 
 import { useParams, useSearchParams } from 'next/navigation';
 import { useEffect, useState, Suspense } from 'react';
-import { useBooking } from '@/hooks/use-bookings';
+import { useBooking, useReceipt } from '@/hooks/use-bookings';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import { generateReceiptPDF } from '@/lib/generate-receipt-pdf';
 import { 
   CheckCircle2, 
   Calendar, 
@@ -30,8 +31,10 @@ function BookingDetailContent() {
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const { data: booking, isLoading, error } = useBooking(bookingId || 0);
+  const { data: receiptResponse } = useReceipt(bookingId || 0);
 
   useEffect(() => {
     // Lire les paramètres de l'URL
@@ -66,10 +69,22 @@ function BookingDetailContent() {
     });
   };
 
-  // Ouvrir la page de reçu
-  const handleViewReceipt = () => {
-    if (bookingId) {
-      window.open(`/bookings/${bookingId}/receipt`, '_blank');
+  // Générer et télécharger le PDF du reçu
+  const handleViewReceipt = async () => {
+    if (!receiptResponse?.data) {
+      toast.error('Impossible de générer le reçu. Veuillez réessayer.');
+      return;
+    }
+
+    try {
+      setIsGeneratingPDF(true);
+      await generateReceiptPDF(receiptResponse.data);
+      toast.success('Reçu généré et téléchargé avec succès');
+    } catch (error) {
+      console.error('Erreur lors de la génération du PDF:', error);
+      toast.error('Erreur lors de la génération du reçu');
+    } finally {
+      setIsGeneratingPDF(false);
     }
   };
 
@@ -298,10 +313,10 @@ function BookingDetailContent() {
                   variant="outline" 
                   className="w-full justify-start"
                   onClick={handleViewReceipt}
-                  disabled={!bookingId}
+                  disabled={!bookingId || isGeneratingPDF || !receiptResponse?.data}
                 >
-                  <Download className="w-4 h-4 mr-2" />
-                  Voir le reçu
+                  <Download className={`w-4 h-4 mr-2 ${isGeneratingPDF ? 'animate-spin' : ''}`} />
+                  {isGeneratingPDF ? 'Génération...' : 'Télécharger le reçu PDF'}
                 </Button>
                 <Button variant="outline" className="w-full justify-start" asChild>
                   <Link href="#">

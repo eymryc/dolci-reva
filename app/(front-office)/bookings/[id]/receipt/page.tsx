@@ -1,17 +1,19 @@
 "use client";
 
 import { useParams, useRouter } from 'next/navigation';
-import { Suspense } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
 import { useReceipt } from '@/hooks/use-bookings';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { ArrowLeft, Download, Printer, QrCode, Building2, User, Calendar, CreditCard, MapPin, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
+import QRCode from 'qrcode';
 
 function ReceiptContent() {
   const params = useParams();
   const router = useRouter();
   const bookingId = params?.id ? parseInt(params.id as string) : null;
+  const qrCodeRef = useRef<HTMLCanvasElement>(null);
   
   const { data: receiptResponse, isLoading, error } = useReceipt(bookingId || 0);
 
@@ -73,6 +75,31 @@ function ReceiptContent() {
   const handlePrint = () => {
     window.print();
   };
+
+  // Générer le QR code
+  useEffect(() => {
+    const generateQRCode = async () => {
+      if (receiptResponse?.data?.qr_code?.token) {
+        try {
+          if (qrCodeRef.current) {
+            // Générer directement sur le canvas
+            await QRCode.toCanvas(qrCodeRef.current, receiptResponse.data.qr_code.token, {
+              width: 200,
+              margin: 2,
+              color: {
+                dark: '#000000',
+                light: '#FFFFFF',
+              },
+            });
+          }
+        } catch (error) {
+          console.error('Erreur lors de la génération du QR code:', error);
+        }
+      }
+    };
+
+    generateQRCode();
+  }, [receiptResponse?.data?.qr_code?.token]);
 
   if (isLoading) {
     return (
@@ -299,15 +326,16 @@ function ReceiptContent() {
                   Code de vérification
                 </h2>
                 <div className="bg-gray-50 rounded-lg p-6 inline-block">
-                  <p className="text-xs text-gray-600 mb-2">Scannez ce code pour vérifier votre réservation</p>
-                  <div className="bg-white p-4 rounded-lg inline-block">
-                    {/* Vous pouvez ajouter un composant QR Code ici si nécessaire */}
-                    <p className="font-mono text-xs break-all max-w-xs">
-                      {receipt.qr_code.token.substring(0, 50)}...
-                    </p>
+                  <p className="text-xs text-gray-600 mb-4">Scannez ce code pour vérifier votre réservation</p>
+                  <div className="bg-white p-4 rounded-lg inline-block shadow-md">
+                    <canvas 
+                      ref={qrCodeRef} 
+                      className="w-48 h-48"
+                      style={{ display: 'block' }}
+                    />
                   </div>
-                  <p className="text-xs text-gray-500 mt-2">
-                    URL: <a href={receipt.qr_code.qr_code_url} className="text-theme-primary hover:underline" target="_blank" rel="noopener noreferrer">
+                  <p className="text-xs text-gray-500 mt-4">
+                    URL: <a href={receipt.qr_code.qr_code_url} className="text-theme-primary hover:underline break-all" target="_blank" rel="noopener noreferrer">
                       {receipt.qr_code.qr_code_url}
                     </a>
                   </p>

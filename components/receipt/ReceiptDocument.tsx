@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     padding: 0,
     margin: 0,
     fontFamily: 'Helvetica',
+    position: 'relative',
   },
   header: {
     backgroundColor: colors.primaryOrange,
@@ -54,7 +55,7 @@ const styles = StyleSheet.create({
   content: {
     padding: 25,
     paddingTop: 95, // Espace pour le header (70 + 25)
-    paddingBottom: 0, // Pas de padding en bas pour le footer
+    paddingBottom: 70, // Espace pour le footer (60 + 10)
   },
   topSection: {
     flexDirection: 'row',
@@ -146,15 +147,19 @@ const styles = StyleSheet.create({
     color: colors.textLight,
   },
   footer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
     backgroundColor: colors.primaryOrange,
     padding: 15,
     paddingBottom: 15,
     margin: 0,
-    marginTop: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     width: '100%',
+    height: 60,
   },
   footerLeft: {
     flexDirection: 'column',

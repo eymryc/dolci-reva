@@ -18,10 +18,10 @@ const ALLOWED_WEBHOOK_URL = 'https://dolci-reva-x27q.vercel.app';
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { provider: string } }
+  { params }: { params: Promise<{ provider: string }> }
 ) {
   try {
-    const { provider } = params;
+    const { provider } = await params;
     
     // Vérifier que la requête provient de l'URL autorisée
     const url = request.nextUrl;
@@ -100,7 +100,8 @@ export async function POST(
     );
     
   } catch (error: unknown) {
-    console.error(`Erreur lors du traitement du webhook ${params.provider}:`, error);
+    const { provider } = await params;
+    console.error(`Erreur lors du traitement du webhook ${provider}:`, error);
     
     // Gérer les erreurs de l'API
     if (error && typeof error === 'object' && 'response' in error) {
@@ -117,31 +118,15 @@ export async function POST(
     
     // Erreur de parsing ou autre
     const errorMessage = error instanceof Error ? error.message : "Une erreur inconnue s'est produite";
+    const { provider: providerName } = await params;
     return NextResponse.json(
       {
         success: false,
-        error: `Erreur lors du traitement du webhook ${params.provider}`,
+        error: `Erreur lors du traitement du webhook ${providerName}`,
         message: errorMessage,
       },
       { status: 500 }
     );
   }
-}
-
-/**
- * Route GET pour vérifier que le webhook est accessible
- */
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { provider: string } }
-) {
-  return NextResponse.json(
-    {
-      message: `Endpoint webhook ${params.provider} actif`,
-      endpoint: `/api/webhooks/${params.provider}`,
-      method: "POST",
-    },
-    { status: 200 }
-  );
 }
 

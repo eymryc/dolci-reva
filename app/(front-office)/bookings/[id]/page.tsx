@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { toast } from 'sonner';
 import Link from 'next/link';
+import api from '@/lib/axios';
 import { 
   CheckCircle2, 
   Calendar, 
@@ -30,6 +31,7 @@ function BookingDetailContent() {
   const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
   const [reference, setReference] = useState<string | null>(null);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+  const [isDownloadingReceipt, setIsDownloadingReceipt] = useState(false);
 
   const { data: booking, isLoading, error } = useBooking(bookingId || 0);
 
@@ -64,6 +66,43 @@ function BookingDetailContent() {
       minimumFractionDigits: 0,
       maximumFractionDigits: 0,
     });
+  };
+
+  // Télécharger le reçu
+  const handleDownloadReceipt = async () => {
+    if (!bookingId || !booking) {
+      toast.error('Impossible de télécharger le reçu');
+      return;
+    }
+
+    try {
+      setIsDownloadingReceipt(true);
+      
+      const response = await api.get(
+        `payments/bookings/${bookingId}/receipt?format=pdf`,
+        {
+          responseType: 'blob', // Important pour les fichiers PDF
+        }
+      );
+
+      // Créer un blob et télécharger le fichier
+      const blob = new Blob([response.data], { type: 'application/pdf' });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `receipt-${booking.booking_reference || bookingId}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+
+      toast.success('Reçu téléchargé avec succès');
+    } catch (error: unknown) {
+      console.error('Erreur lors du téléchargement du reçu:', error);
+      toast.error('Erreur lors du téléchargement du reçu');
+    } finally {
+      setIsDownloadingReceipt(false);
+    }
   };
 
   if (isLoading) {
@@ -290,13 +329,11 @@ function BookingDetailContent() {
                 <Button 
                   variant="outline" 
                   className="w-full justify-start"
-                  onClick={() => {
-                    const receiptUrl = `https://dolci-reva.achalivre-afrique.ci/api/payments/bookings/${bookingId}/receipt?format=pdf`;
-                    window.open(receiptUrl, '_blank');
-                  }}
+                  onClick={handleDownloadReceipt}
+                  disabled={isDownloadingReceipt || !bookingId}
                 >
-                  <Download className="w-4 h-4 mr-2" />
-                  Télécharger le reçu
+                  <Download className={`w-4 h-4 mr-2 ${isDownloadingReceipt ? 'animate-spin' : ''}`} />
+                  {isDownloadingReceipt ? 'Téléchargement...' : 'Télécharger le reçu'}
                 </Button>
                 <Button variant="outline" className="w-full justify-start" asChild>
                   <Link href="#">

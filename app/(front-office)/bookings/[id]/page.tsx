@@ -287,11 +287,16 @@ function BookingDetailContent() {
 
               {/* Actions */}
               <div className="pt-4 border-t space-y-2">
-                <Button variant="outline" className="w-full justify-start" asChild>
-                  <Link href="#">
-                    <Download className="w-4 h-4 mr-2" />
-                    Télécharger le reçu
-                  </Link>
+                <Button 
+                  variant="outline" 
+                  className="w-full justify-start"
+                  onClick={() => {
+                    const receiptUrl = `https://dolci-reva.achalivre-afrique.ci/api/payments/bookings/${bookingId}/receipt?format=pdf`;
+                    window.open(receiptUrl, '_blank');
+                  }}
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Télécharger le reçu
                 </Button>
                 <Button variant="outline" className="w-full justify-start" asChild>
                   <Link href="#">

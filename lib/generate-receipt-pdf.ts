@@ -48,7 +48,6 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   const white: [number, number, number] = [255, 255, 255];
   const textDark: [number, number, number] = [33, 33, 33];
   const textLight: [number, number, number] = [120, 120, 120];
-  const borderColor: [number, number, number] = [230, 230, 230];
 
   let yPosition = margin;
 
@@ -107,7 +106,6 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   // SECTION "FACTURÉ À" (gauche) et "REÇU" (droite)
   // ============================================
   const leftColWidth = contentWidth * 0.5;
-  const rightColWidth = contentWidth * 0.5;
 
   // "Facturé à" - Gauche
   doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
@@ -226,63 +224,18 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
     doc.text(receipt.owner.phone, receiptX, receiptY);
   }
 
-  yPosition += 45;
+  // Calculer la position Y après les sections gauche/droite
+  const maxY = Math.max(bookingDetailY + 10, receiptY + 20);
+  yPosition = maxY + 15;
 
   // ============================================
-  // TABLEAU DES DÉTAILS (comme OlistaDental)
+  // SECTION PAIEMENT (centrée) avec QR Code et Total
   // ============================================
-  // En-tête du tableau
-  const tableHeaderY = yPosition;
-  doc.setFillColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
-  doc.rect(margin, tableHeaderY, contentWidth, 8, 'F');
-  
-  let headerX = margin + 5;
-  doc.setTextColor(white[0], white[1], white[2]);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.text('SERVICE', headerX, tableHeaderY + 6);
-  headerX += 80;
-  doc.text('PRIX', headerX, tableHeaderY + 6, { align: 'right' });
-  headerX += 30;
-  doc.text('QTY', headerX, tableHeaderY + 6, { align: 'center' });
-  headerX += 20;
-  doc.text('TOTAL', headerX, tableHeaderY + 6, { align: 'right' });
+  const paymentSectionWidth = contentWidth * 0.6;
+  const paymentSectionX = (pageWidth - paymentSectionWidth) / 2;
 
-  yPosition += 8;
-
-  // Ligne de service - Réservation
-  doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.setLineWidth(0.2);
-  doc.line(margin, yPosition, pageWidth - margin, yPosition);
-  yPosition += 5;
-  
-  let serviceX = margin + 5;
-  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Réservation', serviceX, yPosition);
-  serviceX += 80;
-  doc.text(formatPrice(receipt.payment.total_price), serviceX, yPosition, { align: 'right' });
-  serviceX += 30;
-  doc.text('1', serviceX, yPosition, { align: 'center' });
-  serviceX += 20;
-  doc.setFont('helvetica', 'bold');
-  doc.text(`${formatPrice(receipt.payment.total_price)} ${receipt.payment.payment_currency}`, serviceX, yPosition, { align: 'right' });
-
-  yPosition += 8;
-
-  // Ligne de séparation
-  doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.line(margin, yPosition, pageWidth - margin, yPosition);
-  yPosition += 10;
-
-  // ============================================
-  // SECTION PAIEMENT (droite) avec QR Code et Total
-  // ============================================
-  const paymentSectionX = margin + leftColWidth + 10;
-  const paymentSectionWidth = rightColWidth;
-
-  // QR Code
+  // QR Code à gauche
+  const qrY = yPosition;
   if (receipt.qr_code?.token) {
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(receipt.qr_code.token, {
@@ -294,37 +247,52 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
         },
       });
 
-      const qrSize = 35;
-      doc.addImage(qrCodeDataUrl, 'PNG', paymentSectionX, yPosition, qrSize, qrSize);
+      const qrSize = 40;
+      const qrX = paymentSectionX;
+      doc.addImage(qrCodeDataUrl, 'PNG', qrX, qrY, qrSize, qrSize);
       
       // Texte sous le QR
       doc.setFontSize(7);
       doc.setFont('helvetica', 'normal');
       doc.setTextColor(textLight[0], textLight[1], textLight[2]);
-      doc.text('Code de vérification', paymentSectionX, yPosition + qrSize + 4, { align: 'center', maxWidth: qrSize });
+      doc.text('Code de vérification', qrX, qrY + qrSize + 4, { align: 'center', maxWidth: qrSize });
     } catch (error) {
       console.error('Erreur lors de la génération du QR code:', error);
     }
   }
 
-  // Total à droite du QR ou en dessous
-  const totalY = yPosition + 40;
+  // Total à droite du QR
+  const totalX = paymentSectionX + 50;
+  const totalY = yPosition;
+  const totalBoxWidth = paymentSectionWidth - 50;
+  const totalBoxHeight = 25;
+  
   doc.setFillColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
-  doc.roundedRect(paymentSectionX, totalY, paymentSectionWidth, 20, 3, 3, 'F');
+  doc.roundedRect(totalX, totalY, totalBoxWidth, totalBoxHeight, 3, 3, 'F');
   
-  const totalTextY = totalY + 7;
+  const totalTextY = totalY + 8;
   doc.setTextColor(white[0], white[1], white[2]);
-  doc.setFontSize(10);
+  doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
-  doc.text('TOTAL', paymentSectionX + 5, totalTextY);
+  doc.text('MONTANT TOTAL', totalX + 8, totalTextY);
   
-  doc.setFontSize(14);
+  doc.setFontSize(18);
   doc.text(
     `${formatPrice(receipt.payment.total_price)} ${receipt.payment.payment_currency}`,
-    paymentSectionX + paymentSectionWidth - 5,
-    totalTextY + 5,
+    totalX + totalBoxWidth - 8,
+    totalTextY + 8,
     { align: 'right' }
   );
+  
+  // Détails de paiement sous le total
+  const paymentDetailY = totalY + totalBoxHeight + 8;
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+  doc.text(`Méthode: ${receipt.payment.payment_method}`, totalX, paymentDetailY);
+  if (receipt.payment.authorization_code) {
+    doc.text(`Code: ${receipt.payment.authorization_code}`, totalX + 60, paymentDetailY);
+  }
 
 
   // ============================================

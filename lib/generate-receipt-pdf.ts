@@ -71,7 +71,7 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   const qrSectionX = margin;
   const detailsSectionX = margin + qrSectionWidth + 15; // Espacement entre QR et détails
 
-  // QR Code
+  // QR Code (occupe la moitié de sa section)
   if (receipt.qr_code?.token) {
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(receipt.qr_code.token, {
@@ -83,8 +83,8 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
         },
       });
 
-      const qrSize = qrSectionWidth - 5; // QR code occupe presque toute la largeur de la section
-      const qrX = qrSectionX;
+      const qrSize = (qrSectionWidth - 5) / 2; // QR code occupe la moitié de la section
+      const qrX = qrSectionX + (qrSectionWidth - qrSize) / 2; // Centré dans la section
       const qrY = yPosition;
       
       // Fond blanc pour le QR
@@ -125,6 +125,10 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.text(`Date: ${formatDateShort(receipt.receipt_info.payment_date)}`, detailsSectionX, detailsY);
   detailsY += 5;
   doc.text(`Transaction: ${receipt.receipt_info.payment_reference}`, detailsSectionX, detailsY);
+  detailsY += 5;
+  // Statut du paiement
+  const paymentStatus = receipt.receipt_info.payment_status === 'PAYE' ? 'Payé' : 'En attente';
+  doc.text(`Statut: ${paymentStatus}`, detailsSectionX, detailsY);
   detailsY += 10;
 
   // Détails de la réservation
@@ -174,6 +178,8 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   detailsY += 5;
   doc.setFontSize(8);
   doc.setTextColor(textLight[0], textLight[1], textLight[2]);
+  doc.text(`Numéro: ${receipt.customer.id}`, detailsSectionX, detailsY);
+  detailsY += 4;
   doc.text(`Email: ${receipt.customer.email}`, detailsSectionX, detailsY);
   detailsY += 4;
   doc.text(`Téléphone: ${receipt.customer.phone}`, detailsSectionX, detailsY);
@@ -220,15 +226,31 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-  doc.text(receipt.owner.name, margin, yPosition);
-  if (receipt.owner.email) {
+  
+  // Séparer nom et prénom du propriétaire
+  const ownerNameParts = receipt.owner.name.trim().split(/\s+/);
+  const ownerFirstName = ownerNameParts.length > 1 ? ownerNameParts.slice(0, -1).join(' ') : '';
+  const ownerLastName = ownerNameParts.length > 0 ? ownerNameParts[ownerNameParts.length - 1] : receipt.owner.name;
+  
+  doc.text(`Numéro: ${receipt.owner.id}`, margin, yPosition);
+  yPosition += 5;
+  
+  if (ownerFirstName) {
+    doc.text(`Prénom: ${ownerFirstName}`, margin, yPosition);
     yPosition += 5;
+    doc.text(`Nom: ${ownerLastName}`, margin, yPosition);
+  } else {
+    doc.text(`Nom: ${ownerLastName}`, margin, yPosition);
+  }
+  yPosition += 5;
+  
+  if (receipt.owner.email) {
     doc.setFontSize(8);
     doc.setTextColor(textLight[0], textLight[1], textLight[2]);
     doc.text(`Email: ${receipt.owner.email}`, margin, yPosition);
+    yPosition += 4;
   }
   if (receipt.owner.phone) {
-    yPosition += 4;
     doc.text(`Téléphone: ${receipt.owner.phone}`, margin, yPosition);
   }
 

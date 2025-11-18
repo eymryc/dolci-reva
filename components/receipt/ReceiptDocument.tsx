@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     padding: 20,
     flexDirection: 'row',
     alignItems: 'center',
+    width: '100%',
   },
   logoBox: {
     width: 40,
@@ -51,6 +52,8 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 25,
+    paddingTop: 95, // Espace pour le header (70 + 25)
+    paddingBottom: 75, // Espace pour le footer
   },
   topSection: {
     flexDirection: 'row',
@@ -145,10 +148,10 @@ const styles = StyleSheet.create({
   footer: {
     backgroundColor: colors.primaryOrange,
     padding: 15,
-    marginTop: 20,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    width: '100%',
   },
   footerLeft: {
     flexDirection: 'column',
@@ -212,8 +215,8 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
   return (
     <Document>
       <Page size="A4" style={styles.page}>
-        {/* En-tête */}
-        <View style={styles.header}>
+        {/* En-tête fixe */}
+        <View style={styles.header} fixed>
           <View style={styles.logoBox}>
             <Text style={styles.logoText}>DR</Text>
           </View>

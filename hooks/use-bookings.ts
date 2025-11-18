@@ -222,3 +222,124 @@ export function useDeleteBooking() {
   });
 }
 
+// Types pour le reçu
+export interface ReceiptInfo {
+  booking_reference: string;
+  payment_reference: string;
+  payment_date: string;
+  payment_status: string;
+  escrow_status: string | null;
+  generated_at: string;
+}
+
+export interface ReceiptCustomer {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+}
+
+export interface ReceiptBooking {
+  id: number;
+  booking_reference: string;
+  booking_type: string;
+  start_date: string;
+  end_date: string;
+  guests: string;
+  status: string;
+  payment_status: string;
+  confirmed_at: string;
+  notes: string | null;
+}
+
+export interface ReceiptPropertyAddress {
+  address: string;
+  city: string;
+  country: string;
+  latitude: string;
+  longitude: string;
+}
+
+export interface ReceiptPropertyResidence {
+  type: string;
+  standing: string;
+  max_guests: string;
+  bedrooms: number | null;
+  bathrooms: number | null;
+  piece_number: number | null;
+  price: number;
+  average_rating: number;
+  rating_count: string;
+}
+
+export interface ReceiptPropertyDetails {
+  id: number;
+  name: string;
+  description: string;
+  address: ReceiptPropertyAddress;
+  residence: ReceiptPropertyResidence;
+}
+
+export interface ReceiptProperty {
+  id: number;
+  name: string;
+  type: string;
+  details: ReceiptPropertyDetails;
+}
+
+export interface ReceiptOwner {
+  id: number;
+  name: string;
+  email: string | null;
+  phone: string | null;
+}
+
+export interface ReceiptPayment {
+  total_price: number;
+  commission_amount: number | null;
+  owner_amount: number | null;
+  payment_fees: number | null;
+  amount_received: number | null;
+  payment_method: string;
+  payment_currency: string;
+  payment_reference: string;
+  gateway_response: string | null;
+  authorization_code: string | null;
+  paystack_transaction_id: string | null;
+}
+
+export interface ReceiptQRCode {
+  token: string;
+  booking_id: number;
+  booking_reference: string;
+  qr_code_url: string;
+  generated_at: string;
+}
+
+export interface ReceiptData {
+  receipt_info: ReceiptInfo;
+  customer: ReceiptCustomer;
+  booking: ReceiptBooking;
+  property: ReceiptProperty;
+  owner: ReceiptOwner;
+  payment: ReceiptPayment;
+  qr_code: ReceiptQRCode;
+}
+
+export interface ReceiptResponse {
+  success: boolean;
+  data: ReceiptData;
+}
+
+// GET - Fetch receipt
+export function useReceipt(bookingId: number) {
+  return useQuery({
+    queryKey: ['receipt', bookingId],
+    queryFn: async () => {
+      const response = await api.get(`/payments/bookings/${bookingId}/receipt`);
+      return response.data as ReceiptResponse;
+    },
+    enabled: !!bookingId,
+  });
+}
+

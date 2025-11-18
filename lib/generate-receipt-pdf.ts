@@ -30,301 +30,262 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const margin = 15;
-  const headerHeight = 20;
-  const footerHeight = 20;
-  const contentWidth = pageWidth - (margin * 2);
-  const contentStartY = margin + headerHeight;
-  const contentEndY = pageHeight - footerHeight - margin;
-  let yPosition = contentStartY;
-
-  // Couleurs
-  const primaryColor: [number, number, number] = [255, 140, 0]; // Orange
-  const darkColor: [number, number, number] = [33, 33, 33];
+  
+  // Couleurs Dolci Rêva
+  const primaryOrange: [number, number, number] = [240, 132, 0]; // #f08400
+  const secondaryDark: [number, number, number] = [18, 16, 12]; // #12100c
+  const white: [number, number, number] = [255, 255, 255];
   const lightGray: [number, number, number] = [248, 249, 250];
-  const borderColor: [number, number, number] = [230, 230, 230];
-  const successGreen: [number, number, number] = [34, 197, 94];
+  const textDark: [number, number, number] = [33, 33, 33];
+  const textLight: [number, number, number] = [100, 100, 100];
 
   // ============================================
-  // EN-TÊTE FIXE
+  // FOND SOMBRE (comme le poster)
   // ============================================
-  doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.rect(0, 0, pageWidth, headerHeight, 'F');
-  
-  doc.setTextColor(255, 255, 255);
-  doc.setFontSize(20);
-  doc.setFont('helvetica', 'bold');
-  doc.text('DOLCI RÊVA', margin, 12);
-  
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'normal');
-  doc.text('Reçu de paiement officiel', margin, 17);
-
-  // Badge de statut
-  const statusX = pageWidth - margin - 30;
-  doc.setFillColor(255, 255, 255);
-  doc.roundedRect(statusX, 5, 30, 10, 2, 2, 'F');
-  doc.setTextColor(successGreen[0], successGreen[1], successGreen[2]);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.text('✓ PAYÉ', statusX + 15, 11.5, { align: 'center' });
+  doc.setFillColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.rect(0, 0, pageWidth, pageHeight, 'F');
 
   // ============================================
-  // RÉSUMÉ DE TRANSACTION (avec prix)
+  // RECTANGLE BLANC PRINCIPAL (avec coins arrondis simulés)
   // ============================================
-  const summaryBoxHeight = 30;
-  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
-  doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.setLineWidth(0.5);
-  doc.roundedRect(margin, yPosition, contentWidth, summaryBoxHeight, 2, 2, 'FD');
+  const margin = 12;
+  const contentWidth = pageWidth - (margin * 2);
+  const contentHeight = pageHeight - (margin * 2);
+  const borderRadius = 8;
   
-  yPosition += 8;
+  // Fond blanc
+  doc.setFillColor(white[0], white[1], white[2]);
+  doc.roundedRect(margin, margin, contentWidth, contentHeight, borderRadius, borderRadius, 'F');
   
-  // Ligne 1: Référence et Montant
-  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'bold');
-  doc.text('RÉFÉRENCE:', margin + 5, yPosition);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(10);
-  doc.text(receipt.receipt_info.booking_reference, margin + 30, yPosition);
-  
-  // Montant à droite
-  doc.setFontSize(16);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(primaryColor[0], primaryColor[1], primaryColor[2]);
-  doc.text(
-    `${formatPrice(receipt.payment.total_price)} ${receipt.payment.payment_currency}`,
-    pageWidth - margin - 5,
-    yPosition,
-    { align: 'right' }
-  );
-  
-  yPosition += 7;
-  
-  // Ligne 2: Transaction et Date
-  doc.setFontSize(7);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(100, 100, 100);
-  doc.text(`Transaction: ${receipt.receipt_info.payment_reference}`, margin + 5, yPosition);
-  
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.text('Date:', pageWidth - margin - 50, yPosition);
-  doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
-  doc.text(formatDateShort(receipt.receipt_info.payment_date), pageWidth - margin - 5, yPosition, { align: 'right' });
-  
-  yPosition += 6;
-  
-  // Ligne 3: Méthode de paiement
-  doc.setFontSize(7);
-  doc.setTextColor(100, 100, 100);
-  doc.text(`Méthode: ${receipt.payment.payment_method}`, margin + 5, yPosition);
-  if (receipt.payment.authorization_code) {
-    doc.text(`Code: ${receipt.payment.authorization_code}`, margin + 80, yPosition);
-  }
-
-  yPosition += summaryBoxHeight - 20 + 8;
+  let yPosition = margin + 15;
 
   // ============================================
-  // SECTION: CLIENT ET RÉSERVATION (2 colonnes compactes)
+  // LOGO EN HAUT À GAUCHE
   // ============================================
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.text('DÉTAILS DE LA RÉSERVATION', margin, yPosition);
-  doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.setLineWidth(0.3);
-  doc.line(margin, yPosition + 2, pageWidth - margin, yPosition + 2);
-  yPosition += 7;
-
-  // Colonne gauche - Informations client
-  const leftColWidth = contentWidth / 2 - 5;
-  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
-  doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.roundedRect(margin, yPosition, leftColWidth, 28, 2, 2, 'FD');
-  
-  let clientY = yPosition + 6;
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.text('CLIENT', margin + 4, clientY);
-  clientY += 5;
-  
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(60, 60, 60);
-  doc.text('Nom:', margin + 4, clientY);
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8);
-  doc.text(receipt.customer.name.substring(0, 25), margin + 15, clientY);
-  clientY += 4;
-  
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(60, 60, 60);
-  doc.text('Email:', margin + 4, clientY);
-  doc.setFontSize(7);
-  doc.text(receipt.customer.email.substring(0, 28), margin + 15, clientY);
-  clientY += 4;
-  
-  doc.setFontSize(8);
-  doc.text('Tél:', margin + 4, clientY);
-  doc.text(receipt.customer.phone, margin + 15, clientY);
-
-  // Colonne droite - Informations réservation
-  const rightColXBooking = margin + leftColWidth + 10;
-  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
-  doc.roundedRect(rightColXBooking, yPosition, leftColWidth, 28, 2, 2, 'FD');
-  
-  let bookingY = yPosition + 6;
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.text('RÉSERVATION', rightColXBooking + 4, bookingY);
-  bookingY += 5;
-  
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(60, 60, 60);
-  doc.text('Type:', rightColXBooking + 4, bookingY);
-  doc.setFont('helvetica', 'bold');
-  doc.text(receipt.booking.booking_type, rightColXBooking + 15, bookingY);
-  bookingY += 4;
-  
-  doc.setFont('helvetica', 'normal');
-  doc.text('Arrivée:', rightColXBooking + 4, bookingY);
-  doc.setFontSize(7);
-  doc.text(formatDateShort(receipt.booking.start_date), rightColXBooking + 15, bookingY);
-  bookingY += 4;
-  
-  doc.setFontSize(8);
-  doc.text('Départ:', rightColXBooking + 4, bookingY);
-  doc.setFontSize(7);
-  doc.text(formatDateShort(receipt.booking.end_date), rightColXBooking + 15, bookingY);
-  bookingY += 4;
-  
-  doc.setFontSize(8);
-  doc.text('Voyageurs:', rightColXBooking + 4, bookingY);
-  doc.setFont('helvetica', 'bold');
-  doc.text(`${receipt.booking.guests}`, rightColXBooking + 20, bookingY);
-
-  yPosition += 35;
-
-  // ============================================
-  // SECTION: ÉTABLISSEMENT (compacte)
-  // ============================================
-  doc.setFontSize(11);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.text('ÉTABLISSEMENT', margin, yPosition);
-  doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.line(margin, yPosition + 2, pageWidth - margin, yPosition + 2);
-  yPosition += 7;
-
-  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
-  doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.roundedRect(margin, yPosition, contentWidth, 25, 2, 2, 'FD');
-  
-  let propertyY = yPosition + 6;
+  // Carré avec "D" (logo simplifié)
+  doc.setFillColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.roundedRect(margin + 8, yPosition - 5, 8, 8, 1, 1, 'F');
+  doc.setTextColor(white[0], white[1], white[2]);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
-  doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-  doc.text(receipt.property.details.name, margin + 4, propertyY);
-  propertyY += 5;
+  doc.text('D', margin + 11.5, yPosition);
   
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(60, 60, 60);
-  doc.text(receipt.property.details.address.address.substring(0, 60), margin + 4, propertyY);
-  propertyY += 4;
-  doc.text(`${receipt.property.details.address.city}, ${receipt.property.details.address.country}`, margin + 4, propertyY);
-  propertyY += 5;
-  
-  // Caractéristiques sur une ligne
-  doc.setFontSize(7);
-  doc.setTextColor(100, 100, 100);
-  doc.text(`Type: ${receipt.property.details.residence.type}`, margin + 4, propertyY);
-  doc.text(`Standing: ${receipt.property.details.residence.standing}`, margin + 40, propertyY);
-  doc.text(`Capacité: ${receipt.property.details.residence.max_guests}`, margin + 80, propertyY);
+  // Texte "Dolci Rêva"
+  doc.setTextColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.setFontSize(14);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Dolci Rêva', margin + 20, yPosition);
 
-  yPosition += 32;
+  yPosition += 20;
 
   // ============================================
-  // SECTION: QR CODE (compacte)
+  // SECTION PRINCIPALE (fond sombre comme le poster)
   // ============================================
-  if (receipt.qr_code?.token && yPosition < contentEndY - 40) {
+  const mainSectionHeight = 80;
+  doc.setFillColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.roundedRect(margin + 8, yPosition, contentWidth - 16, mainSectionHeight, 6, 6, 'F');
+  
+  // Texte principal en orange (à droite)
+  const textX = margin + 8 + (contentWidth - 16) - 100;
+  let textY = yPosition + 15;
+  
+  doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Reçu de', textX, textY);
+  textY += 8;
+  doc.text('paiement', textX, textY);
+  textY += 8;
+  doc.text('officiel', textX, textY);
+
+  // QR Code à gauche (comme le smartphone du poster)
+  if (receipt.qr_code?.token) {
     try {
       const qrCodeDataUrl = await QRCode.toDataURL(receipt.qr_code.token, {
-        width: 150,
-        margin: 1,
+        width: 200,
+        margin: 2,
         color: {
           dark: '#000000',
           light: '#FFFFFF',
         },
       });
 
-      // Box pour QR Code compacte
-      const qrBoxHeight = 35;
-      doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
-      doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-      doc.roundedRect(margin, yPosition, contentWidth, qrBoxHeight, 2, 2, 'FD');
+      const qrSize = 50;
+      const qrX = margin + 20;
+      const qrY = yPosition + 15;
       
-      // QR Code à gauche
-      const qrSize = 25;
-      doc.addImage(qrCodeDataUrl, 'PNG', margin + 5, yPosition + 5, qrSize, qrSize);
+      // Fond blanc pour le QR code (simule l'écran du téléphone)
+      doc.setFillColor(white[0], white[1], white[2]);
+      doc.roundedRect(qrX - 2, qrY - 2, qrSize + 4, qrSize + 4, 2, 2, 'F');
       
-      // Texte à droite du QR
-      let qrTextY = yPosition + 8;
-      doc.setFontSize(9);
-      doc.setFont('helvetica', 'bold');
-      doc.setTextColor(darkColor[0], darkColor[1], darkColor[2]);
-      doc.text('CODE DE VÉRIFICATION', margin + 35, qrTextY);
-      qrTextY += 5;
-      
-      doc.setFontSize(7);
-      doc.setFont('helvetica', 'normal');
-      doc.setTextColor(100, 100, 100);
-      doc.text('Scannez ce code pour', margin + 35, qrTextY);
-      qrTextY += 4;
-      doc.text('vérifier votre réservation', margin + 35, qrTextY);
-      
-      yPosition += qrBoxHeight + 5;
+      doc.addImage(qrCodeDataUrl, 'PNG', qrX, qrY, qrSize, qrSize);
     } catch (error) {
       console.error('Erreur lors de la génération du QR code:', error);
     }
   }
 
-  // Propriétaire (très compact)
-  if (yPosition < contentEndY - 10) {
+  yPosition += mainSectionHeight + 15;
+
+  // ============================================
+  // BOX ORANGE (comme "Download our App")
+  // ============================================
+  const orangeBoxHeight = 25;
+  doc.setFillColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
+  doc.roundedRect(margin + 8, yPosition, (contentWidth - 16) * 0.55, orangeBoxHeight, 4, 4, 'F');
+  
+  let boxY = yPosition + 8;
+  doc.setTextColor(white[0], white[1], white[2]);
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Montant payé', margin + 15, boxY);
+  boxY += 7;
+  doc.setFontSize(16);
+  doc.text(
+    `${formatPrice(receipt.payment.total_price)} ${receipt.payment.payment_currency}`,
+    margin + 15,
+    boxY
+  );
+
+  // ============================================
+  // BOX BLANCHE (informations détaillées)
+  // ============================================
+  const infoBoxX = margin + 8 + (contentWidth - 16) * 0.58;
+  const infoBoxWidth = (contentWidth - 16) * 0.42;
+  const infoBoxHeight = 50;
+  
+  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+  doc.setDrawColor(230, 230, 230);
+  doc.setLineWidth(0.3);
+  doc.roundedRect(infoBoxX, yPosition, infoBoxWidth, infoBoxHeight, 4, 4, 'FD');
+  
+  let infoY = yPosition + 8;
+  doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.text('Détails', infoBoxX + 5, infoY);
+  infoY += 6;
+  
+  doc.setFontSize(7);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+  doc.text(`Réf: ${receipt.receipt_info.booking_reference}`, infoBoxX + 5, infoY);
+  infoY += 4;
+  doc.text(`Date: ${formatDateShort(receipt.receipt_info.payment_date)}`, infoBoxX + 5, infoY);
+  infoY += 4;
+  doc.setTextColor(textLight[0], textLight[1], textLight[2]);
+  doc.text(`Méthode: ${receipt.payment.payment_method}`, infoBoxX + 5, infoY);
+  infoY += 4;
+  if (receipt.payment.authorization_code) {
+    doc.text(`Code: ${receipt.payment.authorization_code.substring(0, 15)}...`, infoBoxX + 5, infoY);
+  }
+
+  yPosition += Math.max(orangeBoxHeight, infoBoxHeight) + 12;
+
+  // ============================================
+  // INFORMATIONS CLIENT ET RÉSERVATION
+  // ============================================
+  doc.setFontSize(11);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.text('Informations', margin + 8, yPosition);
+  yPosition += 8;
+
+  // Client
+  const colWidth = (contentWidth - 24) / 2;
+  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+  doc.roundedRect(margin + 8, yPosition, colWidth, 30, 3, 3, 'F');
+  
+  let clientY = yPosition + 7;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.text('CLIENT', margin + 12, clientY);
+  clientY += 5;
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+  doc.text(`Nom: ${receipt.customer.name.substring(0, 22)}`, margin + 12, clientY);
+  clientY += 4;
+  doc.setFontSize(7);
+  doc.text(`Email: ${receipt.customer.email.substring(0, 25)}`, margin + 12, clientY);
+  clientY += 4;
+  doc.setFontSize(8);
+  doc.text(`Tél: ${receipt.customer.phone}`, margin + 12, clientY);
+
+  // Réservation
+  const resX = margin + 8 + colWidth + 8;
+  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+  doc.roundedRect(resX, yPosition, colWidth, 30, 3, 3, 'F');
+  
+  let resY = yPosition + 7;
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.text('RÉSERVATION', resX + 5, resY);
+  resY += 5;
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+  doc.text(`Type: ${receipt.booking.booking_type}`, resX + 5, resY);
+  resY += 4;
+  doc.setFontSize(7);
+  doc.text(`Arrivée: ${formatDateShort(receipt.booking.start_date)}`, resX + 5, resY);
+  resY += 4;
+  doc.text(`Départ: ${formatDateShort(receipt.booking.end_date)}`, resX + 5, resY);
+  resY += 4;
+  doc.setFontSize(8);
+  doc.text(`Voyageurs: ${receipt.booking.guests}`, resX + 5, resY);
+
+  yPosition += 38;
+
+  // ============================================
+  // ÉTABLISSEMENT
+  // ============================================
+  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
+  doc.roundedRect(margin + 8, yPosition, contentWidth - 16, 25, 3, 3, 'F');
+  
+  let propY = yPosition + 7;
+  doc.setFontSize(10);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.text(receipt.property.details.name, margin + 12, propY);
+  propY += 5;
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+  doc.text(receipt.property.details.address.address.substring(0, 55), margin + 12, propY);
+  propY += 4;
+  doc.text(`${receipt.property.details.address.city}, ${receipt.property.details.address.country}`, margin + 12, propY);
+  propY += 4;
+  doc.setFontSize(7);
+  doc.setTextColor(textLight[0], textLight[1], textLight[2]);
+  doc.text(`Type: ${receipt.property.details.residence.type} | Standing: ${receipt.property.details.residence.standing}`, margin + 12, propY);
+
+  yPosition += 32;
+
+  // ============================================
+  // PROPRIÉTAIRE (petit en bas)
+  // ============================================
+  if (yPosition < pageHeight - margin - 15) {
     doc.setFontSize(8);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(100, 100, 100);
-    doc.text('Propriétaire:', margin, yPosition);
     doc.setFont('helvetica', 'normal');
-    doc.text(receipt.owner.name, margin + 25, yPosition);
+    doc.setTextColor(textLight[0], textLight[1], textLight[2]);
+    doc.text(`Propriétaire: ${receipt.owner.name}`, margin + 8, yPosition);
   }
 
   // ============================================
-  // PIED DE PAGE FIXE
+  // PIED DE PAGE (fond sombre)
   // ============================================
-  const footerY = pageHeight - footerHeight;
-  doc.setDrawColor(borderColor[0], borderColor[1], borderColor[2]);
-  doc.setLineWidth(0.5);
-  doc.line(margin, footerY, pageWidth - margin, footerY);
+  const footerY = pageHeight - margin - 12;
+  doc.setFillColor(secondaryDark[0], secondaryDark[1], secondaryDark[2]);
+  doc.roundedRect(margin + 8, footerY, contentWidth - 16, 10, 0, 0, 'F');
   
-  let footerTextY = footerY + 5;
+  doc.setTextColor(white[0], white[1], white[2]);
   doc.setFontSize(7);
-  doc.setTextColor(120, 120, 120);
   doc.setFont('helvetica', 'italic');
-  doc.text('Ce document est un reçu officiel de votre transaction.', margin, footerTextY, { align: 'center', maxWidth: contentWidth });
-  footerTextY += 4;
-  doc.text('Pour toute question, contactez notre service client.', margin, footerTextY, { align: 'center', maxWidth: contentWidth });
-  footerTextY += 4;
-  
+  doc.text('Ce document est un reçu officiel de votre transaction.', margin + 8, footerY + 4, { align: 'center', maxWidth: contentWidth - 16 });
   doc.setFontSize(6);
-  doc.setTextColor(150, 150, 150);
-  doc.text('Dolci Rêva - Kiffer l\'instant | www.dolcireva.com | support@dolcireva.com', margin, footerTextY, { align: 'center', maxWidth: contentWidth });
+  doc.text('Dolci Rêva - Kiffer l\'instant | www.dolcireva.com', margin + 8, footerY + 7.5, { align: 'center', maxWidth: contentWidth - 16 });
 
   // Télécharger le PDF
   const fileName = `receipt-${receipt.receipt_info.booking_reference}.pdf`;

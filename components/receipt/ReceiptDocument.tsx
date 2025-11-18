@@ -34,18 +34,19 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   logoBox: {
-    width: 40,
-    height: 40,
+    width: 50,
+    height: 50,
     backgroundColor: colors.white,
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 15,
+    padding: 5,
   },
-  logoText: {
-    color: colors.primaryOrange,
-    fontSize: 16,
-    fontWeight: 'bold',
+  logoImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
   },
   companyName: {
     color: colors.white,
@@ -175,17 +176,18 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   footerLogo: {
-    width: 30,
-    height: 30,
+    width: 35,
+    height: 35,
     backgroundColor: colors.white,
     borderRadius: 4,
     justifyContent: 'center',
     alignItems: 'center',
+    padding: 3,
   },
-  footerLogoText: {
-    color: colors.primaryOrange,
-    fontSize: 12,
-    fontWeight: 'bold',
+  footerLogoImage: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'contain',
   },
 });
 
@@ -217,7 +219,8 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
         {/* En-tête fixe */}
         <View style={styles.header} fixed>
           <View style={styles.logoBox}>
-            <Text style={styles.logoText}>DR</Text>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            <Image src="/logo/logo-custom.png" style={styles.logoImage} />
           </View>
           <Text style={styles.companyName}>Dolci Rêva</Text>
         </View>
@@ -384,7 +387,8 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
             <Text style={styles.footerTextSmall}>support@dolcireva.com</Text>
           </View>
           <View style={styles.footerLogo}>
-            <Text style={styles.footerLogoText}>D</Text>
+            {/* eslint-disable-next-line jsx-a11y/alt-text */}
+            <Image src="/logo/logo-custom.png" style={styles.footerLogoImage} />
           </View>
         </View>
       </Page>

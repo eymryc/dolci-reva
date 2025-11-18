@@ -83,8 +83,8 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
         },
       });
 
-      const qrSize = (qrSectionWidth - 5) / 2; // QR code occupe la moitié de la section
-      const qrX = qrSectionX + (qrSectionWidth - qrSize) / 2; // Centré dans la section
+      const qrSize = qrSectionWidth - 8; // QR code occupe presque toute la section (agrandi)
+      const qrX = qrSectionX + 4; // Légèrement décalé pour centrage
       const qrY = yPosition;
       
       // Fond blanc pour le QR

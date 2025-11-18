@@ -46,7 +46,6 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   // Couleurs Dolci Rêva
   const primaryOrange: [number, number, number] = [240, 132, 0]; // #f08400
   const white: [number, number, number] = [255, 255, 255];
-  const lightGray: [number, number, number] = [245, 245, 245];
   const textDark: [number, number, number] = [33, 33, 33];
   const textLight: [number, number, number] = [120, 120, 120];
   const borderColor: [number, number, number] = [230, 230, 230];
@@ -60,19 +59,47 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.setFillColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
   doc.rect(0, 0, pageWidth, headerHeight, 'F');
   
-  // Logo simplifié (carré avec "D")
-  doc.setFillColor(white[0], white[1], white[2]);
-  doc.roundedRect(margin, 8, 10, 10, 2, 2, 'F');
-  doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
-  doc.setFontSize(12);
-  doc.setFont('helvetica', 'bold');
-  doc.text('D', margin + 3.5, 15);
+  // Logo Dolci Rêva - Essayer de charger depuis public/logo
+  try {
+    // En production, le logo sera accessible via l'URL publique
+    const logoUrl = typeof window !== 'undefined' 
+      ? '/logo/logo-custom.png' 
+      : null;
+    
+    if (logoUrl && typeof window !== 'undefined') {
+      // En client-side, on peut essayer de charger l'image
+      // Mais pour jsPDF, on doit passer par une URL complète ou base64
+      // Pour l'instant, on garde le logo simplifié amélioré
+      doc.setFillColor(white[0], white[1], white[2]);
+      doc.roundedRect(margin, 8, 12, 12, 2, 2, 'F');
+      doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('DR', margin + 2, 16.5);
+    } else {
+      // Logo simplifié amélioré
+      doc.setFillColor(white[0], white[1], white[2]);
+      doc.roundedRect(margin, 8, 12, 12, 2, 2, 'F');
+      doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
+      doc.text('DR', margin + 2, 16.5);
+    }
+  } catch {
+    // Fallback au logo simplifié
+    doc.setFillColor(white[0], white[1], white[2]);
+    doc.roundedRect(margin, 8, 12, 12, 2, 2, 'F');
+    doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'bold');
+    doc.text('DR', margin + 2, 16.5);
+  }
   
   // Nom de l'entreprise
   doc.setTextColor(white[0], white[1], white[2]);
   doc.setFontSize(20);
   doc.setFont('helvetica', 'bold');
-  doc.text('Dolci Rêva', margin + 15, 16);
+  doc.text('Dolci Rêva', margin + 22, 16);
 
   yPosition = headerHeight + 15;
 
@@ -92,7 +119,19 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.setTextColor(textDark[0], textDark[1], textDark[2]);
   doc.setFontSize(10);
   doc.setFont('helvetica', 'normal');
-  doc.text(receipt.customer.name, margin, yPosition);
+  
+  // Séparer nom et prénom
+  const nameParts = receipt.customer.name.trim().split(/\s+/);
+  const firstName = nameParts.length > 1 ? nameParts.slice(0, -1).join(' ') : '';
+  const lastName = nameParts.length > 0 ? nameParts[nameParts.length - 1] : receipt.customer.name;
+  
+  if (firstName) {
+    doc.text(`Prénom: ${firstName}`, margin, yPosition);
+    yPosition += 5;
+    doc.text(`Nom: ${lastName}`, margin, yPosition);
+  } else {
+    doc.text(`Nom: ${lastName}`, margin, yPosition);
+  }
   yPosition += 5;
   doc.setFontSize(9);
   doc.setTextColor(textLight[0], textLight[1], textLight[2]);
@@ -101,29 +140,26 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.text(receipt.customer.phone, margin, yPosition);
   yPosition += 8;
 
-  // Détails de la réservation (juste en dessous de "Facturé à")
-  doc.setFillColor(lightGray[0], lightGray[1], lightGray[2]);
-  doc.roundedRect(margin, yPosition, leftColWidth, 35, 3, 3, 'F');
-  
-  let bookingDetailY = yPosition + 7;
+  // Détails de la réservation (juste en dessous de "Facturé à") - SANS fond gris
+  let bookingDetailY = yPosition;
   doc.setFontSize(9);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
-  doc.text('Détails de la réservation', margin + 5, bookingDetailY);
+  doc.text('Détails de la réservation', margin, bookingDetailY);
   bookingDetailY += 6;
   
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-  doc.text(`Type: ${receipt.booking.booking_type}`, margin + 5, bookingDetailY);
+  doc.text(`Type: ${receipt.booking.booking_type}`, margin, bookingDetailY);
   bookingDetailY += 4;
-  doc.text(`Référence: ${receipt.booking.booking_reference}`, margin + 5, bookingDetailY);
+  doc.text(`Référence: ${receipt.booking.booking_reference}`, margin, bookingDetailY);
   bookingDetailY += 4;
-  doc.text(`Arrivée: ${formatDateShort(receipt.booking.start_date)}`, margin + 5, bookingDetailY);
+  doc.text(`Arrivée: ${formatDateShort(receipt.booking.start_date)}`, margin, bookingDetailY);
   bookingDetailY += 4;
-  doc.text(`Départ: ${formatDateShort(receipt.booking.end_date)}`, margin + 5, bookingDetailY);
+  doc.text(`Départ: ${formatDateShort(receipt.booking.end_date)}`, margin, bookingDetailY);
   bookingDetailY += 4;
-  doc.text(`Voyageurs: ${receipt.booking.guests}`, margin + 5, bookingDetailY);
+  doc.text(`Voyageurs: ${receipt.booking.guests}`, margin, bookingDetailY);
 
   // "Reçu" - Droite
   const receiptX = margin + leftColWidth + 10;
@@ -141,6 +177,54 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
   doc.text(`Date: ${formatDate(receipt.receipt_info.payment_date)}`, receiptX, receiptY);
   receiptY += 5;
   doc.text(`Transaction: ${receipt.receipt_info.payment_reference}`, receiptX, receiptY);
+  
+  receiptY += 10;
+  
+  // ÉTABLISSEMENT en face de "Détails de la réservation"
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
+  doc.text('ÉTABLISSEMENT', receiptX, receiptY);
+  receiptY += 6;
+  
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+  doc.text(receipt.property.details.name, receiptX, receiptY);
+  receiptY += 4;
+  doc.setFontSize(7);
+  doc.setTextColor(textLight[0], textLight[1], textLight[2]);
+  doc.text(receipt.property.details.address.address.substring(0, 35), receiptX, receiptY);
+  receiptY += 4;
+  doc.text(`${receipt.property.details.address.city}, ${receipt.property.details.address.country}`, receiptX, receiptY);
+  receiptY += 4;
+  doc.text(`Type: ${receipt.property.details.residence.type}`, receiptX, receiptY);
+  receiptY += 4;
+  doc.text(`Standing: ${receipt.property.details.residence.standing}`, receiptX, receiptY);
+  
+  receiptY += 6;
+  
+  // Détails du customer (propriétaire)
+  doc.setFontSize(9);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
+  doc.text('PROPRIÉTAIRE', receiptX, receiptY);
+  receiptY += 6;
+  
+  doc.setFontSize(8);
+  doc.setFont('helvetica', 'normal');
+  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
+  doc.text(receipt.owner.name, receiptX, receiptY);
+  if (receipt.owner.email) {
+    receiptY += 4;
+    doc.setFontSize(7);
+    doc.setTextColor(textLight[0], textLight[1], textLight[2]);
+    doc.text(receipt.owner.email, receiptX, receiptY);
+  }
+  if (receipt.owner.phone) {
+    receiptY += 4;
+    doc.text(receipt.owner.phone, receiptX, receiptY);
+  }
 
   yPosition += 45;
 
@@ -242,56 +326,6 @@ export async function generateReceiptPDF(receipt: ReceiptData): Promise<void> {
     { align: 'right' }
   );
 
-  yPosition = totalY + 30;
-
-  // ============================================
-  // MÉTHODES DE PAIEMENT (bas gauche)
-  // ============================================
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
-  doc.text('MÉTHODE DE PAIEMENT', margin, yPosition);
-  yPosition += 6;
-  
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-  doc.text('Mobile Money', margin, yPosition);
-  yPosition += 4;
-  doc.text('Carte Bancaire', margin, yPosition);
-  yPosition += 4;
-  doc.text('Virement Bancaire', margin, yPosition);
-  yPosition += 4;
-  doc.setFont('helvetica', 'italic');
-  doc.setTextColor(textLight[0], textLight[1], textLight[2]);
-  doc.text('Méthode utilisée: ' + receipt.payment.payment_method, margin, yPosition);
-  if (receipt.payment.authorization_code) {
-    yPosition += 4;
-    doc.setFontSize(7);
-    doc.text(`Code: ${receipt.payment.authorization_code}`, margin, yPosition);
-  }
-
-  // ============================================
-  // ÉTABLISSEMENT (bas centre)
-  // ============================================
-  const propertyX = margin + leftColWidth / 2;
-  yPosition = totalY + 30;
-  doc.setFontSize(9);
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(primaryOrange[0], primaryOrange[1], primaryOrange[2]);
-  doc.text('ÉTABLISSEMENT', propertyX, yPosition);
-  yPosition += 6;
-  
-  doc.setFontSize(8);
-  doc.setFont('helvetica', 'normal');
-  doc.setTextColor(textDark[0], textDark[1], textDark[2]);
-  doc.text(receipt.property.details.name, propertyX, yPosition);
-  yPosition += 4;
-  doc.setFontSize(7);
-  doc.setTextColor(textLight[0], textLight[1], textLight[2]);
-  doc.text(receipt.property.details.address.address.substring(0, 40), propertyX, yPosition);
-  yPosition += 4;
-  doc.text(`${receipt.property.details.address.city}, ${receipt.property.details.address.country}`, propertyX, yPosition);
 
   // ============================================
   // PIED DE PAGE ORANGE (comme OlistaDental)

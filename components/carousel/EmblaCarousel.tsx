@@ -31,14 +31,12 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
           {children
             ? children
             : slides?.map((img, index) => (
-                <div className="embla__slide" key={index} style={{ position: 'relative', width: '100%', height: '100%', minHeight: '100%' }}>
+                <div className="embla__slide" key={index} style={{ position: 'relative', width: '100%', height: '300px' }}>
                   <Image
                     src={img.src}
                     alt={img.alt}
                     fill
-                    style={{ objectFit: 'cover' }}
-                    priority={index === 0}
-                    sizes="100vw"
+                    style={{ objectFit: 'cover',  }}
                   />
                 </div>
               ))}

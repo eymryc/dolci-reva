@@ -67,8 +67,8 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   qrSection: {
-    width: '30%',
-    marginRight: 15,
+    width: '50%',
+    marginRight: 10,
     flexShrink: 0,
   },
   qrContainer: {
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   detailsSection: {
-    width: '70%',
+    width: '50%',
     flexShrink: 0,
   },
   receiptTitle: {

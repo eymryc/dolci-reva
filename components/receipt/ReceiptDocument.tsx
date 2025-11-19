@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 25,
-    paddingTop: 95, // Espace pour le header (70 + 25)
+    paddingTop: 10, // Espace pour le header (réduit)
     paddingBottom: 70, // Espace pour le footer (60 + 10)
   },
   topSection: {

@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
   companyName: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: 'bold',
   },
   content: {
     padding: 25,
@@ -61,10 +60,12 @@ const styles = StyleSheet.create({
   topSection: {
     flexDirection: 'row',
     marginBottom: 20,
+    width: '100%',
   },
   qrSection: {
-    width: '25%',
-    marginRight: 20,
+    width: '30%',
+    marginRight: 15,
+    flexShrink: 0,
   },
   qrContainer: {
     backgroundColor: colors.white,
@@ -84,17 +85,16 @@ const styles = StyleSheet.create({
     marginTop: 5,
   },
   detailsSection: {
-    width: '65%',
+    width: '70%',
+    flexShrink: 0,
   },
   receiptTitle: {
     fontSize: 20,
-    fontWeight: 'bold',
     color: colors.primaryOrange,
     marginBottom: 10,
   },
   sectionTitle: {
     fontSize: 12,
-    fontWeight: 'bold',
     color: colors.primaryOrange,
     marginTop: 12,
     marginBottom: 6,
@@ -137,7 +137,6 @@ const styles = StyleSheet.create({
   tableHeaderText: {
     color: colors.white,
     fontSize: 10,
-    fontWeight: 'bold',
   },
   tableCellText: {
     fontSize: 9,

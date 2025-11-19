@@ -206,12 +206,12 @@ const styles = StyleSheet.create({
   },
   tableCell: {
     flex: 1,
-    padding: 12,
+    padding: 8,
     borderRight: `1px solid ${colors.borderLight}`,
   },
   tableCellLast: {
     flex: 1,
-    padding: 12,
+    padding: 8,
   },
   tableHeader: {
     backgroundColor: colors.primaryOrange,
@@ -283,18 +283,6 @@ const formatDateShort = (dateString: string) => {
   });
 };
 
-// Format date complète
-const formatDateFull = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('fr-FR', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
-};
-
 interface ReceiptDocumentProps {
   receipt: ReceiptData;
   qrCodeDataUrl?: string;
@@ -331,7 +319,6 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
                   <Image src={qrCodeDataUrl} style={styles.qrCode} />
                 </View>
               )}
-              <Text style={styles.qrLabel}>Code de vérification</Text>
 
               <View style={styles.separator} />
 
@@ -476,11 +463,6 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
               </View>
             </View>
           </View>
-
-          {/* Date de génération */}
-          <Text style={styles.generatedDate}>
-            Reçu généré le {formatDateFull(receipt.receipt_info.generated_at)}
-          </Text>
         </View>
 
         {/* Pied de page */}

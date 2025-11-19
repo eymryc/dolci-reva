@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   table: {
-    marginTop: 5,
+    marginTop: 0,
     border: `1px solid ${colors.borderLight}`,
     borderRadius: 6,
     overflow: 'hidden',
@@ -345,7 +345,7 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
               <View style={styles.separator} />
 
               <Text style={styles.sectionTitle}>PROPRIÉTAIRE</Text>
-              <View style={styles.sectionBox}>
+              <View>
                 <Text style={styles.labelText}>Nom complet</Text>
                 {receipt.owner.full_name ? (
                   <Text style={styles.valueText}>{receipt.owner.full_name}</Text>
@@ -367,6 +367,7 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
                   </>
                 )}
               </View>
+              <View style={styles.separator} />
             </View>
 
             {/* Colonne droite - Détails du reçu */}
@@ -395,7 +396,7 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
               <View style={styles.separator} />
 
               <Text style={styles.sectionTitle}>CLIENT</Text>
-              <View style={styles.sectionBox}>
+              <View>
                 <Text style={styles.labelText}>Nom complet</Text>
                 <Text style={styles.valueText}>{receipt.customer.full_name}</Text>
                 
@@ -405,6 +406,7 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
                 <Text style={styles.labelText}>Téléphone</Text>
                 <Text style={styles.textSmall}>{receipt.customer.phone}</Text>
               </View>
+              <View style={styles.separator} />
             </View>
           </View>
 

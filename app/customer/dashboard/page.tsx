@@ -302,6 +302,7 @@ export default function CustomerDashboardPage() {
                         isRefreshing={isRefetchingBookings}
                         canCancel={true}
                         canDelete={false}
+                        viewMode="customer"
                       />
                     ) : (
                       <div className="text-center py-16">
@@ -338,6 +339,7 @@ export default function CustomerDashboardPage() {
                         isRefreshing={isRefetchingBookings}
                         canCancel={true}
                         canDelete={false}
+                        viewMode="customer"
                       />
                     ) : (
                       <div className="text-center py-16">
@@ -368,6 +370,7 @@ export default function CustomerDashboardPage() {
                         isRefreshing={isRefetchingBookings}
                         canCancel={true}
                         canDelete={false}
+                        viewMode="customer"
                       />
                     ) : (
                       <div className="text-center py-16">
@@ -398,6 +401,7 @@ export default function CustomerDashboardPage() {
                         isRefreshing={isRefetchingBookings}
                         canCancel={false}
                         canDelete={false}
+                        viewMode="customer"
                       />
                     ) : (
                       <div className="text-center py-16">
@@ -428,6 +432,7 @@ export default function CustomerDashboardPage() {
                         isRefreshing={isRefetchingBookings}
                         canCancel={false}
                         canDelete={false}
+                        viewMode="customer"
                       />
                     ) : (
                       <div className="text-center py-16">

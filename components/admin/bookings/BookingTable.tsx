@@ -49,6 +49,7 @@ interface BookingTableProps {
   isRefreshing?: boolean;
   canCancel?: boolean;
   canDelete?: boolean;
+  viewMode?: 'customer' | 'owner'; // 'customer' affiche les infos du owner, 'owner' affiche les infos du client
 }
 
 export function BookingTable({
@@ -61,6 +62,7 @@ export function BookingTable({
   isRefreshing = false,
   canCancel = true,
   canDelete = true,
+  viewMode = 'owner', // Par défaut 'owner' pour rétrocompatibilité
 }: BookingTableProps) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -114,16 +116,22 @@ export function BookingTable({
       },
       {
         id: "customer",
-        header: "Client",
+        header: viewMode === 'customer' ? "Propriétaire" : "Client",
         cell: ({ row }) => {
-          const customer = row.original.customer;
-          if (!customer) {
+          // Si viewMode === 'customer', on affiche les infos du owner
+          // Sinon, on affiche les infos du client (comportement par défaut)
+          const person = viewMode === 'customer' ? row.original.owner : row.original.customer;
+          
+          if (!person) {
             return <div className="text-gray-500 text-sm">N/A</div>;
           }
           return (
             <div className="text-gray-900">
-              <div className="font-medium">{`${customer.first_name} ${customer.last_name}`}</div>
-              <div className="text-xs text-gray-500">{customer.email}</div>
+              <div className="font-medium">{`${person.first_name} ${person.last_name}`}</div>
+              <div className="text-xs text-gray-500">{person.email}</div>
+              {person.phone && (
+                <div className="text-xs text-gray-500">{person.phone}</div>
+              )}
             </div>
           );
         },
@@ -369,7 +377,7 @@ export function BookingTable({
         },
       },
     ],
-    [onCancel, onDelete, canCancel, canDelete]
+    [onCancel, onDelete, canCancel, canDelete, viewMode]
   );
 
   const table = useReactTable({

@@ -167,6 +167,7 @@ export default function CustomerBookingsPage() {
             isRefreshing={isRefetchingBookings}
             canCancel={true}
             canDelete={false}
+            viewMode="customer"
           />
         )}
       </div>

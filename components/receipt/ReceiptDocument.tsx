@@ -95,13 +95,13 @@ const styles = StyleSheet.create({
   receiptTitle: {
     fontSize: 24,
     color: colors.primaryOrange,
-    marginBottom: 15,
+    marginBottom: 5,
     fontWeight: 'bold',
   },
   sectionTitle: {
     fontSize: 13,
     color: colors.primaryOrange,
-    marginTop: 15,
+    marginTop: 5,
     marginBottom: 8,
     fontWeight: 'bold',
     textTransform: 'uppercase',

@@ -160,9 +160,9 @@ const HebergementCard: React.FC<HebergementCardProps> = ({
 
   return (
     <Link href={linkHref} className="block group/card">
-      <div className="bg-white rounded-2xl shadow-md overflow-hidden flex flex-row min-h-[280px] h-auto group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100 cursor-pointer">
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-md overflow-hidden flex flex-col sm:flex-row min-h-[280px] h-auto group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100 cursor-pointer">
       {/* Image Section (Left) - 40-50% width */}
-      <div className="relative w-2/5 min-w-[280px] min-h-[280px] overflow-hidden">
+      <div className="relative w-full sm:w-2/5 h-48 sm:h-auto sm:min-w-[280px] sm:min-h-[280px] overflow-hidden">
         <Image 
           src={allImages[currentImageIndex] || imageSrc} 
           alt={name} 
@@ -173,7 +173,7 @@ const HebergementCard: React.FC<HebergementCardProps> = ({
         
         {/* Pagination dots (si plusieurs images) */}
         {allImages.length > 1 && (
-          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5 z-10">
+          <div className="absolute bottom-2 sm:bottom-3 left-1/2 -translate-x-1/2 flex gap-1 sm:gap-1.5 z-10">
             {allImages.map((_, index) => (
               <button
                 key={index}
@@ -182,9 +182,9 @@ const HebergementCard: React.FC<HebergementCardProps> = ({
                   e.stopPropagation();
                   setCurrentImageIndex(index);
                 }}
-                className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                className={`w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full transition-all duration-200 ${
                   index === currentImageIndex 
-                    ? 'bg-white w-6' 
+                    ? 'bg-white w-4 sm:w-6' 
                     : 'bg-white/50 hover:bg-white/75'
                 }`}
                 aria-label={`Image ${index + 1}`}
@@ -200,53 +200,54 @@ const HebergementCard: React.FC<HebergementCardProps> = ({
             e.stopPropagation();
             // TODO: Ouvrir modal/galerie
           }}
-          className="absolute bottom-3 right-3 z-10 w-8 h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg hover:bg-white transition-colors duration-200 group/zoom"
+          className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 z-10 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-lg hover:bg-white transition-colors duration-200 group/zoom"
           aria-label="Agrandir l'image"
         >
-          <Maximize2 className="w-4 h-4 text-gray-700 group-hover/zoom:scale-110 transition-transform" />
+          <Maximize2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-700 group-hover/zoom:scale-110 transition-transform" />
         </button>
       </div>
 
       {/* Details Section (Right) - 60% width */}
-      <div className="flex-1 flex flex-col relative min-h-[280px]">
+      <div className="flex-1 flex flex-col relative sm:min-h-[280px]">
         {/* Header Section */}
-        <div className="p-6 pb-4 relative">
+        <div className="p-4 sm:p-6 pb-3 sm:pb-4 relative">
           {/* Location et Lien Voir les détails */}
-          <div className="flex items-start justify-between mb-3">
-            <div className="flex items-center gap-1.5">
-              <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
-              <p className="text-sm text-gray-500">{location}</p>
+          <div className="flex items-start justify-between mb-2 sm:mb-3 gap-2">
+            <div className="flex items-center gap-1.5 min-w-0 flex-1">
+              <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
+              <p className="text-xs sm:text-sm text-gray-500 truncate">{location}</p>
             </div>
             <button
               onClick={handleViewDetails}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm font-semibold text-theme-primary hover:text-theme-primary/80 hover:bg-theme-primary/10 rounded-lg transition-all duration-200 flex-shrink-0"
+              className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold text-theme-primary hover:text-theme-primary/80 hover:bg-theme-primary/10 rounded-lg transition-all duration-200 flex-shrink-0"
             >
-              Découvrir
-              <ArrowRight className="w-4 h-4" />
+              <span className="hidden sm:inline">Découvrir</span>
+              <span className="sm:hidden">Voir</span>
+              <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </button>
           </div>
 
           {/* Title avec type et adresse */}
           {title && (
-            <h3 className="text-xl text-gray-900 mb-4 line-clamp-2">
+            <h3 className="text-base sm:text-lg md:text-xl text-gray-900 mb-3 sm:mb-4 line-clamp-2">
               {title}
             </h3>
           )}
 
           {/* Badges Type, Structure, Construction */}
-          <div className="flex flex-wrap items-center gap-2 mb-3">
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
             {type && (
-              <span className="px-2.5 py-1 bg-theme-primary/10 text-theme-primary rounded-md font-semibold border border-theme-primary/20 text-xs">
+              <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-theme-primary/10 text-theme-primary rounded-md font-semibold border border-theme-primary/20 text-[10px] sm:text-xs">
                 {formatLabel(type)}
               </span>
             )}
             {(structureTypeLabel || structureType) && (
-              <span className="px-2.5 py-1 bg-blue-50 text-blue-700 rounded-md font-medium border border-blue-200 text-xs">
+              <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-blue-50 text-blue-700 rounded-md font-medium border border-blue-200 text-[10px] sm:text-xs">
                 {structureTypeLabel || formatLabel(structureType || '')}
               </span>
             )}
             {(constructionTypeLabel || constructionType) && (
-              <span className="px-2.5 py-1 bg-purple-50 text-purple-700 rounded-md font-medium border border-purple-200 text-xs">
+              <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-purple-50 text-purple-700 rounded-md font-medium border border-purple-200 text-[10px] sm:text-xs">
                 {constructionTypeLabel || formatLabel(constructionType || '')}
               </span>
             )}
@@ -254,19 +255,19 @@ const HebergementCard: React.FC<HebergementCardProps> = ({
 
           {/* Amenities Icons */}
           {displayAmenities.length > 0 && (
-            <div className="flex items-center gap-3 mb-3 flex-wrap">
+            <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 flex-wrap">
               {displayAmenities.map((amenity, index) => {
                 const Icon = getAmenityIcon(amenity);
                 return (
                   <div
                     key={index}
-                    className="flex items-center justify-center w-6 h-6 text-gray-500"
+                    className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 text-gray-500"
                     title={amenity}
                   >
                     {Icon ? (
-                      <Icon className="w-5 h-5" />
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                     ) : (
-                      <div className="w-2 h-2 rounded-full bg-gray-400" />
+                      <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400" />
                     )}
                   </div>
                 );
@@ -276,62 +277,62 @@ const HebergementCard: React.FC<HebergementCardProps> = ({
 
           {/* Informations financières */}
           {(rentAdvanceAmountNumber || securityDepositMonthNumber || agencyFeesMonthNumber || visitePrice) && (
-            <div className="flex flex-wrap items-center gap-2.5">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5">
               {rentAdvanceAmountNumber && rentAdvanceAmountNumber > 0 && (
-                <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-blue-50 to-blue-100/50 rounded-lg border border-blue-200/60 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-500/10">
-                    <Calendar className="w-4 h-4 text-blue-600" />
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-blue-50 to-blue-100/50 rounded-lg border border-blue-200/60 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-blue-500/10">
+                    <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs font-medium text-blue-900 leading-tight">
+                    <span className="text-[10px] sm:text-xs font-medium text-blue-900 leading-tight">
                       {rentAdvanceAmountNumber} mois
                     </span>
-                    <span className="text-[10px] text-blue-600/80 leading-tight">
+                    <span className="text-[9px] sm:text-[10px] text-blue-600/80 leading-tight">
                       d&apos;avance
                     </span>
                   </div>
                 </div>
               )}
               {securityDepositMonthNumber && securityDepositMonthNumber > 0 && (
-                <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-lg border border-amber-200/60 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-amber-500/10">
-                    <Shield className="w-4 h-4 text-amber-600" />
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-amber-50 to-amber-100/50 rounded-lg border border-amber-200/60 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-amber-500/10">
+                    <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs font-medium text-amber-900 leading-tight">
+                    <span className="text-[10px] sm:text-xs font-medium text-amber-900 leading-tight">
                       {securityDepositMonthNumber} mois
                     </span>
-                    <span className="text-[10px] text-amber-600/80 leading-tight">
+                    <span className="text-[9px] sm:text-[10px] text-amber-600/80 leading-tight">
                       de caution
                     </span>
                   </div>
                 </div>
               )}
               {agencyFeesMonthNumber && agencyFeesMonthNumber > 0 && (
-                <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-purple-50 to-purple-100/50 rounded-lg border border-purple-200/60 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-purple-500/10">
-                    <Building2 className="w-4 h-4 text-purple-600" />
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-purple-50 to-purple-100/50 rounded-lg border border-purple-200/60 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-purple-500/10">
+                    <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs font-medium text-purple-900 leading-tight">
+                    <span className="text-[10px] sm:text-xs font-medium text-purple-900 leading-tight">
                       {agencyFeesMonthNumber} mois
                     </span>
-                    <span className="text-[10px] text-purple-600/80 leading-tight">
+                    <span className="text-[9px] sm:text-[10px] text-purple-600/80 leading-tight">
                       frais d&apos;agence
                     </span>
                   </div>
                 </div>
               )}
               {visitePrice && visitePrice > 0 && (
-                <div className="flex items-center gap-2 px-3 py-2 bg-gradient-to-r from-green-50 to-green-100/50 rounded-lg border border-green-200/60 shadow-sm hover:shadow-md transition-shadow">
-                  <div className="flex items-center justify-center w-7 h-7 rounded-full bg-green-500/10">
-                    <Eye className="w-4 h-4 text-green-600" />
+                <div className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1.5 sm:py-2 bg-gradient-to-r from-green-50 to-green-100/50 rounded-lg border border-green-200/60 shadow-sm hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-center w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-green-500/10">
+                    <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs font-medium text-green-900 leading-tight">
+                    <span className="text-[10px] sm:text-xs font-medium text-green-900 leading-tight">
                       Visite
                     </span>
-                    <span className="text-[10px] text-green-600/80 leading-tight font-semibold">
+                    <span className="text-[9px] sm:text-[10px] text-green-600/80 leading-tight font-semibold">
                       {formatPrice(visitePrice)} FCFA
                     </span>
                   </div>
@@ -342,40 +343,40 @@ const HebergementCard: React.FC<HebergementCardProps> = ({
         </div>
 
         {/* Rating and Price Section - Fond orange */}
-        <div className="mt-auto flex items-end justify-between gap-4 pt-4 px-6 pb-6 bg-theme-primary">
+        <div className="mt-auto flex flex-col sm:flex-row items-start sm:items-end justify-between gap-3 sm:gap-4 pt-3 sm:pt-4 px-4 sm:px-6 pb-4 sm:pb-6 bg-theme-primary">
           {/* Left side: Informations sur les pièces */}
-          <div className="flex items-center gap-2 flex-wrap">
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
             {pieceNumber != null && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
-                <Home className="w-4 h-4 text-white" />
-                <span className="text-sm font-bold text-white">{pieceNumber}</span>
-                <span className="text-xs font-medium text-white/90">pièce{pieceNumber > 1 ? 's' : ''}</span>
+              <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
+                <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
+                <span className="text-xs sm:text-sm font-bold text-white">{pieceNumber}</span>
+                <span className="text-[10px] sm:text-xs font-medium text-white/90">pièce{pieceNumber > 1 ? 's' : ''}</span>
               </div>
             )}
             {displayRooms != null && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
-                <span className="text-sm font-bold text-white">{displayRooms}</span>
-                <span className="text-xs font-medium text-white/90">chambre{displayRooms > 1 ? 's' : ''}</span>
+              <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
+                <span className="text-xs sm:text-sm font-bold text-white">{displayRooms}</span>
+                <span className="text-[10px] sm:text-xs font-medium text-white/90">chambre{displayRooms > 1 ? 's' : ''}</span>
               </div>
             )}
             {bathrooms != null && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
-                <span className="text-sm font-bold text-white">{bathrooms}</span>
-                <span className="text-xs font-medium text-white/90">salle{bathrooms > 1 ? 's' : ''} de bain</span>
+              <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
+                <span className="text-xs sm:text-sm font-bold text-white">{bathrooms}</span>
+                <span className="text-[10px] sm:text-xs font-medium text-white/90">salle{bathrooms > 1 ? 's' : ''} de bain</span>
               </div>
             )}
             {living_room != null && (
-              <div className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
-                <span className="text-sm font-bold text-white">{living_room}</span>
-                <span className="text-xs font-medium text-white/90">salon{living_room > 1 ? 's' : ''}</span>
+              <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
+                <span className="text-xs sm:text-sm font-bold text-white">{living_room}</span>
+                <span className="text-[10px] sm:text-xs font-medium text-white/90">salon{living_room > 1 ? 's' : ''}</span>
               </div>
             )}
           </div>
 
           {/* Price - Toujours à droite */}
-          <div className="flex flex-col items-end ml-auto">
-            <p className="text-xs text-white/80 mb-1">Loyer mensuel</p>
-            <p className="text-2xl font-bold text-white">
+          <div className="flex flex-col items-start sm:items-end ml-0 sm:ml-auto w-full sm:w-auto">
+            <p className="text-[10px] sm:text-xs text-white/80 mb-0.5 sm:mb-1">Loyer mensuel</p>
+            <p className="text-xl sm:text-2xl font-bold text-white">
               {formatPrice(price)} FCFA
             </p>
           </div>

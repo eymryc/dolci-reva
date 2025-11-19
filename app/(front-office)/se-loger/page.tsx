@@ -118,33 +118,33 @@ export default function SeLogerPage() {
          />
 
       {/* Main Content with Filters and Cards */}
-      <div className="container mx-auto px-4 md:px-6 lg:px-8 py-8 md:py-12">
-        <div className="grid grid-cols-1 lg:grid-cols-[minmax(300px,400px)_1fr] gap-6 lg:gap-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(300px,400px)_1fr] gap-4 sm:gap-6 lg:gap-8">
           {/* Sidebar Filtres - Left */}
           <div>
-            <div className="bg-white rounded-2xl shadow-md border border-gray-100 p-8 sticky top-6">
-              <h3 className="text-xl font-bold text-gray-900 mb-8">Filtres</h3>
+            <div className="bg-white rounded-xl sm:rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6 md:p-8 lg:sticky lg:top-6">
+              <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 md:mb-8">Filtres</h3>
               
-              <div className="space-y-5">
+              <div className="space-y-4 sm:space-y-5">
                 {/* Barre de recherche */}
                 <div className="relative group">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10 pointer-events-none group-focus-within:text-theme-primary transition-colors" />
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5 z-10 pointer-events-none group-focus-within:text-theme-primary transition-colors" />
                   <Input
                     placeholder="Rechercher..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 h-12 border-2 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 text-gray-900 bg-gray-50 hover:bg-white transition-all duration-200 rounded-xl"
+                    className="pl-9 sm:pl-10 h-11 sm:h-12 text-sm sm:text-base border-2 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 text-gray-900 bg-gray-50 hover:bg-white transition-all duration-200 rounded-lg sm:rounded-xl"
                   />
                 </div>
 
                 {/* Selects Ville et Type */}
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
                   <div className="min-w-0">
-                    <label className="text-base font-semibold text-gray-700 mb-3 block">Ville</label>
+                    <label className="text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3 block">Ville</label>
                     <Select value={selectedCity || 'all'} onValueChange={(value) => setSelectedCity(value === 'all' ? '' : value)}>
-                      <SelectTrigger className="h-12 text-gray-900 bg-gray-50 hover:bg-white border-2 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-xl transition-all duration-200 w-full">
+                      <SelectTrigger className="h-11 sm:h-12 text-sm sm:text-base text-gray-900 bg-gray-50 hover:bg-white border-2 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-lg sm:rounded-xl transition-all duration-200 w-full">
                         <div className="flex items-center gap-2 min-w-0">
-                          <MapPin className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                           <SelectValue placeholder="Toutes les villes" className="truncate" />
                         </div>
                       </SelectTrigger>
@@ -160,11 +160,11 @@ export default function SeLogerPage() {
                   </div>
                   
                   <div className="min-w-0">
-                    <label className="text-base font-semibold text-gray-700 mb-3 block">Type</label>
+                    <label className="text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3 block">Type</label>
                     <Select value={selectedType || 'all'} onValueChange={(value) => setSelectedType(value === 'all' ? '' : value)}>
-                      <SelectTrigger className="h-12 text-gray-900 bg-gray-50 hover:bg-white border-2 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-xl transition-all duration-200 w-full">
+                      <SelectTrigger className="h-11 sm:h-12 text-sm sm:text-base text-gray-900 bg-gray-50 hover:bg-white border-2 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-lg sm:rounded-xl transition-all duration-200 w-full">
                         <div className="flex items-center gap-2 min-w-0">
-                          <Home className="w-4 h-4 text-gray-400 flex-shrink-0" />
+                          <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
                           <SelectValue placeholder="Tous les types" className="truncate" />
                         </div>
                       </SelectTrigger>
@@ -180,8 +180,8 @@ export default function SeLogerPage() {
                 </div>
 
                 {/* Bouton Rechercher */}
-                <Button className="w-full h-12 bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
-                  <Search className="w-5 h-5 mr-2" />
+                <Button className="w-full h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
+                  <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                   Rechercher
                 </Button>
 
@@ -194,7 +194,7 @@ export default function SeLogerPage() {
                       setSelectedCity('');
                       setSelectedType('');
                     }}
-                    className="w-full h-12 border-2 border-gray-200 text-gray-700 hover:bg-gray-50 rounded-xl transition-all duration-200"
+                    className="w-full h-11 sm:h-12 text-sm sm:text-base border-2 border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg sm:rounded-xl transition-all duration-200"
                   >
                     Réinitialiser
                   </Button>
@@ -206,17 +206,17 @@ export default function SeLogerPage() {
           {/* Cards Section - Right */}
           <div>
             {/* Résultats Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-              <div className="flex items-center gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
                 <div>
-                  <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">
+                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1">
                     {dwellings.length} hébergement{dwellings.length > 1 ? 's' : ''} trouvé{dwellings.length > 1 ? 's' : ''}
                   </h2>
-                  <p className="text-sm text-gray-500">Découvrez nos meilleures offres</p>
+                  <p className="text-xs sm:text-sm text-gray-500">Découvrez nos meilleures offres</p>
                 </div>
                 {(searchTerm || selectedCity || selectedType) && (
-                  <div className="flex items-center gap-2 px-3 py-1.5 bg-theme-primary/10 rounded-lg border border-theme-primary/20">
-                    <Filter className="w-4 h-4 text-theme-primary" />
+                  <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-theme-primary/10 rounded-lg border border-theme-primary/20">
+                    <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-theme-primary" />
                     <span className="text-xs font-semibold text-theme-primary">Filtres actifs</span>
                   </div>
                 )}
@@ -225,7 +225,7 @@ export default function SeLogerPage() {
                 value={orderPrice || 'none'}
                 onValueChange={(value) => setOrderPrice(value === 'none' ? '' : value as 'asc' | 'desc')}
               >
-                <SelectTrigger className="w-full sm:w-56 text-gray-900 bg-white border-2 border-gray-200 hover:border-theme-primary/50 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-xl transition-all duration-200">
+                <SelectTrigger className="w-full sm:w-48 md:w-56 text-sm sm:text-base text-gray-900 bg-white border-2 border-gray-200 hover:border-theme-primary/50 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-lg sm:rounded-xl transition-all duration-200">
                   <SelectValue placeholder="Trier par prix" />
                 </SelectTrigger>
                 <SelectContent>
@@ -238,19 +238,19 @@ export default function SeLogerPage() {
 
             {/* Liste des hébergements */}
             {isLoading ? (
-              <div className="space-y-6 animate-fade-in">
+              <div className="space-y-4 sm:space-y-6 animate-fade-in">
                 {Array.from({ length: 4 }).map((_, idx) => (
-                  <Card key={idx} className="overflow-hidden animate-pulse h-64 border border-gray-100">
-                    <div className="flex h-full">
-                      <div className="w-2/5 bg-gradient-to-br from-gray-200 to-gray-300"></div>
-                      <div className="flex-1 p-6 space-y-4">
-                        <div className="h-4 bg-gray-200 rounded-lg w-3/4"></div>
-                        <div className="h-4 bg-gray-200 rounded-lg w-1/2"></div>
-                        <div className="h-4 bg-gray-200 rounded-lg w-full"></div>
-                        <div className="flex gap-2 mt-4">
-                          <div className="h-6 w-6 bg-gray-200 rounded"></div>
-                          <div className="h-6 w-6 bg-gray-200 rounded"></div>
-                          <div className="h-6 w-6 bg-gray-200 rounded"></div>
+                  <Card key={idx} className="overflow-hidden animate-pulse h-48 sm:h-56 md:h-64 border border-gray-100">
+                    <div className="flex flex-col sm:flex-row h-full">
+                      <div className="w-full sm:w-2/5 h-32 sm:h-full bg-gradient-to-br from-gray-200 to-gray-300"></div>
+                      <div className="flex-1 p-4 sm:p-6 space-y-3 sm:space-y-4">
+                        <div className="h-3 sm:h-4 bg-gray-200 rounded-lg w-3/4"></div>
+                        <div className="h-3 sm:h-4 bg-gray-200 rounded-lg w-1/2"></div>
+                        <div className="h-3 sm:h-4 bg-gray-200 rounded-lg w-full"></div>
+                        <div className="flex gap-2 mt-3 sm:mt-4">
+                          <div className="h-5 w-5 sm:h-6 sm:w-6 bg-gray-200 rounded"></div>
+                          <div className="h-5 w-5 sm:h-6 sm:w-6 bg-gray-200 rounded"></div>
+                          <div className="h-5 w-5 sm:h-6 sm:w-6 bg-gray-200 rounded"></div>
                         </div>
                       </div>
                     </div>
@@ -298,7 +298,7 @@ export default function SeLogerPage() {
                 </Button>
               </div>
             ) : (
-              <div className="space-y-6 animate-fade-in">
+              <div className="space-y-4 sm:space-y-6 animate-fade-in">
                 {dwellings.map((dwelling, index) => (
                   <div
                     key={dwelling.id}

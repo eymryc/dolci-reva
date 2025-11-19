@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
     fontStyle: 'italic',
   },
   table: {
-    marginTop: 20,
+    marginTop: 5,
     border: `1px solid ${colors.borderLight}`,
     borderRadius: 6,
     overflow: 'hidden',

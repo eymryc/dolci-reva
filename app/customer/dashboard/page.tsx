@@ -7,7 +7,6 @@ import {
   Clock, 
   CheckCircle, 
   Loader2,
-  MapPin,
   CreditCard,
   Star,
   TrendingUp,
@@ -73,7 +72,8 @@ export default function CustomerDashboardPage() {
         </div>
         
         <div className="relative z-10">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-start gap-8 lg:gap-12">
+            {/* Left side - Content */}
             <div className="flex-1">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4 drop-shadow-lg">
                 Mon Espace Client
@@ -102,102 +102,102 @@ export default function CustomerDashboardPage() {
                 </Link>
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Statistics Cards */}
-      <section className="mb-16">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Vue d&apos;ensemble</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {/* Total Bookings Card */}
-          <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-theme-primary/10 rounded-full blur-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-theme-primary/10 rounded-xl">
-                  <Package className="w-6 h-6 text-theme-primary" />
+            
+            {/* Right side - Vue d'ensemble Cards */}
+            <div className="w-full lg:w-auto lg:min-w-[500px]">
+              <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-lg">Vue d&apos;ensemble</h2>
+              <div className="grid grid-cols-2 gap-4">
+                {/* Total Bookings Card */}
+                <div className="group relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-theme-primary/20 rounded-full blur-2xl"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="p-2 bg-white/30 rounded-lg">
+                        <Package className="w-5 h-5 text-white" />
+                      </div>
+                      <TrendingUp className="w-4 h-4 text-white/80" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-white/80 mb-1">Total réservations</p>
+                      <p className="text-2xl font-bold text-white">
+                        {isLoadingBookings ? (
+                          <Loader2 className="w-6 h-6 animate-spin text-white" />
+                        ) : (
+                          stats.totalBookings
+                        )}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <TrendingUp className="w-5 h-5 text-green-500" />
-              </div>
-              <div className="mb-2">
-                <p className="text-sm font-medium text-gray-600 mb-1">Total réservations</p>
-                <p className="text-4xl font-bold text-gray-900">
-                  {isLoadingBookings ? (
-                    <Loader2 className="w-8 h-8 animate-spin text-theme-primary" />
-                  ) : (
-                    stats.totalBookings
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
 
-          {/* Confirmed Bookings Card */}
-          <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-green-500/10 rounded-full blur-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-green-500/10 rounded-xl">
-                  <CheckCircle className="w-6 h-6 text-green-500" />
+                {/* Confirmed Bookings Card */}
+                <div className="group relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/20 rounded-full blur-2xl"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="p-2 bg-white/30 rounded-lg">
+                        <CheckCircle className="w-5 h-5 text-white" />
+                      </div>
+                      <Badge className="bg-green-500/80 text-white border-0 text-xs">Confirmé</Badge>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-white/80 mb-1">Confirmées</p>
+                      <p className="text-2xl font-bold text-white">
+                        {isLoadingBookings ? (
+                          <Loader2 className="w-6 h-6 animate-spin text-white" />
+                        ) : (
+                          stats.confirmedBookings
+                        )}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <Badge className="bg-green-100 text-green-700 border-green-200">Confirmé</Badge>
-              </div>
-              <div className="mb-2">
-                <p className="text-sm font-medium text-gray-600 mb-1">Confirmées</p>
-                <p className="text-4xl font-bold text-gray-900">
-                  {isLoadingBookings ? (
-                    <Loader2 className="w-8 h-8 animate-spin text-theme-primary" />
-                  ) : (
-                    stats.confirmedBookings
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
 
-          {/* Pending Bookings Card */}
-          <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-yellow-500/10 rounded-full blur-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-yellow-500/10 rounded-xl">
-                  <Clock className="w-6 h-6 text-yellow-500" />
+                {/* Pending Bookings Card */}
+                <div className="group relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/20 rounded-full blur-2xl"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="p-2 bg-white/30 rounded-lg">
+                        <Clock className="w-5 h-5 text-white" />
+                      </div>
+                      <Badge className="bg-yellow-500/80 text-white border-0 text-xs">En attente</Badge>
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-white/80 mb-1">En attente</p>
+                      <p className="text-2xl font-bold text-white">
+                        {isLoadingBookings ? (
+                          <Loader2 className="w-6 h-6 animate-spin text-white" />
+                        ) : (
+                          stats.pendingBookings
+                        )}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200">En attente</Badge>
-              </div>
-              <div className="mb-2">
-                <p className="text-sm font-medium text-gray-600 mb-1">En attente</p>
-                <p className="text-4xl font-bold text-gray-900">
-                  {isLoadingBookings ? (
-                    <Loader2 className="w-8 h-8 animate-spin text-theme-primary" />
-                  ) : (
-                    stats.pendingBookings
-                  )}
-                </p>
-              </div>
-            </div>
-          </div>
 
-          {/* Total Spent Card */}
-          <div className="group relative overflow-hidden bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-between mb-4">
-                <div className="p-3 bg-blue-500/10 rounded-xl">
-                  <CreditCard className="w-6 h-6 text-blue-500" />
+                {/* Total Spent Card */}
+                <div className="group relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
+                  <div className="relative z-10">
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="p-2 bg-white/30 rounded-lg">
+                        <CreditCard className="w-5 h-5 text-white" />
+                      </div>
+                      <Star className="w-4 h-4 text-white fill-white/80" />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-white/80 mb-1">Total dépensé</p>
+                      <p className="text-lg font-bold text-white">
+                        {isLoadingBookings ? (
+                          <Loader2 className="w-6 h-6 animate-spin text-white" />
+                        ) : (
+                          new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(stats.totalRevenue)
+                        )}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <Star className="w-5 h-5 text-yellow-500 fill-yellow-500" />
-              </div>
-              <div className="mb-2">
-                <p className="text-sm font-medium text-gray-600 mb-1">Total dépensé</p>
-                <p className="text-2xl font-bold text-gray-900">
-                  {isLoadingBookings ? (
-                    <Loader2 className="w-8 h-8 animate-spin text-theme-primary" />
-                  ) : (
-                    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF' }).format(stats.totalRevenue)
-                  )}
-                </p>
               </div>
             </div>
           </div>
@@ -247,44 +247,6 @@ export default function CustomerDashboardPage() {
         </div>
       </section>
 
-      {/* Quick Actions */}
-      <section>
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">Actions rapides</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <Link href="/residences">
-            <div className="group relative overflow-hidden bg-gradient-to-br from-theme-primary to-theme-accent rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10">
-                <MapPin className="w-12 h-12 text-white mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-2xl font-bold text-white mb-2">Explorer</h3>
-                <p className="text-white/90">Découvrez nos résidences d&apos;exception</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/customer/bookings">
-            <div className="group relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10">
-                <Calendar className="w-12 h-12 text-white mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-2xl font-bold text-white mb-2">Réservations</h3>
-                <p className="text-white/90">Gérez toutes vos réservations</p>
-              </div>
-            </div>
-          </Link>
-
-          <Link href="/customer/profile">
-            <div className="group relative overflow-hidden bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer">
-              <div className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-              <div className="relative z-10">
-                <Star className="w-12 h-12 text-white mb-4 group-hover:scale-110 transition-transform duration-300" />
-                <h3 className="text-2xl font-bold text-white mb-2">Mon profil</h3>
-                <p className="text-white/90">Modifiez vos informations personnelles</p>
-              </div>
-            </div>
-          </Link>
-        </div>
-      </section>
     </div>
   );
 }

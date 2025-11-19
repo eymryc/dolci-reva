@@ -17,10 +17,8 @@ import {
   CreditCard, 
   ArrowLeft, 
   FileText, 
-  Sparkles,
   Download,
-  Mail,
-  Shield
+  Mail
 } from 'lucide-react';
 
 function BookingDetailContent() {
@@ -28,9 +26,6 @@ function BookingDetailContent() {
   const searchParams = useSearchParams();
   const bookingId = params?.id ? parseInt(params.id as string) : null;
   
-  const [paymentStatus, setPaymentStatus] = useState<string | null>(null);
-  const [reference, setReference] = useState<string | null>(null);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const [isGeneratingPDF, setIsGeneratingPDF] = useState(false);
 
   const { data: booking, isLoading, error } = useBooking(bookingId || 0);
@@ -42,9 +37,6 @@ function BookingDetailContent() {
     const ref = searchParams.get('reference');
 
     if (payment === 'success' && ref) {
-      setPaymentStatus('success');
-      setReference(ref);
-      setShowSuccessMessage(true);
       toast.success('Paiement effectué avec succès !', {
         description: `Référence: ${ref}`,
       });
@@ -125,53 +117,6 @@ function BookingDetailContent() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-yellow-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-5xl mx-auto">
-        {/* Success Message Banner - Amélioré */}
-        {showSuccessMessage && paymentStatus === 'success' && (
-          <div className="mb-8 relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-green-400/20 via-emerald-400/20 to-teal-400/20 animate-pulse"></div>
-            <Card className="relative border-2 border-green-300 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 shadow-xl">
-              <CardContent className="pt-8 pb-6">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                  {/* Icône animée */}
-                  <div className="flex-shrink-0 relative">
-                    <div className="absolute inset-0 bg-green-400 rounded-full animate-ping opacity-20"></div>
-                    <div className="relative bg-gradient-to-br from-green-500 to-emerald-600 rounded-full p-4 shadow-lg">
-                      <CheckCircle2 className="w-12 h-12 text-white" />
-                    </div>
-                  </div>
-                  
-                  {/* Contenu */}
-                  <div className="flex-1 text-center md:text-left">
-                    <div className="flex items-center justify-center md:justify-start gap-2 mb-3">
-                      <Sparkles className="w-5 h-5 text-green-600 animate-pulse" />
-                      <h3 className="text-2xl font-bold text-green-900">
-                        Paiement confirmé avec succès !
-                      </h3>
-                    </div>
-                    <p className="text-green-800 mb-4 text-lg">
-                      🎉 Félicitations ! Votre réservation a été confirmée et votre paiement a été traité.
-                    </p>
-                    <div className="bg-white/60 backdrop-blur-sm rounded-lg p-4 border border-green-200">
-                      <p className="text-sm text-green-700 mb-2 font-medium">
-                        📧 Un email de confirmation vous a été envoyé avec tous les détails de votre réservation.
-                      </p>
-                      {reference && (
-                        <div className="flex items-center justify-center md:justify-start gap-2 mt-3 pt-3 border-t border-green-200">
-                          <Shield className="w-4 h-4 text-green-600" />
-                          <span className="text-xs text-green-600 font-medium">Référence:</span>
-                          <span className="font-mono text-sm font-bold text-green-900 bg-white px-2 py-1 rounded">
-                            {reference}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-
         {/* Header */}
         <div className="mb-6">
           <Link href="/bookings">
@@ -189,12 +134,24 @@ function BookingDetailContent() {
                 Référence: <span className="font-mono font-semibold">{booking.booking_reference}</span>
               </p>
             </div>
-            {booking.payment_status === 'PAYE' && (
-              <Badge className="bg-green-500 text-white px-4 py-2 text-sm font-semibold">
-                <CheckCircle2 className="w-4 h-4 mr-2" />
-                Paiement validé
-              </Badge>
-            )}
+            <div className="flex items-center gap-3 flex-wrap">
+              {booking.payment_status === 'PAYE' && (
+                <Badge className="bg-green-500 text-white px-4 py-2 text-sm font-semibold">
+                  <CheckCircle2 className="w-4 h-4 mr-2" />
+                  Paiement validé
+                </Badge>
+              )}
+              <Link href="/residences">
+                <Button variant="outline" size="sm">
+                  Explorer d&apos;autres lieux
+                </Button>
+              </Link>
+              <Link href="/bookings">
+                <Button size="sm" className="bg-theme-primary hover:bg-theme-primary/90">
+                  Voir toutes mes réservations
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -291,16 +248,6 @@ function BookingDetailContent() {
                 </p>
               </div>
 
-              {/* Référence transaction */}
-              {reference && (
-                <div className="pt-4 border-t">
-                  <p className="text-sm text-gray-600 mb-2">Référence de transaction</p>
-                  <p className="font-mono text-sm font-semibold bg-gray-50 px-3 py-2 rounded">
-                    {reference}
-                  </p>
-                </div>
-              )}
-
               {/* Date de réservation */}
               <div className="pt-4 border-t">
                 <p className="text-sm text-gray-600 mb-1">Réservé le</p>
@@ -328,45 +275,6 @@ function BookingDetailContent() {
             </CardContent>
           </Card>
         </div>
-
-        {/* Actions */}
-        <div className="mt-6 flex gap-4">
-          <Link href="/residences" className="flex-1">
-            <Button variant="outline" className="w-full">
-              Explorer d&apos;autres lieux
-            </Button>
-          </Link>
-          <Link href="/bookings" className="flex-1">
-            <Button className="w-full bg-theme-primary hover:bg-theme-primary/90">
-              Voir toutes mes réservations
-            </Button>
-          </Link>
-        </div>
-
-        {/* Message d'aide */}
-        {showSuccessMessage && (
-          <Card className="mt-6 border-blue-200 bg-blue-50/50">
-            <CardContent className="pt-6">
-              <div className="flex items-start gap-4">
-                <div className="p-2 bg-blue-500 rounded-lg">
-                  <Mail className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-blue-900 mb-2">Besoin d&apos;aide ?</h4>
-                  <p className="text-sm text-blue-800 mb-3">
-                    Si vous avez des questions concernant votre réservation, n&apos;hésitez pas à nous contacter. 
-                    Notre équipe est disponible 24/7 pour vous assister.
-                  </p>
-                  <Link href="/contact">
-                    <Button variant="outline" size="sm" className="border-blue-300 text-blue-700 hover:bg-blue-100">
-                      Nous contacter
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        )}
       </div>
     </div>
   );

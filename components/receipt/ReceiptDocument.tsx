@@ -295,15 +295,6 @@ const formatDateFull = (dateString: string) => {
   });
 };
 
-// Format price
-const formatPrice = (price: number | null) => {
-  if (price === null) return 'N/A';
-  return price.toLocaleString('fr-FR', {
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  });
-};
-
 interface ReceiptDocumentProps {
   receipt: ReceiptData;
   qrCodeDataUrl?: string;
@@ -353,13 +344,6 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
                   <Text style={styles.valueText}>N/A</Text>
                 )}
                 
-                {receipt.owner.email && (
-                  <>
-                    <Text style={styles.labelText}>Email</Text>
-                    <Text style={styles.textSmall}>{receipt.owner.email}</Text>
-                  </>
-                )}
-                
                 {receipt.owner.phone && (
                   <>
                     <Text style={styles.labelText}>Téléphone</Text>
@@ -399,9 +383,6 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
               <View>
                 <Text style={styles.labelText}>Nom complet</Text>
                 <Text style={styles.valueText}>{receipt.customer.full_name}</Text>
-                
-                <Text style={styles.labelText}>Email</Text>
-                <Text style={styles.textSmall}>{receipt.customer.email}</Text>
                 
                 <Text style={styles.labelText}>Téléphone</Text>
                 <Text style={styles.textSmall}>{receipt.customer.phone}</Text>
@@ -494,14 +475,6 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
                 </Text>
               </View>
             </View>
-          </View>
-
-          {/* Montant Total */}
-          <View style={styles.totalBox}>
-            <Text style={styles.totalLabel}>MONTANT TOTAL</Text>
-            <Text style={styles.totalAmount}>
-              {formatPrice(receipt.payment.total_price)} {receipt.payment.payment_currency}
-            </Text>
           </View>
 
           {/* Date de génération */}

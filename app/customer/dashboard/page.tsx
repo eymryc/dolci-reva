@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import Link from "next/link";
 import { 
   Calendar, 
@@ -10,16 +10,20 @@ import {
   CreditCard,
   Star,
   TrendingUp,
-  Package
+  Package,
+  XCircle,
+  CheckCircle2
 } from "lucide-react";
 import { useBookings } from "@/hooks/use-bookings";
 import { usePermissions } from "@/hooks/use-permissions";
 import { BookingTable } from "@/components/admin/bookings/BookingTable";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 export default function CustomerDashboardPage() {
   const { isCustomer } = usePermissions();
+  const [activeTab, setActiveTab] = useState("reservations");
   const { 
     data: bookingsResponse, 
     isLoading: isLoadingBookings,
@@ -204,47 +208,229 @@ export default function CustomerDashboardPage() {
         </div>
       </section>
 
-      {/* Recent Bookings */}
+      {/* Tabs Navigation */}
       <section className="mb-16">
-        <div className="flex items-center justify-between mb-8">
-          <h2 className="text-3xl font-bold text-gray-900">Mes réservations récentes</h2>
-          <Link href="/customer/bookings">
-            <Button variant="outline" className="hover:bg-theme-primary hover:text-white transition-all duration-300">
-              Voir toutes les réservations
-            </Button>
-          </Link>
-        </div>
-        
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50">
-          {isLoadingBookings ? (
-            <div className="flex flex-col items-center justify-center py-16">
-              <Loader2 className="w-12 h-12 animate-spin text-theme-primary mb-4" />
-              <p className="text-gray-500 text-sm">Chargement des réservations...</p>
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex flex-col lg:flex-row gap-6">
+            {/* Vertical Tabs List */}
+            <div className="w-full lg:w-64 flex-shrink-0">
+              <div className="bg-white rounded-2xl p-4 shadow-lg border border-gray-200/50">
+                <TabsList className="flex flex-col h-auto bg-transparent p-0 gap-2 w-full">
+                  <TabsTrigger
+                    value="reservations"
+                    className="w-full justify-start px-4 py-3 rounded-xl data-[state=active]:bg-theme-primary data-[state=active]:text-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <Calendar className="w-5 h-5 mr-3" />
+                    <span className="flex-1 text-left">Réservations</span>
+                    <Badge className="ml-2 bg-gray-200 text-gray-700 data-[state=active]:bg-white/20 data-[state=active]:text-white">
+                      {stats.totalBookings}
+                    </Badge>
+                  </TabsTrigger>
+                  
+                  <TabsTrigger
+                    value="confirmed"
+                    className="w-full justify-start px-4 py-3 rounded-xl data-[state=active]:bg-theme-primary data-[state=active]:text-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <CheckCircle2 className="w-5 h-5 mr-3" />
+                    <span className="flex-1 text-left">Confirmées</span>
+                    <Badge className="ml-2 bg-green-100 text-green-700 data-[state=active]:bg-white/20 data-[state=active]:text-white">
+                      {stats.confirmedBookings}
+                    </Badge>
+                  </TabsTrigger>
+                  
+                  <TabsTrigger
+                    value="pending"
+                    className="w-full justify-start px-4 py-3 rounded-xl data-[state=active]:bg-theme-primary data-[state=active]:text-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <Clock className="w-5 h-5 mr-3" />
+                    <span className="flex-1 text-left">En attente</span>
+                    <Badge className="ml-2 bg-yellow-100 text-yellow-700 data-[state=active]:bg-white/20 data-[state=active]:text-white">
+                      {stats.pendingBookings}
+                    </Badge>
+                  </TabsTrigger>
+                  
+                  <TabsTrigger
+                    value="cancelled"
+                    className="w-full justify-start px-4 py-3 rounded-xl data-[state=active]:bg-theme-primary data-[state=active]:text-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <XCircle className="w-5 h-5 mr-3" />
+                    <span className="flex-1 text-left">Annulées</span>
+                    <Badge className="ml-2 bg-red-100 text-red-700 data-[state=active]:bg-white/20 data-[state=active]:text-white">
+                      {stats.cancelledBookings}
+                    </Badge>
+                  </TabsTrigger>
+                  
+                  <TabsTrigger
+                    value="completed"
+                    className="w-full justify-start px-4 py-3 rounded-xl data-[state=active]:bg-theme-primary data-[state=active]:text-white text-gray-700 hover:bg-gray-50 transition-all duration-200"
+                  >
+                    <CheckCircle className="w-5 h-5 mr-3" />
+                    <span className="flex-1 text-left">Terminées</span>
+                    <Badge className="ml-2 bg-blue-100 text-blue-700 data-[state=active]:bg-white/20 data-[state=active]:text-white">
+                      {stats.completedBookings}
+                    </Badge>
+                  </TabsTrigger>
+                </TabsList>
+              </div>
             </div>
-          ) : bookings.length > 0 ? (
-            <BookingTable
-              data={bookings.slice(0, 5)}
-              onCancel={() => {}}
-              onDelete={() => {}}
-              isLoading={false}
-              onRefresh={() => refetchBookings()}
-              isRefreshing={isRefetchingBookings}
-              canCancel={true}
-              canDelete={false}
-            />
-          ) : (
-            <div className="text-center py-16">
-              <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucune réservation</h3>
-              <p className="text-gray-600 mb-6">Vous n&apos;avez pas encore de réservations.</p>
-              <Link href="/residences">
-                <Button className="bg-theme-primary hover:bg-theme-primary/90 text-white">
-                  Explorer les résidences
-                </Button>
-              </Link>
+
+            {/* Tab Content */}
+            <div className="flex-1">
+              <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50">
+                <TabsContent value="reservations" className="mt-0">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900">Toutes mes réservations</h2>
+                    <Link href="/customer/bookings">
+                      <Button variant="outline" size="sm" className="hover:bg-theme-primary hover:text-white transition-all duration-300">
+                        Voir toutes
+                      </Button>
+                    </Link>
+                  </div>
+                  {isLoadingBookings ? (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <Loader2 className="w-12 h-12 animate-spin text-theme-primary mb-4" />
+                      <p className="text-gray-500 text-sm">Chargement des réservations...</p>
+                    </div>
+                  ) : bookings.length > 0 ? (
+                    <BookingTable
+                      data={bookings}
+                      onCancel={() => {}}
+                      onDelete={() => {}}
+                      isLoading={false}
+                      onRefresh={() => refetchBookings()}
+                      isRefreshing={isRefetchingBookings}
+                      canCancel={true}
+                      canDelete={false}
+                    />
+                  ) : (
+                    <div className="text-center py-16">
+                      <Calendar className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucune réservation</h3>
+                      <p className="text-gray-600 mb-6">Vous n&apos;avez pas encore de réservations.</p>
+                      <Link href="/residences">
+                        <Button className="bg-theme-primary hover:bg-theme-primary/90 text-white">
+                          Explorer les résidences
+                        </Button>
+                      </Link>
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="confirmed" className="mt-0">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900">Réservations confirmées</h2>
+                  </div>
+                  {isLoadingBookings ? (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <Loader2 className="w-12 h-12 animate-spin text-theme-primary mb-4" />
+                      <p className="text-gray-500 text-sm">Chargement...</p>
+                    </div>
+                  ) : bookings.filter(b => b.status === 'CONFIRME').length > 0 ? (
+                    <BookingTable
+                      data={bookings.filter(b => b.status === 'CONFIRME')}
+                      onCancel={() => {}}
+                      onDelete={() => {}}
+                      isLoading={false}
+                      onRefresh={() => refetchBookings()}
+                      isRefreshing={isRefetchingBookings}
+                      canCancel={true}
+                      canDelete={false}
+                    />
+                  ) : (
+                    <div className="text-center py-16">
+                      <CheckCircle2 className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucune réservation confirmée</h3>
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="pending" className="mt-0">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900">Réservations en attente</h2>
+                  </div>
+                  {isLoadingBookings ? (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <Loader2 className="w-12 h-12 animate-spin text-theme-primary mb-4" />
+                      <p className="text-gray-500 text-sm">Chargement...</p>
+                    </div>
+                  ) : bookings.filter(b => b.status === 'EN_ATTENTE').length > 0 ? (
+                    <BookingTable
+                      data={bookings.filter(b => b.status === 'EN_ATTENTE')}
+                      onCancel={() => {}}
+                      onDelete={() => {}}
+                      isLoading={false}
+                      onRefresh={() => refetchBookings()}
+                      isRefreshing={isRefetchingBookings}
+                      canCancel={true}
+                      canDelete={false}
+                    />
+                  ) : (
+                    <div className="text-center py-16">
+                      <Clock className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucune réservation en attente</h3>
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="cancelled" className="mt-0">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900">Réservations annulées</h2>
+                  </div>
+                  {isLoadingBookings ? (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <Loader2 className="w-12 h-12 animate-spin text-theme-primary mb-4" />
+                      <p className="text-gray-500 text-sm">Chargement...</p>
+                    </div>
+                  ) : bookings.filter(b => b.status === 'ANNULE').length > 0 ? (
+                    <BookingTable
+                      data={bookings.filter(b => b.status === 'ANNULE')}
+                      onCancel={() => {}}
+                      onDelete={() => {}}
+                      isLoading={false}
+                      onRefresh={() => refetchBookings()}
+                      isRefreshing={isRefetchingBookings}
+                      canCancel={false}
+                      canDelete={false}
+                    />
+                  ) : (
+                    <div className="text-center py-16">
+                      <XCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucune réservation annulée</h3>
+                    </div>
+                  )}
+                </TabsContent>
+
+                <TabsContent value="completed" className="mt-0">
+                  <div className="flex items-center justify-between mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900">Réservations terminées</h2>
+                  </div>
+                  {isLoadingBookings ? (
+                    <div className="flex flex-col items-center justify-center py-16">
+                      <Loader2 className="w-12 h-12 animate-spin text-theme-primary mb-4" />
+                      <p className="text-gray-500 text-sm">Chargement...</p>
+                    </div>
+                  ) : bookings.filter(b => b.status === 'TERMINE').length > 0 ? (
+                    <BookingTable
+                      data={bookings.filter(b => b.status === 'TERMINE')}
+                      onCancel={() => {}}
+                      onDelete={() => {}}
+                      isLoading={false}
+                      onRefresh={() => refetchBookings()}
+                      isRefreshing={isRefetchingBookings}
+                      canCancel={false}
+                      canDelete={false}
+                    />
+                  ) : (
+                    <div className="text-center py-16">
+                      <CheckCircle className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+                      <h3 className="text-xl font-semibold text-gray-900 mb-2">Aucune réservation terminée</h3>
+                    </div>
+                  )}
+                </TabsContent>
+              </div>
             </div>
-          )}
-        </div>
+          </div>
+        </Tabs>
       </section>
 
     </div>

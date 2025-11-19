@@ -40,8 +40,8 @@ export default function Home() {
   };
   return (
     <div>
-      <section className="px-2 md:px-0">
-        <div className="">
+      <section className="px-0">
+        <div className="w-full">
           <EmblaCarousel slides={IMAGES} options={OPTIONS} />
         </div>
       </section>

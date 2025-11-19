@@ -17,8 +17,7 @@ import {
   CreditCard, 
   ArrowLeft, 
   FileText, 
-  Download,
-  Mail
+  Download
 } from 'lucide-react';
 
 function BookingDetailContent() {
@@ -142,13 +141,13 @@ function BookingDetailContent() {
                 </Badge>
               )}
               <Link href="/residences">
-                <Button variant="outline" size="sm">
+                <Button variant="outline" className="px-4 py-2 text-sm font-semibold">
                   Explorer d&apos;autres lieux
                 </Button>
               </Link>
               <Link href="/bookings">
-                <Button size="sm" className="bg-theme-primary hover:bg-theme-primary/90">
-                  Voir toutes mes réservations
+                <Button className="px-4 py-2 text-sm font-semibold bg-theme-primary hover:bg-theme-primary/90">
+                  Mes réservations
                 </Button>
               </Link>
             </div>
@@ -255,21 +254,15 @@ function BookingDetailContent() {
               </div>
 
               {/* Actions */}
-              <div className="pt-4 border-t space-y-2">
+              <div className="pt-4 border-t flex items-center gap-4">
                 <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
+                  variant="link" 
+                  className="p-0 h-auto justify-start"
                   onClick={handleViewReceipt}
                   disabled={!bookingId || isGeneratingPDF || !receiptResponse?.data}
                 >
                   <Download className={`w-4 h-4 mr-2 ${isGeneratingPDF ? 'animate-spin' : ''}`} />
-                  {isGeneratingPDF ? 'Génération...' : 'Télécharger le reçu PDF'}
-                </Button>
-                <Button variant="outline" className="w-full justify-start" asChild>
-                  <Link href="#">
-                    <Mail className="w-4 h-4 mr-2" />
-                    Renvoyer l&apos;email
-                  </Link>
+                  {isGeneratingPDF ? 'Génération...' : 'Télécharger le reçu'}
                 </Button>
               </div>
             </CardContent>

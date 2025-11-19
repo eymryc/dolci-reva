@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 25,
-    paddingTop: 10, // Espace pour le header (réduit)
+    paddingTop: 30, // Espace pour le header (réduit)
     paddingBottom: 70, // Espace pour le footer (60 + 10)
   },
   topSection: {
@@ -332,7 +332,7 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
         <View style={styles.content}>
           {/* Section QR Code et Détails */}
           <View style={styles.topSection}>
-            {/* QR Code */}
+            {/* Colonne gauche - QR Code et Propriétaire */}
             <View style={styles.qrSection}>
               {qrCodeDataUrl && (
                 <View style={styles.qrContainer}>
@@ -341,9 +341,35 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
                 </View>
               )}
               <Text style={styles.qrLabel}>Code de vérification</Text>
+
+              <View style={styles.separator} />
+
+              <Text style={styles.sectionTitle}>PROPRIÉTAIRE</Text>
+              <View style={styles.sectionBox}>
+                <Text style={styles.labelText}>Nom complet</Text>
+                {receipt.owner.full_name ? (
+                  <Text style={styles.valueText}>{receipt.owner.full_name}</Text>
+                ) : (
+                  <Text style={styles.valueText}>N/A</Text>
+                )}
+                
+                {receipt.owner.email && (
+                  <>
+                    <Text style={styles.labelText}>Email</Text>
+                    <Text style={styles.textSmall}>{receipt.owner.email}</Text>
+                  </>
+                )}
+                
+                {receipt.owner.phone && (
+                  <>
+                    <Text style={styles.labelText}>Téléphone</Text>
+                    <Text style={styles.textSmall}>{receipt.owner.phone}</Text>
+                  </>
+                )}
+              </View>
             </View>
 
-            {/* Détails du reçu */}
+            {/* Colonne droite - Détails du reçu */}
             <View style={styles.detailsSection}>
               <Text style={styles.receiptTitle}>REÇU</Text>
 
@@ -378,30 +404,6 @@ export const ReceiptDocument: React.FC<ReceiptDocumentProps> = ({
                 
                 <Text style={styles.labelText}>Téléphone</Text>
                 <Text style={styles.textSmall}>{receipt.customer.phone}</Text>
-              </View>
-
-              <Text style={styles.sectionTitle}>PROPRIÉTAIRE</Text>
-              <View style={styles.sectionBox}>
-                <Text style={styles.labelText}>Nom complet</Text>
-                {receipt.owner.full_name ? (
-                  <Text style={styles.valueText}>{receipt.owner.full_name}</Text>
-                ) : (
-                  <Text style={styles.valueText}>N/A</Text>
-                )}
-                
-                {receipt.owner.email && (
-                  <>
-                    <Text style={styles.labelText}>Email</Text>
-                    <Text style={styles.textSmall}>{receipt.owner.email}</Text>
-                  </>
-                )}
-                
-                {receipt.owner.phone && (
-                  <>
-                    <Text style={styles.labelText}>Téléphone</Text>
-                    <Text style={styles.textSmall}>{receipt.owner.phone}</Text>
-                  </>
-                )}
               </View>
             </View>
           </View>

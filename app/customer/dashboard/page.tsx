@@ -108,20 +108,20 @@ export default function CustomerDashboardPage() {
               <h2 className="text-2xl font-bold text-white mb-6 drop-shadow-lg">Vue d&apos;ensemble</h2>
               <div className="grid grid-cols-2 gap-4">
                 {/* Total Bookings Card */}
-                <div className="group relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-theme-primary/20 rounded-full blur-2xl"></div>
+                <div className="group relative overflow-hidden bg-white rounded-2xl p-4 shadow-lg border border-theme-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-theme-primary/10 rounded-full blur-2xl"></div>
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="p-2 bg-white/30 rounded-lg">
-                        <Package className="w-5 h-5 text-white" />
+                      <div className="p-2 bg-theme-primary/10 rounded-lg">
+                        <Package className="w-5 h-5 text-theme-primary" />
                       </div>
-                      <TrendingUp className="w-4 h-4 text-white/80" />
+                      <TrendingUp className="w-4 h-4 text-theme-primary" />
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-white/80 mb-1">Total réservations</p>
-                      <p className="text-2xl font-bold text-white">
+                      <p className="text-xs font-medium text-gray-600 mb-1">Total réservations</p>
+                      <p className="text-2xl font-bold text-theme-primary">
                         {isLoadingBookings ? (
-                          <Loader2 className="w-6 h-6 animate-spin text-white" />
+                          <Loader2 className="w-6 h-6 animate-spin text-theme-primary" />
                         ) : (
                           stats.totalBookings
                         )}
@@ -131,20 +131,20 @@ export default function CustomerDashboardPage() {
                 </div>
 
                 {/* Confirmed Bookings Card */}
-                <div className="group relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/20 rounded-full blur-2xl"></div>
+                <div className="group relative overflow-hidden bg-white rounded-2xl p-4 shadow-lg border border-theme-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-green-500/10 rounded-full blur-2xl"></div>
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="p-2 bg-white/30 rounded-lg">
-                        <CheckCircle className="w-5 h-5 text-white" />
+                      <div className="p-2 bg-green-500/10 rounded-lg">
+                        <CheckCircle className="w-5 h-5 text-theme-primary" />
                       </div>
-                      <Badge className="bg-green-500/80 text-white border-0 text-xs">Confirmé</Badge>
+                      <Badge className="bg-green-100 text-green-700 border-green-200 text-xs">Confirmé</Badge>
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-white/80 mb-1">Confirmées</p>
-                      <p className="text-2xl font-bold text-white">
+                      <p className="text-xs font-medium text-gray-600 mb-1">Confirmées</p>
+                      <p className="text-2xl font-bold text-theme-primary">
                         {isLoadingBookings ? (
-                          <Loader2 className="w-6 h-6 animate-spin text-white" />
+                          <Loader2 className="w-6 h-6 animate-spin text-theme-primary" />
                         ) : (
                           stats.confirmedBookings
                         )}
@@ -154,20 +154,20 @@ export default function CustomerDashboardPage() {
                 </div>
 
                 {/* Pending Bookings Card */}
-                <div className="group relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/20 rounded-full blur-2xl"></div>
+                <div className="group relative overflow-hidden bg-white rounded-2xl p-4 shadow-lg border border-theme-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-500/10 rounded-full blur-2xl"></div>
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="p-2 bg-white/30 rounded-lg">
-                        <Clock className="w-5 h-5 text-white" />
+                      <div className="p-2 bg-yellow-500/10 rounded-lg">
+                        <Clock className="w-5 h-5 text-theme-primary" />
                       </div>
-                      <Badge className="bg-yellow-500/80 text-white border-0 text-xs">En attente</Badge>
+                      <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200 text-xs">En attente</Badge>
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-white/80 mb-1">En attente</p>
-                      <p className="text-2xl font-bold text-white">
+                      <p className="text-xs font-medium text-gray-600 mb-1">En attente</p>
+                      <p className="text-2xl font-bold text-theme-primary">
                         {isLoadingBookings ? (
-                          <Loader2 className="w-6 h-6 animate-spin text-white" />
+                          <Loader2 className="w-6 h-6 animate-spin text-theme-primary" />
                         ) : (
                           stats.pendingBookings
                         )}
@@ -177,20 +177,20 @@ export default function CustomerDashboardPage() {
                 </div>
 
                 {/* Total Spent Card */}
-                <div className="group relative overflow-hidden bg-white/90 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-white/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/20 rounded-full blur-2xl"></div>
+                <div className="group relative overflow-hidden bg-white rounded-2xl p-4 shadow-lg border border-theme-primary/20 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl"></div>
                   <div className="relative z-10">
                     <div className="flex items-center justify-between mb-3">
-                      <div className="p-2 bg-white/30 rounded-lg">
-                        <CreditCard className="w-5 h-5 text-white" />
+                      <div className="p-2 bg-blue-500/10 rounded-lg">
+                        <CreditCard className="w-5 h-5 text-theme-primary" />
                       </div>
-                      <Star className="w-4 h-4 text-white fill-white/80" />
+                      <Star className="w-4 h-4 text-theme-primary fill-theme-primary" />
                     </div>
                     <div>
-                      <p className="text-xs font-medium text-white/80 mb-1">Total dépensé</p>
-                      <p className="text-lg font-bold text-white">
+                      <p className="text-xs font-medium text-gray-600 mb-1">Total dépensé</p>
+                      <p className="text-lg font-bold text-theme-primary">
                         {isLoadingBookings ? (
-                          <Loader2 className="w-6 h-6 animate-spin text-white" />
+                          <Loader2 className="w-6 h-6 animate-spin text-theme-primary" />
                         ) : (
                           new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'XOF', maximumFractionDigits: 0 }).format(stats.totalRevenue)
                         )}

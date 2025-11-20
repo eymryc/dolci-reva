@@ -541,20 +541,6 @@ export default function AdminProfilePage() {
                       />
                     </div>
 
-                    <div className="space-y-1.5">
-                      <Label htmlFor="postal_code" className="text-sm">
-                        Code postal
-                      </Label>
-                      <Input
-                        id="postal_code"
-                        name="postal_code"
-                        value={formData.postal_code}
-                        onChange={handleInputChange}
-                        placeholder="Exemple : 01 BP 1234"
-                        className="h-12"
-                        disabled={!isEditing}
-                      />
-                    </div>
                   </div>
 
                   {/* Sélection des services (business types) */}

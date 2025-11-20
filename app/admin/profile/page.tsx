@@ -223,19 +223,19 @@ export default function AdminProfilePage() {
   }
 
   return (
-    <div className="space-y-6 pb-8 animate-in fade-in-50 duration-500">
+    <div className="space-y-4 sm:space-y-6 pb-4 sm:pb-8 animate-in fade-in-50 duration-500 px-2 sm:px-0">
       {/* Header avec Avatar */}
-      <Card className="bg-gradient-to-br from-white via-white to-gray-50/50 backdrop-blur-md rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-200/60 overflow-hidden relative">
+      <Card className="bg-gradient-to-br from-white via-white to-gray-50/50 backdrop-blur-md rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 shadow-xl shadow-gray-200/50 border border-gray-200/60 overflow-hidden relative">
         {/* Decorative background */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#f08400]/5 via-transparent to-transparent rounded-full blur-3xl -z-0"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-blue-500/5 via-transparent to-transparent rounded-full blur-3xl -z-0"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 sm:w-96 sm:h-96 bg-gradient-to-br from-[#f08400]/5 via-transparent to-transparent rounded-full blur-3xl -z-0"></div>
+        <div className="absolute bottom-0 left-0 w-48 h-48 sm:w-64 sm:h-64 bg-gradient-to-tr from-blue-500/5 via-transparent to-transparent rounded-full blur-3xl -z-0"></div>
 
         <div className="relative z-10">
-          <div className="flex items-start justify-between gap-6 mb-6">
-            <div className="flex items-center gap-6 flex-1">
+          <div className="flex flex-col sm:flex-row items-start sm:items-start justify-between gap-4 sm:gap-6 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6 flex-1 w-full">
               {/* Avatar */}
-              <div className="relative">
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#f08400] via-[#f08400]/90 to-orange-600 flex items-center justify-center shadow-2xl shadow-[#f08400]/30 ring-4 ring-white overflow-hidden">
+              <div className="relative flex-shrink-0">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 lg:w-24 lg:h-24 rounded-xl sm:rounded-2xl bg-gradient-to-br from-[#f08400] via-[#f08400]/90 to-orange-600 flex items-center justify-center shadow-2xl shadow-[#f08400]/30 ring-2 sm:ring-4 ring-white overflow-hidden">
                   {(user as unknown as { profile_picture?: string }).profile_picture ? (
                     <Image
                       src={(user as unknown as { profile_picture: string }).profile_picture}
@@ -245,43 +245,43 @@ export default function AdminProfilePage() {
                       className="w-full h-full object-cover"
                     />
                   ) : (
-                    <span className="text-3xl font-bold text-white">{getUserInitials()}</span>
+                    <span className="text-xl sm:text-2xl lg:text-3xl font-bold text-white">{getUserInitials()}</span>
                   )}
                 </div>
                 {user.is_verified && (
-                  <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                    <CheckCircle2 className="w-4 h-4 text-white" />
+                  <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-6 h-6 sm:w-8 sm:h-8 bg-green-500 rounded-full flex items-center justify-center border-2 sm:border-4 border-white shadow-lg">
+                    <CheckCircle2 className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
                   </div>
                 )}
                 {user.is_premium && (
-                  <div className="absolute -top-1 -right-1 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                    <Star className="w-4 h-4 text-white fill-white" />
+                  <div className="absolute -top-0.5 -right-0.5 sm:-top-1 sm:-right-1 w-6 h-6 sm:w-8 sm:h-8 bg-yellow-500 rounded-full flex items-center justify-center border-2 sm:border-4 border-white shadow-lg">
+                    <Star className="w-3 h-3 sm:w-4 sm:h-4 text-white fill-white" />
                   </div>
                 )}
               </div>
 
               {/* User Info */}
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-4xl font-bold text-[#101828]">
+              <div className="flex-1 min-w-0 w-full sm:w-auto">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-2">
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#101828] truncate">
                     {user.first_name} {user.last_name}
                   </h1>
                   {getTypeBadge(user.type)}
                 </div>
-                <p className="text-gray-600 text-base mb-3 flex items-center gap-4">
-                  <span className="flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    {user.email}
+                <p className="text-gray-600 text-sm sm:text-base mb-2 sm:mb-3 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                  <span className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <span className="truncate">{user.email}</span>
                   </span>
-                  <span className="flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
+                  <span className="flex items-center gap-2 text-xs sm:text-sm">
+                    <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                     {user.phone}
                   </span>
                 </p>
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
                   {getStatusBadge(user.verification_status)}
                   {user.role && (
-                    <Badge variant="outline" className="px-3 py-1">
+                    <Badge variant="outline" className="px-2 py-0.5 sm:px-3 sm:py-1 text-xs">
                       {user.role}
                     </Badge>
                   )}
@@ -290,22 +290,22 @@ export default function AdminProfilePage() {
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 w-full sm:w-auto">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => router.push("/admin/dashboard")}
-                className="hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
+                className="hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
               >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Retour
+                <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
+                <span className="hidden sm:inline">Retour</span>
               </Button>
               <Button
                 size="sm"
                 onClick={() => setIsEditing(!isEditing)}
-                className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg hover:shadow-xl transition-all duration-200"
+                className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg hover:shadow-xl transition-all duration-200 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
               >
-                <Edit2 className="w-4 h-4 mr-2" />
+                <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                 {isEditing ? "Annuler" : "Modifier"}
               </Button>
             </div>
@@ -313,16 +313,16 @@ export default function AdminProfilePage() {
 
           {/* Statistiques dans le Header */}
           {(user.reputation_score !== undefined || user.total_bookings !== undefined || user.cancellation_rate !== undefined) && (
-            <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
               {user.reputation_score !== undefined && (
-                <div className="p-4 bg-gradient-to-br from-blue-50 via-blue-50/50 to-white rounded-lg border border-blue-200/50 hover:border-blue-300 transition-all duration-200">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
-                      <Award className="w-4 h-4 text-white" />
+                <div className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 via-blue-50/50 to-white rounded-lg border border-blue-200/50 hover:border-blue-300 transition-all duration-200">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
+                      <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-medium text-gray-600 mb-0.5">Score de réputation</p>
-                      <p className="text-xl font-bold text-gray-900">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] sm:text-xs font-medium text-gray-600 mb-0.5">Score de réputation</p>
+                      <p className="text-lg sm:text-xl font-bold text-gray-900 truncate">
                         {user.reputation_score ? parseFloat(user.reputation_score).toFixed(2) : "0.00"}
                       </p>
                     </div>
@@ -330,27 +330,27 @@ export default function AdminProfilePage() {
                 </div>
               )}
               {user.total_bookings !== undefined && (
-                <div className="p-4 bg-gradient-to-br from-green-50 via-green-50/50 to-white rounded-lg border border-green-200/50 hover:border-green-300 transition-all duration-200">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md">
-                      <Calendar className="w-4 h-4 text-white" />
+                <div className="p-3 sm:p-4 bg-gradient-to-br from-green-50 via-green-50/50 to-white rounded-lg border border-green-200/50 hover:border-green-300 transition-all duration-200">
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className="p-1.5 sm:p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md">
+                      <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-medium text-gray-600 mb-0.5">Total réservations</p>
-                      <p className="text-xl font-bold text-gray-900">{user.total_bookings || 0}</p>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] sm:text-xs font-medium text-gray-600 mb-0.5">Total réservations</p>
+                      <p className="text-lg sm:text-xl font-bold text-gray-900">{user.total_bookings || 0}</p>
                     </div>
                   </div>
                 </div>
               )}
               {user.cancellation_rate !== undefined && (
-                <div className={`p-4 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-50 via-red-50/50" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-50 via-yellow-50/50" : "from-green-50 via-green-50/50"} to-white rounded-lg border ${parseFloat(user.cancellation_rate || "0") > 10 ? "border-red-200/50 hover:border-red-300" : parseFloat(user.cancellation_rate || "0") > 5 ? "border-yellow-200/50 hover:border-yellow-300" : "border-green-200/50 hover:border-green-300"} transition-all duration-200`}>
-                  <div className="flex items-center gap-3">
-                    <div className={`p-2 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-500 to-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-500 to-yellow-600" : "from-green-500 to-green-600"} rounded-lg shadow-md`}>
-                      <Ban className="w-4 h-4 text-white" />
+                <div className={`p-3 sm:p-4 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-50 via-red-50/50" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-50 via-yellow-50/50" : "from-green-50 via-green-50/50"} to-white rounded-lg border ${parseFloat(user.cancellation_rate || "0") > 10 ? "border-red-200/50 hover:border-red-300" : parseFloat(user.cancellation_rate || "0") > 5 ? "border-yellow-200/50 hover:border-yellow-300" : "border-green-200/50 hover:border-green-300"} transition-all duration-200`}>
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <div className={`p-1.5 sm:p-2 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-500 to-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-500 to-yellow-600" : "from-green-500 to-green-600"} rounded-lg shadow-md`}>
+                      <Ban className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-medium text-gray-600 mb-0.5">Taux d&apos;annulation</p>
-                      <p className={`text-xl font-bold ${parseFloat(user.cancellation_rate || "0") > 10 ? "text-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "text-yellow-600" : "text-green-600"}`}>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-[10px] sm:text-xs font-medium text-gray-600 mb-0.5">Taux d&apos;annulation</p>
+                      <p className={`text-lg sm:text-xl font-bold ${parseFloat(user.cancellation_rate || "0") > 10 ? "text-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "text-yellow-600" : "text-green-600"}`}>
                         {user.cancellation_rate ? parseFloat(user.cancellation_rate).toFixed(2) : "0.00"}%
                       </p>
                     </div>
@@ -363,32 +363,35 @@ export default function AdminProfilePage() {
       </Card>
 
       {/* Tabs pour organiser les sections - Vertical */}
-      <Tabs defaultValue="overview" orientation="vertical" className="flex flex-col lg:flex-row gap-6">
-        <TabsList className="flex flex-col lg:flex-col bg-white/90 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-gray-200/60 h-auto w-full lg:w-auto lg:min-w-[350px]">
-          <TabsTrigger value="overview" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
-            <User className="w-4 h-4" />
-            Vue d&apos;ensemble
+      <Tabs defaultValue="overview" orientation="vertical" className="flex flex-col lg:flex-row gap-4 sm:gap-6">
+        <TabsList className="flex flex-row lg:flex-col bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl p-1 sm:p-1.5 shadow-lg border border-gray-200/60 h-auto w-full lg:w-auto lg:min-w-[250px] xl:min-w-[300px] overflow-x-auto">
+          <TabsTrigger value="overview" className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 w-full lg:w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-lg sm:rounded-xl transition-all duration-200 text-xs sm:text-sm whitespace-nowrap">
+            <User className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span className="hidden sm:inline">Vue d&apos;ensemble</span>
+            <span className="sm:hidden">Vue</span>
           </TabsTrigger>
-          <TabsTrigger value="account" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
-            <Shield className="w-4 h-4" />
+          <TabsTrigger value="account" className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 w-full lg:w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-lg sm:rounded-xl transition-all duration-200 text-xs sm:text-sm whitespace-nowrap">
+            <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             Compte
           </TabsTrigger>
           {isAnyAdmin() && (
-            <TabsTrigger value="permissions" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
-              <FileText className="w-4 h-4" />
-              Permissions
+            <TabsTrigger value="permissions" className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 w-full lg:w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-lg sm:rounded-xl transition-all duration-200 text-xs sm:text-sm whitespace-nowrap">
+              <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Permissions</span>
+              <span className="sm:hidden">Perm.</span>
             </TabsTrigger>
           )}
           {user.businessTypes && user.businessTypes.length > 0 && (
-            <TabsTrigger value="business" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
-              <Building2 className="w-4 h-4" />
+            <TabsTrigger value="business" className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 w-full lg:w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-lg sm:rounded-xl transition-all duration-200 text-xs sm:text-sm whitespace-nowrap">
+              <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               Business
             </TabsTrigger>
           )}
           {user.type === "OWNER" && (
-            <TabsTrigger value="verification" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
-              <ShieldCheck className="w-4 h-4" />
-              Vérification
+            <TabsTrigger value="verification" className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 w-full lg:w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-lg sm:rounded-xl transition-all duration-200 text-xs sm:text-sm whitespace-nowrap">
+              <ShieldCheck className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              <span className="hidden sm:inline">Vérification</span>
+              <span className="sm:hidden">Vérif.</span>
             </TabsTrigger>
           )}
         </TabsList>
@@ -397,27 +400,27 @@ export default function AdminProfilePage() {
         <TabsContent value="overview" className="space-y-6 mt-0 flex-1">
           <div className="space-y-4">
             {/* Informations personnelles */}
-            <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
+            <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
               {/* Header compact */}
-              <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-5 border-b border-gray-200/50">
-                <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md">
-                    <User className="w-5 h-5 text-white" />
+              <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-3 sm:p-4 lg:p-5 border-b border-gray-200/50">
+                <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                  <div className="p-1.5 sm:p-2 lg:p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg sm:rounded-xl shadow-md">
+                    <User className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold text-gray-900">Informations personnelles</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">Données de base de votre profil</p>
+                    <h2 className="text-base sm:text-lg font-bold text-gray-900">Informations personnelles</h2>
+                    <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Données de base de votre profil</p>
                   </div>
                 </div>
               </div>
 
               {/* Contenu */}
-              <div className="p-6">
-                  <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="p-3 sm:p-4 lg:p-6">
+                  <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
                     {/* Prénom, Nom, Email et Téléphone sur la même ligne */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="first_name" className="text-sm">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                      <div className="space-y-1 sm:space-y-1.5">
+                        <Label htmlFor="first_name" className="text-xs sm:text-sm">
                           Prénom
                         </Label>
                         <Input
@@ -426,12 +429,12 @@ export default function AdminProfilePage() {
                           value={formData.first_name}
                           onChange={handleInputChange}
                           placeholder="Exemple : John"
-                          className="h-12"
+                          className="h-10 sm:h-12 text-xs sm:text-sm"
                           disabled={!isEditing}
                         />
                       </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="last_name" className="text-sm">
+                      <div className="space-y-1 sm:space-y-1.5">
+                        <Label htmlFor="last_name" className="text-xs sm:text-sm">
                           Nom
                         </Label>
                         <Input
@@ -440,13 +443,13 @@ export default function AdminProfilePage() {
                           value={formData.last_name}
                           onChange={handleInputChange}
                           placeholder="Exemple : Doe"
-                          className="h-12"
+                          className="h-10 sm:h-12 text-xs sm:text-sm"
                           disabled={!isEditing}
                         />
                       </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="email" className="text-sm flex items-center gap-1.5">
-                          <Mail className="w-3.5 h-3.5" />
+                      <div className="space-y-1 sm:space-y-1.5">
+                        <Label htmlFor="email" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-1.5">
+                          <Mail className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           Email
                         </Label>
                         <Input
@@ -456,13 +459,13 @@ export default function AdminProfilePage() {
                           value={formData.email}
                           onChange={handleInputChange}
                           placeholder="Exemple : john.doe@example.com"
-                          className="h-12"
+                          className="h-10 sm:h-12 text-xs sm:text-sm"
                           disabled={!isEditing}
                         />
                       </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="phone" className="text-sm flex items-center gap-1.5">
-                          <Phone className="w-3.5 h-3.5" />
+                      <div className="space-y-1 sm:space-y-1.5">
+                        <Label htmlFor="phone" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-1.5">
+                          <Phone className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                           Téléphone
                         </Label>
                         <Input
@@ -471,16 +474,16 @@ export default function AdminProfilePage() {
                           value={formData.phone}
                           onChange={handleInputChange}
                           placeholder="Exemple : 0612345678"
-                          className="h-12"
+                          className="h-10 sm:h-12 text-xs sm:text-sm"
                           disabled={!isEditing}
                         />
                       </div>
                     </div>
 
                   {/* Informations supplémentaires */}
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                    <div className="space-y-1.5">
-                      <Label htmlFor="id_document_number" className="text-sm">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-3 sm:mt-4">
+                    <div className="space-y-1 sm:space-y-1.5">
+                      <Label htmlFor="id_document_number" className="text-xs sm:text-sm">
                         Numéro de pièce d&apos;identité
                       </Label>
                       <Input
@@ -489,14 +492,14 @@ export default function AdminProfilePage() {
                         value={formData.id_document_number}
                         onChange={handleInputChange}
                         placeholder="Exemple : CI123456789"
-                        className="h-12"
+                        className="h-10 sm:h-12 text-xs sm:text-sm"
                         disabled={!isEditing}
                       />
                     </div>
 
-                    <div className="space-y-1.5">
-                      <Label htmlFor="date_of_birth" className="text-sm flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5" />
+                    <div className="space-y-1 sm:space-y-1.5">
+                      <Label htmlFor="date_of_birth" className="text-xs sm:text-sm flex items-center gap-1 sm:gap-1.5">
+                        <Calendar className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                         Date de naissance
                       </Label>
                       <Input
@@ -505,13 +508,13 @@ export default function AdminProfilePage() {
                         type="date"
                         value={formData.date_of_birth}
                         onChange={handleInputChange}
-                        className="h-12"
+                        className="h-10 sm:h-12 text-xs sm:text-sm"
                         disabled={!isEditing}
                       />
                     </div>
 
-                    <div className="space-y-1.5">
-                      <Label htmlFor="address_line1" className="text-sm">
+                    <div className="space-y-1 sm:space-y-1.5">
+                      <Label htmlFor="address_line1" className="text-xs sm:text-sm">
                         Adresse (ligne 1)
                       </Label>
                       <Input
@@ -520,13 +523,13 @@ export default function AdminProfilePage() {
                         value={formData.address_line1}
                         onChange={handleInputChange}
                         placeholder="Exemple : 123 Rue de la République"
-                        className="h-12"
+                        className="h-10 sm:h-12 text-xs sm:text-sm"
                         disabled={!isEditing}
                       />
                     </div>
 
-                    <div className="space-y-1.5 md:col-span-2">
-                      <Label htmlFor="address_line2" className="text-sm">
+                    <div className="space-y-1 sm:space-y-1.5 sm:col-span-2 lg:col-span-3">
+                      <Label htmlFor="address_line2" className="text-xs sm:text-sm">
                         Adresse (ligne 2)
                       </Label>
                       <Textarea
@@ -535,7 +538,7 @@ export default function AdminProfilePage() {
                         value={formData.address_line2}
                         onChange={handleInputChange}
                         placeholder="Exemple : Appartement 4B, Résidence Les Palmiers"
-                        className="min-h-[100px]"
+                        className="min-h-[80px] sm:min-h-[100px] text-xs sm:text-sm"
                         rows={3}
                         disabled={!isEditing}
                       />
@@ -545,22 +548,22 @@ export default function AdminProfilePage() {
 
                   {/* Sélection des services (business types) */}
                   {user?.type === "OWNER" && (
-                    <div className="space-y-1.5 mt-4">
-                      <Label className="text-sm font-semibold">
+                    <div className="space-y-1 sm:space-y-1.5 mt-3 sm:mt-4">
+                      <Label className="text-xs sm:text-sm font-semibold">
                         Types de services
                       </Label>
                       {isLoadingBusinessTypes ? (
-                        <div className="flex items-center justify-center py-8 border border-gray-200 rounded-lg bg-gray-50">
-                          <Loader2 className="w-5 h-5 animate-spin text-[#f08400]" />
-                          <span className="ml-2 text-sm text-gray-500">Chargement des services...</span>
+                        <div className="flex items-center justify-center py-6 sm:py-8 border border-gray-200 rounded-lg bg-gray-50">
+                          <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin text-[#f08400]" />
+                          <span className="ml-2 text-xs sm:text-sm text-gray-500">Chargement des services...</span>
                         </div>
                       ) : businessTypes.length === 0 ? (
-                        <div className="flex items-center justify-center py-8 border border-gray-200 rounded-lg bg-gray-50">
-                          <p className="text-sm text-gray-500">Aucun type de service disponible</p>
+                        <div className="flex items-center justify-center py-6 sm:py-8 border border-gray-200 rounded-lg bg-gray-50">
+                          <p className="text-xs sm:text-sm text-gray-500">Aucun type de service disponible</p>
                         </div>
                       ) : (
-                        <div className="border border-gray-200 rounded-lg p-4 bg-white max-h-64 overflow-y-auto">
-                          <div className="flex flex-wrap gap-2">
+                        <div className="border border-gray-200 rounded-lg p-2 sm:p-4 bg-white max-h-48 sm:max-h-64 overflow-y-auto">
+                          <div className="flex flex-wrap gap-1.5 sm:gap-2">
                             {businessTypes.map((businessType) => {
                               const isSelected = selectedBusinessTypes.includes(businessType.id);
                               return (
@@ -570,7 +573,7 @@ export default function AdminProfilePage() {
                                   onClick={() => handleBusinessTypeToggle(businessType.id)}
                                   disabled={!isEditing}
                                   className={`
-                                      relative inline-flex items-center gap-1.5 px-3 py-2 rounded-md text-sm font-medium
+                                      relative inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1.5 sm:py-2 rounded-md text-xs sm:text-sm font-medium
                                       transition-all duration-200 ease-in-out
                                       border-2
                                       ${isSelected
@@ -581,8 +584,8 @@ export default function AdminProfilePage() {
                                     `}
                                 >
                                   {isSelected && (
-                                    <div className="flex items-center justify-center w-4 h-4 rounded-full bg-[#f08400] text-white">
-                                      <Check className="w-3 h-3" />
+                                    <div className="flex items-center justify-center w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full bg-[#f08400] text-white">
+                                      <Check className="w-2.5 h-2.5 sm:w-3 sm:h-3" />
                                     </div>
                                   )}
                                   <span>{businessType.name}</span>
@@ -593,7 +596,7 @@ export default function AdminProfilePage() {
                         </div>
                       )}
                       {selectedBusinessTypes.length > 0 && (
-                        <p className="text-xs text-gray-500 mt-2">
+                        <p className="text-[10px] sm:text-xs text-gray-500 mt-1.5 sm:mt-2">
                           {selectedBusinessTypes.length} service{selectedBusinessTypes.length > 1 ? "s" : ""} sélectionné{selectedBusinessTypes.length > 1 ? "s" : ""}
                         </p>
                       )}
@@ -601,20 +604,20 @@ export default function AdminProfilePage() {
                   )}
 
                   {isEditing && (
-                    <div className="flex items-center gap-3 pt-4">
+                    <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 pt-3 sm:pt-4">
                       <Button
                         type="submit"
                         disabled={updateProfile.isPending}
-                        className="bg-[#f08400] hover:bg-[#d87200] text-white h-12"
+                        className="bg-[#f08400] hover:bg-[#d87200] text-white h-10 sm:h-12 text-xs sm:text-sm"
                       >
                         {updateProfile.isPending ? (
                           <>
-                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 animate-spin" />
                             Enregistrement...
                           </>
                         ) : (
                           <>
-                            <Save className="w-4 h-4 mr-2" />
+                            <Save className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
                             Enregistrer
                           </>
                         )}
@@ -642,7 +645,7 @@ export default function AdminProfilePage() {
                             setSelectedBusinessTypes([]);
                           }
                         }}
-                        className="h-12"
+                        className="h-10 sm:h-12 text-xs sm:text-sm"
                       >
                         Annuler
                       </Button>
@@ -655,101 +658,101 @@ export default function AdminProfilePage() {
         </TabsContent>
 
         {/* Compte */}
-        <TabsContent value="account" className="space-y-6 mt-0">
-          <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
+        <TabsContent value="account" className="space-y-4 sm:space-y-6 mt-0">
+          <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
             {/* Header compact */}
-            <div className="bg-gradient-to-r from-purple-50 via-purple-50/50 to-transparent p-5 border-b border-gray-200/50">
-              <div className="flex items-center gap-4">
-                <div className="p-2.5 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-md">
-                  <Shield className="w-5 h-5 text-white" />
+            <div className="bg-gradient-to-r from-purple-50 via-purple-50/50 to-transparent p-3 sm:p-4 lg:p-5 border-b border-gray-200/50">
+              <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                <div className="p-1.5 sm:p-2 lg:p-2.5 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg sm:rounded-xl shadow-md">
+                  <Shield className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900">Informations de compte</h2>
-                  <p className="text-xs text-gray-500 mt-0.5">Détails du compte et statuts de vérification</p>
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900">Informations de compte</h2>
+                  <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Détails du compte et statuts de vérification</p>
                 </div>
               </div>
             </div>
 
             {/* Contenu principal */}
-            <div className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="p-3 sm:p-4 lg:p-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
                 {/* Type */}
-                <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Type</label>
+                <div className="p-2.5 sm:p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                  <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Type</label>
                   <div className="mt-1">{getTypeBadge(user.type)}</div>
                 </div>
 
                 {/* Rôle */}
-                <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Rôle</label>
-                  <p className="text-sm font-semibold text-gray-900 mt-1">{user.role}</p>
+                <div className="p-2.5 sm:p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                  <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Rôle</label>
+                  <p className="text-xs sm:text-sm font-semibold text-gray-900 mt-1">{user.role}</p>
                 </div>
 
                 {/* Statut de vérification */}
-                <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Statut de vérification</label>
+                <div className="p-2.5 sm:p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                  <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Statut de vérification</label>
                   <div className="mt-1">{getStatusBadge(user.verification_status)}</div>
                 </div>
 
                 {/* Niveau de vérification */}
-                <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Niveau de vérification</label>
-                  <p className="text-sm font-semibold text-gray-900 mt-1">{user.verification_level || "N/A"}</p>
-                </div>
+                <div className="p-2.5 sm:p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                  <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Niveau de vérification</label>
+                  <p className="text-xs sm:text-sm font-semibold text-gray-900 mt-1">{user.verification_level || "N/A"}</p>
+                 </div>
 
                 {/* Téléphone vérifié */}
-                <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Téléphone vérifié</label>
-                  <div className="flex items-center gap-2 mt-1">
+                <div className="p-2.5 sm:p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                  <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Téléphone vérifié</label>
+                  <div className="flex items-center gap-1.5 sm:gap-2 mt-1">
                     {user.phone_verified ? (
                       <>
-                        <CheckCircle2 className="w-4 h-4 text-green-600" />
-                        <span className="text-sm text-green-600 font-semibold">Oui</span>
+                        <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                        <span className="text-xs sm:text-sm text-green-600 font-semibold">Oui</span>
                       </>
                     ) : (
                       <>
-                        <XCircle className="w-4 h-4 text-red-600" />
-                        <span className="text-sm text-red-600 font-semibold">Non</span>
+                        <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-red-600" />
+                        <span className="text-xs sm:text-sm text-red-600 font-semibold">Non</span>
                       </>
                     )}
                   </div>
                 </div>
 
                 {/* Compte vérifié */}
-                <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Compte vérifié</label>
-                  <div className="flex items-center gap-2 mt-1">
+                <div className="p-2.5 sm:p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                  <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Compte vérifié</label>
+                  <div className="flex items-center gap-1.5 sm:gap-2 mt-1">
                     {user.is_verified ? (
                       <>
-                        <Shield className="w-4 h-4 text-green-600" />
-                        <span className="text-sm text-green-600 font-semibold">Oui</span>
+                        <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                        <span className="text-xs sm:text-sm text-green-600 font-semibold">Oui</span>
                       </>
                     ) : (
                       <>
-                        <XCircle className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-500 font-semibold">Non</span>
+                        <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
+                        <span className="text-xs sm:text-sm text-gray-500 font-semibold">Non</span>
                       </>
                     )}
                   </div>
-                </div>
-
+                 </div>
+                  
                 {/* Premium */}
-                <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                  <label className="text-xs font-medium text-gray-500 mb-1.5 block">Premium</label>
-                  <div className="flex items-center gap-2 mt-1">
+                <div className="p-2.5 sm:p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                  <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Premium</label>
+                  <div className="flex items-center gap-1.5 sm:gap-2 mt-1">
                     {user.is_premium ? (
                       <>
-                        <Star className="w-4 h-4 text-yellow-600 fill-yellow-600" />
-                        <span className="text-sm text-yellow-600 font-semibold">Oui</span>
+                        <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-yellow-600 fill-yellow-600" />
+                        <span className="text-xs sm:text-sm text-yellow-600 font-semibold">Oui</span>
                       </>
                     ) : (
                       <>
-                        <Star className="w-4 h-4 text-gray-400" />
-                        <span className="text-sm text-gray-500 font-semibold">Non</span>
+                        <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
+                        <span className="text-xs sm:text-sm text-gray-500 font-semibold">Non</span>
                       </>
                     )}
                   </div>
-                </div>
+                                </div>
               </div>
             </div>
           </Card>
@@ -757,42 +760,42 @@ export default function AdminProfilePage() {
 
         {/* Permissions */}
         {isAnyAdmin() && (
-          <TabsContent value="permissions" className="space-y-6 mt-0">
+          <TabsContent value="permissions" className="space-y-4 sm:space-y-6 mt-0">
             {user.permissions && user.permissions.length > 0 ? (
-              <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
+              <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
                 {/* Header compact */}
-                <div className="bg-gradient-to-r from-green-50 via-green-50/50 to-transparent p-5 border-b border-gray-200/50">
-                  <div className="flex items-center gap-4">
-                    <div className="p-2.5 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-md">
-                      <FileText className="w-5 h-5 text-white" />
+                <div className="bg-gradient-to-r from-green-50 via-green-50/50 to-transparent p-3 sm:p-4 lg:p-5 border-b border-gray-200/50">
+                  <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                    <div className="p-1.5 sm:p-2 lg:p-2.5 bg-gradient-to-br from-green-500 to-green-600 rounded-lg sm:rounded-xl shadow-md">
+                      <FileText className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-white" />
                     </div>
                     <div>
-                      <h2 className="text-lg font-bold text-gray-900">Permissions</h2>
-                      <p className="text-xs text-gray-500 mt-0.5">{user.permissions.length} permission(s) accordée(s)</p>
+                      <h2 className="text-base sm:text-lg font-bold text-gray-900">Permissions</h2>
+                      <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">{user.permissions.length} permission(s) accordée(s)</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Contenu */}
-                <div className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 max-h-[600px] overflow-y-auto pr-2">
+                <div className="p-3 sm:p-4 lg:p-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 max-h-[400px] sm:max-h-[600px] overflow-y-auto pr-1 sm:pr-2">
                     {user.permissions.map((permission, index) => (
                       <div
                         key={index}
-                        className="px-3 py-2.5 bg-gradient-to-br from-gray-50 to-white rounded-lg text-xs text-gray-700 border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 flex items-center gap-2"
+                        className="px-2.5 sm:px-3 py-2 sm:py-2.5 bg-gradient-to-br from-gray-50 to-white rounded-lg text-[10px] sm:text-xs text-gray-700 border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 flex items-center gap-1.5 sm:gap-2"
                       >
-                        <CheckCircle2 className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
-                        <span className="font-medium">{permission}</span>
+                        <CheckCircle2 className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-green-600 flex-shrink-0" />
+                        <span className="font-medium truncate">{permission}</span>
                       </div>
                     ))}
                   </div>
                 </div>
               </Card>
             ) : (
-              <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 text-center p-12">
-                <FileText className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-bold text-gray-900 mb-2">Aucune permission</h3>
-                <p className="text-sm text-gray-600">Vous n&apos;avez aucune permission assignée.</p>
+              <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 text-center p-8 sm:p-12">
+                <FileText className="w-8 h-8 sm:w-12 sm:h-12 text-gray-400 mx-auto mb-3 sm:mb-4" />
+                <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1.5 sm:mb-2">Aucune permission</h3>
+                <p className="text-xs sm:text-sm text-gray-600">Vous n&apos;avez aucune permission assignée.</p>
               </Card>
             )}
           </TabsContent>
@@ -800,28 +803,28 @@ export default function AdminProfilePage() {
 
         {/* Business Types */}
         {user.businessTypes && user.businessTypes.length > 0 && (
-          <TabsContent value="business" className="space-y-6 mt-0">
-            <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
+          <TabsContent value="business" className="space-y-4 sm:space-y-6 mt-0">
+            <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
               {/* Header compact */}
-              <div className="bg-gradient-to-r from-indigo-50 via-indigo-50/50 to-transparent p-5 border-b border-gray-200/50">
-                <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-md">
-                    <Building2 className="w-5 h-5 text-white" />
+              <div className="bg-gradient-to-r from-indigo-50 via-indigo-50/50 to-transparent p-3 sm:p-4 lg:p-5 border-b border-gray-200/50">
+                <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                  <div className="p-1.5 sm:p-2 lg:p-2.5 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg sm:rounded-xl shadow-md">
+                    <Building2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-white" />
                   </div>
                   <div>
-                    <h2 className="text-lg font-bold text-gray-900">Types de business</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">{user.businessTypes.length} type(s) de business</p>
+                    <h2 className="text-base sm:text-lg font-bold text-gray-900">Types de business</h2>
+                    <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">{user.businessTypes.length} type(s) de business</p>
                   </div>
                 </div>
               </div>
 
               {/* Contenu */}
-              <div className="p-6">
-                <div className="flex flex-wrap gap-2">
+              <div className="p-3 sm:p-4 lg:p-6">
+                <div className="flex flex-wrap gap-1.5 sm:gap-2">
                   {user.businessTypes.map((bt) => (
                     <Badge
                       key={bt.id}
-                      className="bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1.5 text-xs font-semibold hover:shadow-md transition-all duration-200"
+                      className="bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-700 border border-indigo-200 px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold hover:shadow-md transition-all duration-200"
                     >
                       {bt.name}
                     </Badge>
@@ -834,41 +837,41 @@ export default function AdminProfilePage() {
 
         {/* Verification */}
         {user.type === "OWNER" && (
-          <TabsContent value="verification" className="space-y-6 mt-0">
+          <TabsContent value="verification" className="space-y-4 sm:space-y-6 mt-0">
             {isLoadingVerification ? (
-              <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 p-12">
-                <div className="flex items-center justify-center">
-                  <Loader2 className="w-8 h-8 animate-spin text-[#f08400]" />
-                  <span className="ml-3 text-sm text-gray-500">Chargement des informations de vérification...</span>
+              <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 p-8 sm:p-12">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3">
+                  <Loader2 className="w-6 h-6 sm:w-8 sm:h-8 animate-spin text-[#f08400]" />
+                  <span className="text-xs sm:text-sm text-gray-500 text-center">Chargement des informations de vérification...</span>
                 </div>
               </Card>
             ) : (
               <>
                 {/* Statut de vérification */}
-                <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-5 border-b border-gray-200/50">
-                    <div className="flex items-center gap-4">
-                      <div className="p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md">
-                        <ShieldCheck className="w-5 h-5 text-white" />
+                <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-3 sm:p-4 lg:p-5 border-b border-gray-200/50">
+                    <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
+                      <div className="p-1.5 sm:p-2 lg:p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg sm:rounded-xl shadow-md">
+                        <ShieldCheck className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-white" />
                       </div>
                       <div>
-                        <h2 className="text-lg font-bold text-gray-900">Statut de vérification</h2>
-                        <p className="text-xs text-gray-500 mt-0.5">Informations sur votre vérification</p>
+                        <h2 className="text-base sm:text-lg font-bold text-gray-900">Statut de vérification</h2>
+                        <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">Informations sur votre vérification</p>
                       </div>
                     </div>
                   </div>
 
-                  <div className="p-6">
-                    <div className="space-y-3">
+                  <div className="p-3 sm:p-4 lg:p-6">
+                    <div className="space-y-2 sm:space-y-3">
                       {/* Vérification d'identité - Ligne principale - Toujours affichée */}
-                      <div className="flex items-center justify-between p-4 bg-gradient-to-r from-blue-50/50 to-white rounded-lg border border-gray-200/50 hover:border-gray-300 transition-all duration-200">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-blue-100 rounded-lg">
-                            <ShieldCheck className="w-5 h-5 text-blue-600" />
+                      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 p-3 sm:p-4 bg-gradient-to-r from-blue-50/50 to-white rounded-lg border border-gray-200/50 hover:border-gray-300 transition-all duration-200">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                          <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg flex-shrink-0">
+                            <ShieldCheck className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                           </div>
-                          <div>
-                            <label className="text-sm font-semibold text-gray-900 block">Vérification d&apos;identité pièce d&apos;identité</label>
-                            <p className="text-xs text-gray-500 mt-0.5">
+                          <div className="min-w-0 flex-1">
+                            <label className="text-xs sm:text-sm font-semibold text-gray-900 block truncate">Vérification d&apos;identité pièce d&apos;identité</label>
+                            <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">
                               {(() => {
                                 const identityDoc = verificationStatus?.documents?.find(doc => doc.document_type === "IDENTITY");
                                 if (identityDoc) {
@@ -885,36 +888,36 @@ export default function AdminProfilePage() {
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
                           {(() => {
                             const identityDoc = verificationStatus?.documents?.find(doc => doc.document_type === "IDENTITY");
                             if (identityDoc) {
                               if (identityDoc.status === "APPROVED") {
                                 return (
-                                  <Badge className="bg-green-100 text-green-700 border-green-200 px-3 py-1">
-                                    <CheckCircle2 className="w-3 h-3 mr-1 inline" />
+                                  <Badge className="bg-green-100 text-green-700 border-green-200 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs">
+                                    <CheckCircle2 className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 inline" />
                                     Vérifiée
                                   </Badge>
                                 );
                               } else if (identityDoc.status === "REJECTED") {
                                 return (
-                                  <Badge className="bg-red-100 text-red-700 border-red-200 px-3 py-1">
-                                    <XCircle className="w-3 h-3 mr-1 inline" />
+                                  <Badge className="bg-red-100 text-red-700 border-red-200 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs">
+                                    <XCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 inline" />
                                     Rejetée
                                   </Badge>
                                 );
                               } else {
                                 return (
-                                  <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200 px-3 py-1">
-                                    <Clock className="w-3 h-3 mr-1 inline" />
+                                  <Badge className="bg-yellow-100 text-yellow-700 border-yellow-200 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs">
+                                    <Clock className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 inline" />
                                     En attente
                                   </Badge>
                                 );
                               }
                             }
                             return (
-                              <Badge className="bg-gray-100 text-gray-700 border-gray-200 px-3 py-1">
-                                <XCircle className="w-3 h-3 mr-1 inline" />
+                              <Badge className="bg-gray-100 text-gray-700 border-gray-200 px-2 sm:px-3 py-0.5 sm:py-1 text-[10px] sm:text-xs">
+                                <XCircle className="w-2.5 h-2.5 sm:w-3 sm:h-3 mr-1 inline" />
                                 Non vérifiée
                               </Badge>
                             );
@@ -926,10 +929,11 @@ export default function AdminProfilePage() {
                                 <Button
                                   onClick={() => openDocumentDialog("IDENTITY")}
                                   size="sm"
-                                  className="bg-[#f08400] hover:bg-[#d87200] text-white"
+                                  className="bg-[#f08400] hover:bg-[#d87200] text-white h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3"
                                 >
-                                  <Upload className="w-4 h-4 mr-2" />
-                                  Initier la vérification
+                                  <Upload className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                                  <span className="hidden sm:inline">Initier la vérification</span>
+                                  <span className="sm:hidden">Initier</span>
                                 </Button>
                               );
                             }
@@ -940,20 +944,20 @@ export default function AdminProfilePage() {
 
                       {/* Autres informations en grille - Affichées seulement si verification existe */}
                       {verificationStatus?.verification && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                          <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Statut global</label>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 mt-3 sm:mt-4">
+                          <div className="p-2.5 sm:p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                            <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Statut global</label>
                             <div className="mt-1">{getStatusBadge(verificationStatus.verification.verification_status)}</div>
                           </div>
 
-                          <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                            <label className="text-xs font-medium text-gray-500 mb-1.5 block">Niveau de vérification</label>
-                            <p className="text-sm font-semibold text-gray-900 mt-1">
+                          <div className="p-2.5 sm:p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                            <label className="text-[10px] sm:text-xs font-medium text-gray-500 mb-1 sm:mb-1.5 block">Niveau de vérification</label>
+                            <p className="text-xs sm:text-sm font-semibold text-gray-900 mt-1">
                               {verificationStatus.verification.verification_level || "N/A"}
                             </p>
                           </div>
 
-                          <div className="p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
+                          <div className="p-2.5 sm:p-4 bg-gray-50/50 rounded-lg border border-gray-200/50">
                             <label className="text-xs font-medium text-gray-500 mb-1.5 block">Téléphone vérifié</label>
                             <div className="flex items-center gap-2 mt-1">
                               {verificationStatus.verification.phone_verified ? (

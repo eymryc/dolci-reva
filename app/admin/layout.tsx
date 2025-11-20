@@ -81,7 +81,13 @@ export default function AdminLayout({
   const router = useRouter();
   const { user, loading, logout } = useAuth();
   const { canManageUsers, isAnyAdmin, isOwner } = usePermissions();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Ouvert par défaut
+  // Initialiser à false sur mobile, true sur desktop
+  const [isSidebarOpen, setIsSidebarOpen] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.innerWidth >= 1024;
+    }
+    return false;
+  });
   const [isDesktop, setIsDesktop] = useState(false);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
   const isLoginPage = pathname === "/auth/sign-in";
@@ -90,10 +96,14 @@ export default function AdminLayout({
   // Détecter si on est sur desktop
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsDesktop(window.innerWidth >= 1024);
+      const isDesktopSize = window.innerWidth >= 1024;
+      setIsDesktop(isDesktopSize);
       // Sur desktop, forcer la sidebar à être ouverte
-      if (window.innerWidth >= 1024) {
+      // Sur mobile, fermer la sidebar si elle était ouverte
+      if (isDesktopSize) {
         setIsSidebarOpen(true);
+      } else {
+        setIsSidebarOpen(false);
       }
     };
     

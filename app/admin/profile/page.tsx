@@ -413,68 +413,73 @@ export default function AdminProfilePage() {
 
               {/* Contenu */}
               <div className="p-6">
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-1.5">
-                      <Label htmlFor="first_name" className="text-sm">
-                        Prénom
-                      </Label>
-                      <Input
-                        id="first_name"
-                        name="first_name"
-                        value={formData.first_name}
-                        onChange={handleInputChange}
-                        placeholder="Exemple : John"
-                        className="h-12"
-                        disabled={!isEditing}
-                      />
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Nom et Prénom */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="first_name" className="text-sm">
+                          Prénom
+                        </Label>
+                        <Input
+                          id="first_name"
+                          name="first_name"
+                          value={formData.first_name}
+                          onChange={handleInputChange}
+                          placeholder="Exemple : John"
+                          className="h-12"
+                          disabled={!isEditing}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="last_name" className="text-sm">
+                          Nom
+                        </Label>
+                        <Input
+                          id="last_name"
+                          name="last_name"
+                          value={formData.last_name}
+                          onChange={handleInputChange}
+                          placeholder="Exemple : Doe"
+                          className="h-12"
+                          disabled={!isEditing}
+                        />
+                      </div>
                     </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="last_name" className="text-sm">
-                        Nom
-                      </Label>
-                      <Input
-                        id="last_name"
-                        name="last_name"
-                        value={formData.last_name}
-                        onChange={handleInputChange}
-                        placeholder="Exemple : Doe"
-                        className="h-12"
-                        disabled={!isEditing}
-                      />
+
+                    {/* Email et Téléphone */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="space-y-1.5">
+                        <Label htmlFor="email" className="text-sm flex items-center gap-1.5">
+                          <Mail className="w-3.5 h-3.5" />
+                          Email
+                        </Label>
+                        <Input
+                          id="email"
+                          name="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          placeholder="Exemple : john.doe@example.com"
+                          className="h-12"
+                          disabled={!isEditing}
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label htmlFor="phone" className="text-sm flex items-center gap-1.5">
+                          <Phone className="w-3.5 h-3.5" />
+                          Téléphone
+                        </Label>
+                        <Input
+                          id="phone"
+                          name="phone"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          placeholder="Exemple : 0612345678"
+                          className="h-12"
+                          disabled={!isEditing}
+                        />
+                      </div>
                     </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="email" className="text-sm flex items-center gap-1.5">
-                        <Mail className="w-3.5 h-3.5" />
-                        Email
-                      </Label>
-                      <Input
-                        id="email"
-                        name="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        placeholder="Exemple : john.doe@example.com"
-                        className="h-12"
-                        disabled={!isEditing}
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="phone" className="text-sm flex items-center gap-1.5">
-                        <Phone className="w-3.5 h-3.5" />
-                        Téléphone
-                      </Label>
-                      <Input
-                        id="phone"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        placeholder="Exemple : 0612345678"
-                        className="h-12"
-                        disabled={!isEditing}
-                      />
-                    </div>
-                  </div>
 
                   {/* Informations supplémentaires */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -509,7 +514,7 @@ export default function AdminProfilePage() {
                       />
                     </div>
 
-                    <div className="space-y-1.5 md:col-span-2">
+                    <div className="space-y-1.5">
                       <Label htmlFor="address_line1" className="text-sm">
                         Adresse (ligne 1)
                       </Label>

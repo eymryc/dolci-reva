@@ -399,15 +399,15 @@ export default function AdminLayout({
         )}
 
         {/* Header */}
-        <header className="h-auto min-h-[70px] sm:min-h-[80px] lg:h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-2 sm:px-3 lg:px-6 py-1.5 sm:py-2 lg:py-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 lg:gap-0 shadow-sm">
-          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 flex-1 w-full sm:w-auto">
+        <header className="h-auto min-h-[70px] sm:min-h-[80px] lg:h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-2 sm:px-3 lg:px-6 py-1.5 sm:py-2 lg:py-0 flex flex-row items-center justify-between gap-1.5 sm:gap-2 lg:gap-3 shadow-sm overflow-x-auto">
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 flex-1 min-w-0">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="lg:hidden p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="lg:hidden p-1 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
             >
               <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
             </button>
-            <div className="relative flex-1 sm:flex-initial sm:max-w-md">
+            <div className="relative flex-1 min-w-0 sm:flex-initial sm:max-w-md">
               <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
               <input
                 type="text"
@@ -417,42 +417,46 @@ export default function AdminLayout({
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-1.5 lg:gap-3 w-full sm:w-auto">
+          <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-3 flex-shrink-0">
             {/* Wallet Balance Section */}
             {user && (
-              <div className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 2xl:gap-4 px-2 sm:px-2.5 xl:px-3 2xl:px-4 py-1.5 sm:py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20 shadow-sm">
+              <div className="flex items-center gap-1 sm:gap-1.5 xl:gap-3 2xl:gap-4 px-1.5 sm:px-2 xl:px-3 2xl:px-4 py-1 sm:py-1.5 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20 shadow-sm">
                 {/* Solde normal */}
-                <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 xl:gap-3">
+                <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-2 xl:gap-3">
                   <div className="p-0.5 sm:p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded-lg">
-                    <Wallet className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-[#f08400]" />
+                    <Wallet className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-[#f08400]" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] xl:text-xs text-gray-500 font-medium">Solde normal</span>
-                    <span className="text-[9px] sm:text-[10px] lg:text-xs xl:text-sm font-bold text-gray-900">
+                    <span className="text-[7px] sm:text-[8px] lg:text-[10px] xl:text-xs text-gray-500 font-medium leading-tight">Solde</span>
+                    <span className="text-[8px] sm:text-[9px] lg:text-xs xl:text-sm font-bold text-gray-900 leading-tight">
                       {new Intl.NumberFormat('fr-FR', {
                         style: 'currency',
                         currency: 'XOF',
-                        maximumFractionDigits: 0
+                        maximumFractionDigits: 0,
+                        notation: 'compact',
+                        compactDisplay: 'short'
                       }).format(user.wallet?.balance || 0)}
                     </span>
                   </div>
                 </div>
                 
                 {/* Séparateur */}
-                <div className="h-4 sm:h-5 lg:h-6 xl:h-8 w-px bg-gray-300"></div>
+                <div className="h-3 sm:h-4 lg:h-6 xl:h-8 w-px bg-gray-300"></div>
                 
                 {/* Solde gelé */}
-                <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 xl:gap-3">
+                <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-2 xl:gap-3">
                   <div className="p-0.5 sm:p-1 lg:p-1.5 xl:p-2 bg-gray-100 rounded-lg">
-                    <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-gray-600" />
+                    <Lock className="w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-gray-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] xl:text-xs text-gray-500 font-medium">Solde gelé</span>
-                    <span className="text-[9px] sm:text-[10px] lg:text-xs xl:text-sm font-bold text-gray-600">
+                    <span className="text-[7px] sm:text-[8px] lg:text-[10px] xl:text-xs text-gray-500 font-medium leading-tight">Gelé</span>
+                    <span className="text-[8px] sm:text-[9px] lg:text-xs xl:text-sm font-bold text-gray-600 leading-tight">
                       {new Intl.NumberFormat('fr-FR', {
                         style: 'currency',
                         currency: 'XOF',
-                        maximumFractionDigits: 0
+                        maximumFractionDigits: 0,
+                        notation: 'compact',
+                        compactDisplay: 'short'
                       }).format(user.wallet?.frozen_balance || 0)}
                     </span>
                   </div>
@@ -460,24 +464,22 @@ export default function AdminLayout({
               </div>
             )}
 
-            <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3">
-              {/* Notifications */}
-              <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
-                <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full border-2 border-white"></span>
-              </button>
+            {/* Notifications */}
+            <button className="relative p-1 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0">
+              <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
+              <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
 
-              {/* Messages */}
-              <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
-                <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full border-2 border-white"></span>
-              </button>
-            </div>
+            {/* Messages */}
+            <button className="relative p-1 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0">
+              <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
+              <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full border-2 border-white"></span>
+            </button>
 
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 pl-1.5 sm:pl-2 lg:pl-3 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity">
+                <div className="flex items-center gap-1 sm:gap-2 lg:gap-3 pl-1 sm:pl-2 lg:pl-3 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity flex-shrink-0">
                   <div className="text-right hidden lg:block">
                     <div className="text-[11px] xl:text-xs 2xl:text-sm font-semibold text-gray-900 truncate max-w-[100px] xl:max-w-[120px] 2xl:max-w-[150px]">
                       {userFullName}

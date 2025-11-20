@@ -80,9 +80,26 @@ export default function AdminLayout({
   const router = useRouter();
   const { user, loading, logout } = useAuth();
   const { canManageUsers, isAnyAdmin, isOwner } = usePermissions();
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Ouvert par défaut
+  const [isDesktop, setIsDesktop] = useState(false);
   const isLoginPage = pathname === "/auth/sign-in";
   const [showVerificationAlert, setShowVerificationAlert] = useState(true);
+
+  // Détecter si on est sur desktop
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsDesktop(window.innerWidth >= 1024);
+      // Sur desktop, forcer la sidebar à être ouverte
+      if (window.innerWidth >= 1024) {
+        setIsSidebarOpen(true);
+      }
+    };
+    
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
 
   // Vérifier le statut de vérification pour les propriétaires
   // Utiliser directement user.verification_status depuis le contexte d'authentification
@@ -175,7 +192,8 @@ export default function AdminLayout({
             ? "translate-x-0" 
             : "-translate-x-full lg:translate-x-0"
         } ${
-          isSidebarOpen ? "w-72" : "w-72 lg:w-20"
+          // Sur desktop, toujours largeur 72. Sur mobile, dépend de isSidebarOpen
+          isSidebarOpen ? "w-72" : "w-72 lg:w-72"
         } fixed lg:relative z-50 lg:z-10 transition-all duration-300 flex flex-col bg-white/80 backdrop-blur-xl border-r border-gray-200/50 shadow-xl h-full`}
       >
         {/* Gradient Overlay */}
@@ -218,7 +236,7 @@ export default function AdminLayout({
                   }`}
               >
                 <Icon className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
-                {isSidebarOpen && (
+                {(isSidebarOpen || isDesktop) && (
                   <span className={`text-xs sm:text-sm font-medium transition-all ${isActive ? 'text-white' : 'text-gray-700'}`}>
                     {item.name}
                   </span>
@@ -231,7 +249,7 @@ export default function AdminLayout({
           })}
 
           {/* Preferences Section */}
-          {isSidebarOpen && (
+          {(isSidebarOpen || isDesktop) && (
             <div className="pt-4 sm:pt-8 mt-4 sm:mt-8 border-t border-gray-200/50">
               {isAnyAdmin() && (
                 <Link
@@ -289,7 +307,7 @@ export default function AdminLayout({
                 </div>
                 <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-white"></div>
               </div>
-              {isSidebarOpen && (
+              {(isSidebarOpen || isDesktop) && (
                 <div className="flex-1 min-w-0">
                   <div className="font-semibold text-xs sm:text-sm text-gray-900 truncate">
                     {userFullName}
@@ -402,7 +420,7 @@ export default function AdminLayout({
           <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 w-full sm:w-auto justify-between sm:justify-end">
             {/* Wallet Balance Section */}
             {user?.wallet && (
-              <div className="hidden xl:flex items-center gap-2 lg:gap-3 xl:gap-4 px-2 lg:px-3 xl:px-4 py-1 lg:py-1.5 xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20">
+              <div className="hidden lg:flex items-center gap-2 xl:gap-3 2xl:gap-4 px-2 xl:px-3 2xl:px-4 py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20">
                 <div className="flex items-center gap-1.5 lg:gap-2 xl:gap-3">
                   <div className="p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded-lg">
                     <Wallet className="w-3 h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-[#f08400]" />

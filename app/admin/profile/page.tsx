@@ -16,7 +16,6 @@ import {
   XCircle,
   FileText,
   Building2,
-  Wallet,
   Award,
   Calendar,
   Ban,
@@ -390,12 +389,6 @@ export default function AdminProfilePage() {
             <TabsTrigger value="verification" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
               <ShieldCheck className="w-4 h-4" />
               Vérification
-            </TabsTrigger>
-          )}
-          {user.wallet && (
-            <TabsTrigger value="wallet" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
-              <Wallet className="w-4 h-4" />
-              Portefeuille
             </TabsTrigger>
           )}
         </TabsList>
@@ -1072,42 +1065,6 @@ export default function AdminProfilePage() {
           </TabsContent>
         )}
 
-        {/* Wallet */}
-        {user.wallet && (
-          <TabsContent value="wallet" className="space-y-6 mt-0">
-            <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
-              {/* Header compact */}
-              <div className="bg-gradient-to-r from-emerald-50 via-emerald-50/50 to-transparent p-5 border-b border-gray-200/50">
-                <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-xl shadow-md">
-                    <Wallet className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold text-gray-900">Portefeuille</h2>
-                    <p className="text-xs text-gray-500 mt-0.5">Solde et transactions</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Contenu */}
-              <div className="p-6">
-                <div className="p-4 bg-gradient-to-br from-emerald-50 via-emerald-50/50 to-white rounded-lg border border-emerald-200/50">
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-lg shadow-md">
-                      <Wallet className="w-4 h-4 text-white" />
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-xs font-medium text-gray-600 mb-0.5">Solde disponible</p>
-                      <p className="text-3xl font-bold text-gray-900">
-                        {Number(user.wallet.balance || 0).toFixed(2)} €
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                          </div>
-            </Card>
-          </TabsContent>
-        )}
       </Tabs>
     </div>
   );

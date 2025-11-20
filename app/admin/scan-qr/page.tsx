@@ -94,18 +94,27 @@ export default function ScanQRPage() {
     // Arrêter le scanner immédiatement après avoir scanné
     await stopScanning();
 
-    // Extraire le token du QR code
+    // Extraire le token encodé du QR code
     // Le QR code peut contenir soit directement le token, soit une URL avec le token
     let token = decodedText;
 
     // Si c'est une URL, extraire le token
+    // Format attendu: https://dolci-reva-x27q.vercel.app/verify-booking/TOKEN_ENCODE
     if (decodedText.includes("/verify-booking/")) {
       const parts = decodedText.split("/verify-booking/");
       if (parts.length > 1) {
-        token = parts[1];
+        // Le token peut être suivi d'un point (.) pour la signature, on prend tout
+        token = parts[1].split("?")[0]; // Enlever les query params si présents
+      }
+    } else if (decodedText.includes("verify-booking/")) {
+      // Format alternatif sans le domaine complet
+      const parts = decodedText.split("verify-booking/");
+      if (parts.length > 1) {
+        token = parts[1].split("?")[0];
       }
     }
 
+    // Le token doit être le token JWT complet (eyJib29raW5nX2lkIjoxLC...)
     // Envoyer le token à l'API
     await processQRCode(token);
   };
@@ -126,7 +135,7 @@ export default function ScanQRPage() {
 
     try {
       const response = await api.post("/payments/qr-code/scan", {
-        qr_code_token: token,
+        token: token,
       });
 
       if (response.data.success) {

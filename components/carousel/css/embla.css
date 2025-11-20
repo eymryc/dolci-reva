@@ -4,27 +4,39 @@
    --slide-height: clamp(18rem, 40vw, 40rem);
    --slide-spacing: 1rem;
    --slide-size: 100%;
+   width: 100%;
+   max-width: 100vw;
  }
  .embla__viewport {
    overflow: hidden;
    position: relative;
    width: 100%;
-   min-height: 300px;
+   max-width: 100vw;
+   height: var(--slide-height);
+   min-height: var(--slide-height);
+   max-height: var(--slide-height);
  }
  .embla__container {
    display: flex;
    touch-action: pan-y pinch-zoom;
-   margin-top: calc(var(--slide-spacing) * -1);
-   height: calc(var(--slide-spacing) + var(--slide-height));
    flex-direction: column;
+   width: 100%;
+   will-change: transform;
+   backface-visibility: hidden;
  }
  .embla__slide {
    transform: translate3d(0, 0, 0);
-   flex: 0 0 100%;
+   flex: 0 0 var(--slide-height);
    min-height: 0;
-   padding-top: var(--slide-spacing);
+   padding: 0;
    width: 100%;
    max-width: 100%;
+   margin: 0;
+   height: var(--slide-height);
+   box-sizing: border-box;
+   position: relative;
+   flex-shrink: 0;
+   overflow: hidden;
  }
  .embla__slide__number {
    box-shadow: inset 0 0 0 0.2rem var(--detail-medium-contrast);

@@ -1,8 +1,5 @@
 "use client";
 
-import EmblaCarousel from '@/components/carousel/EmblaCarousel'
-import { EmblaOptionsType } from 'embla-carousel'
-import '@/components/carousel/css/embla.css'
 import TrueFocus from '@/components/animations/textanimate/TextAnimations/TrueFocus/TrueFocus';
 import SectionHeader from '@/components/ui/SectionHeader';
 import AnimatedButton from '@/components/ui/AnimatedButton';
@@ -13,18 +10,10 @@ import { usePublicResidences } from '@/hooks/use-residences';
 import { usePublicDwellings } from '@/hooks/use-dwellings';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-// import GenericCarousel from '@/components/carousel/GenericCarousel';
+import Image from 'next/image';
 
-
-const OPTIONS: EmblaOptionsType = { axis: 'y' }
-// Création d'un tableau d'images
-const IMAGES = [
-  { src: "/media/slide/slide3.jpg", alt: "Image 3" },
-  { src: "/media/slide/slide5.jpg", alt: "Image 5" },
-  { src: "/media/slide/slide4.jpg", alt: "Image 4" },
-  { src: "/media/slide/slide1.jpg", alt: "Image 1" },
-  { src: "/media/slide/slide2.jpg", alt: "Image 2" },
-]
+// Première image comme cover
+const COVER_IMAGE = "/media/slide/slide3.jpg"
 
 export default function Home() {
   const router = useRouter();
@@ -40,9 +29,17 @@ export default function Home() {
   };
   return (
     <div>
-      <section className="px-2 md:px-0">
-        <div className="">
-          <EmblaCarousel slides={IMAGES} options={OPTIONS} />
+      {/* Cover Image */}
+      <section className="w-full relative">
+        <div className="w-full h-[60vh] sm:h-[70vh] lg:h-[80vh] relative">
+          <Image
+            src={COVER_IMAGE}
+            alt="Dolci Rêva - Kiffer l'instant"
+            fill
+            style={{ objectFit: 'cover' }}
+            sizes="100vw"
+            priority
+          />
         </div>
       </section>
 

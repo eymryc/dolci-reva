@@ -24,14 +24,21 @@ const EmblaCarousel: React.FC<PropType> = (props) => {
     setMounted(true)
   }, [])
 
+  // Réinitialiser Embla quand les slides changent
+  useEffect(() => {
+    if (emblaApi && slides) {
+      emblaApi.reInit()
+    }
+  }, [emblaApi, slides])
+
   return (
-    <section className="embla">
-      <div className="embla__viewport" ref={emblaRef}>
-        <div className="embla__container">
+    <section className="embla w-full">
+      <div className="embla__viewport w-full" ref={emblaRef}>
+        <div className="embla__container w-full">
           {children
             ? children
             : slides?.map((img, index) => (
-                <div className="embla__slide" key={index} style={{ position: 'relative', width: '100%', height: '100%', minHeight: '300px', flexShrink: 0 }}>
+                <div className="embla__slide w-full" key={index} style={{ position: 'relative', width: '100%', height: 'var(--slide-height)', flexShrink: 0 }}>
                   <Image
                     src={img.src}
                     alt={img.alt}

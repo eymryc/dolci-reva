@@ -19,7 +19,6 @@ import {
   Wallet,
   Award,
   Calendar,
-  TrendingUp,
   Ban,
   ArrowLeft,
   ShieldCheck,
@@ -234,7 +233,7 @@ export default function AdminProfilePage() {
             
             <div className="relative z-10">
           <div className="flex items-start justify-between gap-6 mb-6">
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-6 flex-1">
               {/* Avatar */}
               <div className="relative">
                 <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#f08400] via-[#f08400]/90 to-orange-600 flex items-center justify-center shadow-2xl shadow-[#f08400]/30 ring-4 ring-white overflow-hidden">
@@ -312,40 +311,89 @@ export default function AdminProfilePage() {
               </Button>
                 </div>
               </div>
+
+              {/* Statistiques dans le Header */}
+              {(user.reputation_score !== undefined || user.total_bookings !== undefined || user.cancellation_rate !== undefined) && (
+                <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {user.reputation_score !== undefined && (
+                    <div className="p-4 bg-gradient-to-br from-blue-50 via-blue-50/50 to-white rounded-lg border border-blue-200/50 hover:border-blue-300 transition-all duration-200">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
+                          <Award className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs font-medium text-gray-600 mb-0.5">Score de réputation</p>
+                          <p className="text-xl font-bold text-gray-900">
+                            {user.reputation_score ? parseFloat(user.reputation_score).toFixed(2) : "0.00"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {user.total_bookings !== undefined && (
+                    <div className="p-4 bg-gradient-to-br from-green-50 via-green-50/50 to-white rounded-lg border border-green-200/50 hover:border-green-300 transition-all duration-200">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md">
+                          <Calendar className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs font-medium text-gray-600 mb-0.5">Total réservations</p>
+                          <p className="text-xl font-bold text-gray-900">{user.total_bookings || 0}</p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  {user.cancellation_rate !== undefined && (
+                    <div className={`p-4 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-50 via-red-50/50" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-50 via-yellow-50/50" : "from-green-50 via-green-50/50"} to-white rounded-lg border ${parseFloat(user.cancellation_rate || "0") > 10 ? "border-red-200/50 hover:border-red-300" : parseFloat(user.cancellation_rate || "0") > 5 ? "border-yellow-200/50 hover:border-yellow-300" : "border-green-200/50 hover:border-green-300"} transition-all duration-200`}>
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-500 to-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-500 to-yellow-600" : "from-green-500 to-green-600"} rounded-lg shadow-md`}>
+                          <Ban className="w-4 h-4 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <p className="text-xs font-medium text-gray-600 mb-0.5">Taux d&apos;annulation</p>
+                          <p className={`text-xl font-bold ${parseFloat(user.cancellation_rate || "0") > 10 ? "text-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "text-yellow-600" : "text-green-600"}`}>
+                            {user.cancellation_rate ? parseFloat(user.cancellation_rate).toFixed(2) : "0.00"}%
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </Card>
 
-      {/* Tabs pour organiser les sections */}
-      <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-white/90 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-gray-200/60 h-auto">
-          <TabsTrigger value="overview" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+      {/* Tabs pour organiser les sections - Vertical */}
+      <Tabs defaultValue="overview" orientation="vertical" className="flex flex-col lg:flex-row gap-6">
+        <TabsList className="flex flex-col lg:flex-col bg-white/90 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-gray-200/60 h-auto w-full lg:w-auto lg:min-w-[200px]">
+          <TabsTrigger value="overview" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
             <User className="w-4 h-4" />
             Vue d&apos;ensemble
           </TabsTrigger>
-          <TabsTrigger value="account" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+          <TabsTrigger value="account" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
             <Shield className="w-4 h-4" />
             Compte
           </TabsTrigger>
           {isAnyAdmin() && (
-            <TabsTrigger value="permissions" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+            <TabsTrigger value="permissions" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
               <FileText className="w-4 h-4" />
               Permissions
             </TabsTrigger>
           )}
           {user.businessTypes && user.businessTypes.length > 0 && (
-            <TabsTrigger value="business" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+            <TabsTrigger value="business" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
               <Building2 className="w-4 h-4" />
               Business
             </TabsTrigger>
           )}
           {user.type === "OWNER" && (
-            <TabsTrigger value="verification" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+            <TabsTrigger value="verification" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
               <ShieldCheck className="w-4 h-4" />
               Vérification
             </TabsTrigger>
           )}
           {user.wallet && (
-            <TabsTrigger value="wallet" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+            <TabsTrigger value="wallet" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
               <Wallet className="w-4 h-4" />
               Portefeuille
             </TabsTrigger>
@@ -353,10 +401,8 @@ export default function AdminProfilePage() {
         </TabsList>
 
         {/* Vue d'ensemble */}
-        <TabsContent value="overview" className="space-y-6 mt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Colonne principale */}
-            <div className="lg:col-span-2 space-y-4">
+        <TabsContent value="overview" className="space-y-6 mt-0 flex-1">
+          <div className="space-y-4">
               {/* Informations personnelles */}
               <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
                 {/* Header compact */}
@@ -682,77 +728,6 @@ export default function AdminProfilePage() {
                   </form>
                 </div>
               </Card>
-            </div>
-
-            {/* Sidebar Stats */}
-            <div className="space-y-4">
-              {/* Statistiques */}
-              {(user.reputation_score !== undefined || user.total_bookings !== undefined || user.cancellation_rate !== undefined) && (
-                <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  {/* Header compact */}
-                  <div className="bg-gradient-to-r from-orange-50 via-orange-50/50 to-transparent p-5 border-b border-gray-200/50">
-                    <div className="flex items-center gap-4">
-                      <div className="p-2.5 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-md">
-                        <TrendingUp className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-lg font-bold text-gray-900">Statistiques</h2>
-                        <p className="text-xs text-gray-500 mt-0.5">Métriques de performance</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Contenu */}
-                  <div className="p-6">
-                    <div className="space-y-3">
-                      {user.reputation_score !== undefined && (
-                        <div className="p-4 bg-gradient-to-br from-blue-50 via-blue-50/50 to-white rounded-lg border border-blue-200/50 hover:border-blue-300 transition-all duration-200">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
-                              <Award className="w-4 h-4 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs font-medium text-gray-600 mb-0.5">Score de réputation</p>
-                              <p className="text-2xl font-bold text-gray-900">
-                                {user.reputation_score ? parseFloat(user.reputation_score).toFixed(2) : "0.00"}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {user.total_bookings !== undefined && (
-                        <div className="p-4 bg-gradient-to-br from-green-50 via-green-50/50 to-white rounded-lg border border-green-200/50 hover:border-green-300 transition-all duration-200">
-                          <div className="flex items-center gap-3">
-                            <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md">
-                              <Calendar className="w-4 h-4 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs font-medium text-gray-600 mb-0.5">Total réservations</p>
-                              <p className="text-2xl font-bold text-gray-900">{user.total_bookings || 0}</p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {user.cancellation_rate !== undefined && (
-                        <div className={`p-4 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-50 via-red-50/50" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-50 via-yellow-50/50" : "from-green-50 via-green-50/50"} to-white rounded-lg border ${parseFloat(user.cancellation_rate || "0") > 10 ? "border-red-200/50 hover:border-red-300" : parseFloat(user.cancellation_rate || "0") > 5 ? "border-yellow-200/50 hover:border-yellow-300" : "border-green-200/50 hover:border-green-300"} transition-all duration-200`}>
-                          <div className="flex items-center gap-3">
-                            <div className={`p-2 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-500 to-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-500 to-yellow-600" : "from-green-500 to-green-600"} rounded-lg shadow-md`}>
-                              <Ban className="w-4 h-4 text-white" />
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-xs font-medium text-gray-600 mb-0.5">Taux d&apos;annulation</p>
-                              <p className={`text-2xl font-bold ${parseFloat(user.cancellation_rate || "0") > 10 ? "text-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "text-yellow-600" : "text-green-600"}`}>
-                                {user.cancellation_rate ? parseFloat(user.cancellation_rate).toFixed(2) : "0.00"}%
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                </Card>
-              )}
-            </div>
           </div>
         </TabsContent>
 

@@ -407,7 +407,7 @@ export default function AdminLayout({
             >
               <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
             </button>
-            <div className="relative flex-1 min-w-0 sm:flex-initial sm:max-w-md">
+            <div className="hidden sm:block relative flex-1 min-w-0 sm:flex-initial sm:max-w-md">
               <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
               <input
                 type="text"

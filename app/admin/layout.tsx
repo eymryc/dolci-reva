@@ -419,7 +419,7 @@ export default function AdminLayout({
 
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-1.5 lg:gap-3 w-full sm:w-auto">
             {/* Wallet Balance Section */}
-            {user?.wallet && (
+            {user && (
               <div className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 2xl:gap-4 px-2 sm:px-2.5 xl:px-3 2xl:px-4 py-1.5 sm:py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20 shadow-sm">
                 {/* Solde normal */}
                 <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 xl:gap-3">
@@ -433,7 +433,7 @@ export default function AdminLayout({
                         style: 'currency',
                         currency: 'XOF',
                         maximumFractionDigits: 0
-                      }).format(user.wallet.balance || 0)}
+                      }).format(user.wallet?.balance || 0)}
                     </span>
                   </div>
                 </div>
@@ -453,7 +453,7 @@ export default function AdminLayout({
                         style: 'currency',
                         currency: 'XOF',
                         maximumFractionDigits: 0
-                      }).format((user.wallet as { frozen_balance?: number }).frozen_balance || 0)}
+                      }).format(user.wallet?.frozen_balance || 0)}
                     </span>
                   </div>
                 </div>

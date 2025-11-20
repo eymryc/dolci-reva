@@ -11,6 +11,7 @@ export interface BusinessType {
 export interface Wallet {
   id: number;
   balance: number;
+  frozen_balance?: number;
 }
 
 export interface VerificationDocument {

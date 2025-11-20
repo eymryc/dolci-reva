@@ -19,6 +19,7 @@ import {
   User,
   Wallet,
   Lock,
+  QrCode,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
@@ -466,6 +467,15 @@ export default function AdminLayout({
               <MessageSquare className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
               <span className="absolute top-0 right-0 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full border border-white"></span>
             </button>
+
+            {/* QR Code Scanner */}
+            <Link 
+              href="/admin/scan-qr"
+              className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 relative group"
+              title="Scanner QR code"
+            >
+              <QrCode className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600 group-hover:text-[#f08400]" />
+            </Link>
 
             {/* User Menu */}
             <DropdownMenu>

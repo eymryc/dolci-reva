@@ -361,26 +361,26 @@ export function ResidenceForm({
           clearErrors();
         }}
       />
-      <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-3 p-2">
-          <div className="grid grid-cols-2 gap-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+        <div className="space-y-3 p-2 sm:p-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="name" className="text-sm">
+              <Label htmlFor="name" className="text-xs sm:text-sm">
                 Nom <span className="text-red-500">*</span>
               </Label>
               <Input
                 id="name"
                 placeholder="Exemple : Résidence Les Palmiers"
                 {...register("name")}
-                className={errors.name ? "border-red-500 h-12" : "h-12"}
+                className={`${errors.name ? "border-red-500" : ""} h-10 sm:h-12 text-xs sm:text-sm`}
               />
               {errors.name && (
-                <p className="text-sm text-red-500">{errors.name.message}</p>
+                <p className="text-xs sm:text-sm text-red-500">{errors.name.message}</p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="price" className="text-sm">
+              <Label htmlFor="price" className="text-xs sm:text-sm">
                 Prix (FCFA) <span className="text-red-500">*</span>
               </Label>
               <Input
@@ -389,29 +389,29 @@ export function ResidenceForm({
                 step="0.01"
                 placeholder="Exemple : 15000"
                 {...register("price")}
-                className={errors.price ? "border-red-500 h-12" : "h-12"}
+                className={`${errors.price ? "border-red-500" : ""} h-10 sm:h-12 text-xs sm:text-sm`}
               />
               {errors.price && (
-                <p className="text-sm text-red-500">{errors.price.message}</p>
+                <p className="text-xs sm:text-sm text-red-500">{errors.price.message}</p>
               )}
             </div>
           </div>
 
           <div className="space-y-1.5">
-            <Label htmlFor="description" className="text-sm">Description</Label>
+            <Label htmlFor="description" className="text-xs sm:text-sm">Description</Label>
             <Textarea
               id="description"
               placeholder="Description de la résidence"
               {...register("description")}
-              className={errors.description ? "border-red-500 min-h-[100px]" : "min-h-[100px]"}
+              className={`${errors.description ? "border-red-500" : ""} min-h-[80px] sm:min-h-[100px] text-xs sm:text-sm`}
               rows={4}
             />
             {errors.description && (
-              <p className="text-sm text-red-500">{errors.description.message}</p>
+              <p className="text-xs sm:text-sm text-red-500">{errors.description.message}</p>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
             <div className="space-y-1.5 relative" ref={addressInputRef}>
               <Label htmlFor="address" className="text-sm">
                 Adresse <span className="text-red-500">*</span>
@@ -842,20 +842,20 @@ export function ResidenceForm({
           </div>
         </div>
       </div>
-      <div className="flex gap-2 justify-center pt-4 border-t border-gray-200">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center pt-4 border-t border-gray-200">
         <Button
           type="button"
           variant="outline"
           onClick={onCancel}
           disabled={isLoading}
-          className="h-12"
+          className="h-10 sm:h-12 text-xs sm:text-sm w-full sm:w-auto"
         >
           Annuler
         </Button>
         <Button
           type="submit"
           disabled={isLoading}
-          className="bg-[#f08400] hover:bg-[#d87200] text-white h-12"
+          className="bg-[#f08400] hover:bg-[#d87200] text-white h-10 sm:h-12 text-xs sm:text-sm w-full sm:w-auto"
         >
           {isLoading ? "Enregistrement..." : "Enregistrer"}
         </Button>

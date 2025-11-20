@@ -378,12 +378,12 @@ export function DwellingForm({
   return (
     // @ts-expect-error - Type compatibility issue between react-hook-form and zod
     <form onSubmit={handleSubmit(handleFormSubmit)} className="container mx-auto">
-      <div className="grid grid-cols-2 gap-3">
-        <div className="space-y-3 p-2">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+        <div className="space-y-3 p-2 sm:p-3">
           {/* Champs téléphone et contact */}
-          <div className="grid grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
             <div className="space-y-1.5">
-              <Label htmlFor="phone" className="text-sm">
+              <Label htmlFor="phone" className="text-xs sm:text-sm">
                 Téléphone <span className="text-red-500">*</span>
               </Label>
               <PhoneInput
@@ -399,19 +399,19 @@ export function DwellingForm({
                 placeholder="Entrez votre numéro"
                 defaultCountry="ci"
                 error={!!errors.phone}
-                className={`h-12 border-2 ${
+                className={`h-10 sm:h-12 border-2 text-xs sm:text-sm ${
                   errors.phone
                     ? "border-red-500 focus:border-red-500"
                     : "border-gray-200"
                 }`}
               />
               {errors.phone && (
-                <p className="text-sm text-red-500">{errors.phone.message}</p>
+                <p className="text-xs sm:text-sm text-red-500">{errors.phone.message}</p>
               )}
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="whatsapp" className="text-sm">
+              <Label htmlFor="whatsapp" className="text-xs sm:text-sm">
                 WhatsApp <span className="text-red-500">*</span>
               </Label>
               <PhoneInput
@@ -427,20 +427,20 @@ export function DwellingForm({
                 placeholder="Entrez votre numéro WhatsApp"
                 defaultCountry="ci"
                 error={!!errors.whatsapp}
-                className={`h-12 border-2 ${
+                className={`h-10 sm:h-12 border-2 text-xs sm:text-sm ${
                   errors.whatsapp
                     ? "border-red-500 focus:border-red-500"
                     : "border-gray-200"
                 }`}
               />
               {errors.whatsapp && (
-                <p className="text-sm text-red-500">{errors.whatsapp.message}</p>
+                <p className="text-xs sm:text-sm text-red-500">{errors.whatsapp.message}</p>
               )}
             </div>
           </div>
 
           {/* Champs prix et loyer */}
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="visite_price" className="text-sm">
                 Prix de visite (FCFA) <span className="text-red-500">*</span>
@@ -451,10 +451,10 @@ export function DwellingForm({
                 step="0.01"
                 placeholder="Exemple : 5000"
                 {...register("visite_price")}
-                className={errors.visite_price ? "border-red-500 h-12" : "h-12"}
+                className={`${errors.visite_price ? "border-red-500" : ""} h-10 sm:h-12 text-xs sm:text-sm`}
               />
               {errors.visite_price && (
-                <p className="text-sm text-red-500">{errors.visite_price.message}</p>
+                <p className="text-xs sm:text-sm text-red-500">{errors.visite_price.message}</p>
               )}
             </div>
 
@@ -546,7 +546,7 @@ export function DwellingForm({
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
             <div className="space-y-1.5 relative" ref={addressInputRef}>
               <Label htmlFor="address" className="text-sm">
                 Adresse <span className="text-red-500">*</span>
@@ -687,7 +687,7 @@ export function DwellingForm({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 sm:gap-3">
             <div className="space-y-1.5">
               <Label htmlFor="type" className="text-sm">
                 Type <span className="text-red-500">*</span>
@@ -898,19 +898,19 @@ export function DwellingForm({
       </div>
 
       {/* Buttons */}
-      <div className="flex gap-2 justify-center pt-4 border-t border-gray-200 mt-6">
+      <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 justify-center pt-4 border-t border-gray-200 mt-4 sm:mt-6">
         <Button
           type="button"
           variant="outline"
           onClick={onCancel}
-          className="h-12 px-8"
+          className="h-10 sm:h-12 px-4 sm:px-8 text-xs sm:text-sm w-full sm:w-auto"
           disabled={isLoading}
         >
           Annuler
         </Button>
         <Button
           type="submit"
-          className="h-12 px-8 bg-[#f08400] hover:bg-[#d87200] text-white"
+          className="h-10 sm:h-12 px-4 sm:px-8 bg-[#f08400] hover:bg-[#d87200] text-white text-xs sm:text-sm w-full sm:w-auto"
           disabled={isLoading}
         >
           {isLoading ? "Enregistrement..." : "Enregistrer"}

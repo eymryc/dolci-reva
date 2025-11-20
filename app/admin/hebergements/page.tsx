@@ -137,16 +137,16 @@ export default function HebergementsPage() {
             addButton={
               <Button
                 onClick={handleCreateDwelling}
-                className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-10 sm:h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed px-2 sm:px-4"
                 disabled={isLoadingDwellings || (isOwner() && !isOwnerApproved)}
                 title={isOwner() && !isOwnerApproved ? "Votre compte doit être vérifié pour ajouter un hébergement" : undefined}
               >
                 {isLoadingDwellings ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  <Loader2 className="w-4 h-4 sm:mr-2 animate-spin" />
                 ) : (
-                  <Plus className="w-4 h-4 mr-2" />
+                  <Plus className="w-4 h-4 sm:mr-2" />
                 )}
-                Ajouter un hébergement
+                <span className="hidden sm:inline">Ajouter un hébergement</span>
               </Button>
             }
           />

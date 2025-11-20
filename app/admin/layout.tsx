@@ -206,6 +206,12 @@ export default function AdminLayout({
               <Link
                 key={item.name}
                 href={item.href}
+                onClick={() => {
+                  // Fermer le sidebar sur mobile quand on clique sur un lien
+                  if (window.innerWidth < 1024) {
+                    setIsSidebarOpen(false);
+                  }
+                }}
                 className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${isActive
                     ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                     : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
@@ -230,6 +236,12 @@ export default function AdminLayout({
               {isAnyAdmin() && (
                 <Link
                   href="/admin/settings"
+                  onClick={() => {
+                    // Fermer le sidebar sur mobile quand on clique sur un lien
+                    if (window.innerWidth < 1024) {
+                      setIsSidebarOpen(false);
+                    }
+                  }}
                   className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")
                       ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
@@ -245,6 +257,12 @@ export default function AdminLayout({
               {canManageUsers() && (
                 <Link
                   href="/admin/users"
+                  onClick={() => {
+                    // Fermer le sidebar sur mobile quand on clique sur un lien
+                    if (window.innerWidth < 1024) {
+                      setIsSidebarOpen(false);
+                    }
+                  }}
                   className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/")
                       ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"

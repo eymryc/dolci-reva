@@ -97,15 +97,15 @@ export function BookingTable({
             <Button
               variant="ghost"
               onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="h-8 px-2 hover:bg-transparent"
+              className="h-7 sm:h-8 px-1.5 sm:px-2 hover:bg-transparent text-xs sm:text-sm"
             >
               Référence
               {column.getIsSorted() === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
+                <ArrowUp className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
               ) : column.getIsSorted() === "desc" ? (
-                <ArrowDown className="ml-2 h-4 w-4" />
+                <ArrowDown className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
               ) : (
-                <ArrowUpDown className="ml-2 h-4 w-4" />
+                <ArrowUpDown className="ml-1.5 sm:ml-2 h-3 w-3 sm:h-3.5 sm:w-3.5 lg:h-4 lg:w-4" />
               )}
             </Button>
           );
@@ -345,9 +345,9 @@ export function BookingTable({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0 hover:bg-gray-100"
+                  className="h-6 w-6 sm:h-7 sm:w-7 lg:h-8 lg:w-8 p-0 hover:bg-gray-100"
                 >
-                  <MoreVertical className="h-4 w-4" />
+                  <MoreVertical className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
@@ -409,27 +409,27 @@ export function BookingTable({
   return (
     <div className="space-y-4">
       {/* Search and Add Button */}
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-2 sm:gap-4">
         <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5 sm:w-4 sm:h-4" />
           <Input
             placeholder="Rechercher une réservation..."
             value={globalFilter ?? ""}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-10 bg-white h-12"
+            className="pl-8 sm:pl-10 bg-white h-8 sm:h-9 lg:h-12 text-xs sm:text-sm"
           />
         </div>
         <div className="flex items-center gap-2">
           {onRefresh && (
             <Button
               variant="outline"
-              size="xl"
+              size="sm"
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="hover:bg-gray-100"
+              className="h-8 sm:h-9 lg:h-10 hover:bg-gray-100"
               title="Actualiser les données"
             >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
+              <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isRefreshing ? "animate-spin" : ""}`} />
             </Button>
           )}
           {addButton && <div className="flex-shrink-0">{addButton}</div>}
@@ -446,7 +446,7 @@ export function BookingTable({
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-6 py-2 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                      className="px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-left text-[10px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider"
                     >
                       {header.isPlaceholder
                         ? null
@@ -459,7 +459,7 @@ export function BookingTable({
             <tbody className="divide-y divide-gray-100 bg-white">
               {isLoading ? (
                 <tr>
-                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={columns.length} className="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
                     Chargement des réservations...
                   </td>
                 </tr>
@@ -470,7 +470,7 @@ export function BookingTable({
                     className="hover:bg-gradient-to-r hover:from-gray-50/50 hover:to-transparent transition-all duration-200"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-6 py-1 whitespace-nowrap">
+                      <td key={cell.id} className="px-3 sm:px-4 lg:px-6 py-1 sm:py-1.5 whitespace-nowrap">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
@@ -478,7 +478,7 @@ export function BookingTable({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
+                  <td colSpan={columns.length} className="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
                     Aucune réservation trouvée.
                   </td>
                 </tr>
@@ -489,8 +489,8 @@ export function BookingTable({
       </div>
 
       {/* Pagination */}
-      <div className="flex items-center justify-between">
-        <div className="text-sm text-gray-600">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-0">
+        <div className="text-xs sm:text-sm text-gray-600">
           Affichage de {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}{" "}
           à{" "}
           {Math.min(
@@ -499,24 +499,26 @@ export function BookingTable({
           )}{" "}
           de {table.getFilteredRowModel().rows.length} résultats
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
+            className="h-7 sm:h-8 w-7 sm:w-8 p-0"
           >
-            <ChevronsLeft className="h-4 w-4" />
+            <ChevronsLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
+            className="h-7 sm:h-8 w-7 sm:w-8 p-0"
           >
-            <ChevronLeft className="h-4 w-4" />
+            <ChevronLeft className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
-          <div className="text-sm text-gray-600">
+          <div className="text-xs sm:text-sm text-gray-600">
             Page {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
           </div>
           <Button
@@ -524,16 +526,18 @@ export function BookingTable({
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
+            className="h-7 sm:h-8 w-7 sm:w-8 p-0"
           >
-            <ChevronRight className="h-4 w-4" />
+            <ChevronRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
+            className="h-7 sm:h-8 w-7 sm:w-8 p-0"
           >
-            <ChevronsRight className="h-4 w-4" />
+            <ChevronsRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
           </Button>
         </div>
       </div>

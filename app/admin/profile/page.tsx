@@ -414,8 +414,8 @@ export default function AdminProfilePage() {
               {/* Contenu */}
               <div className="p-6">
                   <form onSubmit={handleSubmit} className="space-y-4">
-                    {/* Nom et Prénom */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Prénom, Nom, Email et Téléphone sur la même ligne */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                       <div className="space-y-1.5">
                         <Label htmlFor="first_name" className="text-sm">
                           Prénom
@@ -444,10 +444,6 @@ export default function AdminProfilePage() {
                           disabled={!isEditing}
                         />
                       </div>
-                    </div>
-
-                    {/* Email et Téléphone */}
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
                         <Label htmlFor="email" className="text-sm flex items-center gap-1.5">
                           <Mail className="w-3.5 h-3.5" />

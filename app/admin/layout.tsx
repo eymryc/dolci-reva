@@ -18,6 +18,8 @@ import {
   AlertCircle,
   X,
   User,
+  Wallet,
+  Lock,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
@@ -367,6 +369,43 @@ export default function AdminLayout({
           </div>
           
           <div className="flex items-center gap-3">
+            {/* Wallet Balance Section */}
+            {user?.wallet && (
+              <div className="hidden lg:flex items-center gap-4 px-4 py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-[#f08400]/10 rounded-lg">
+                    <Wallet className="w-4 h-4 text-[#f08400]" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-500 font-medium">Solde normal</span>
+                    <span className="text-sm font-bold text-gray-900">
+                      {new Intl.NumberFormat('fr-FR', { 
+                        style: 'currency', 
+                        currency: 'XOF',
+                        maximumFractionDigits: 0 
+                      }).format(user.wallet.balance || 0)}
+                    </span>
+                  </div>
+                </div>
+                <div className="h-8 w-px bg-gray-300"></div>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-gray-100 rounded-lg">
+                    <Lock className="w-4 h-4 text-gray-600" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="text-xs text-gray-500 font-medium">Solde gelé</span>
+                    <span className="text-sm font-bold text-gray-600">
+                      {new Intl.NumberFormat('fr-FR', { 
+                        style: 'currency', 
+                        currency: 'XOF',
+                        maximumFractionDigits: 0 
+                      }).format('frozen_balance' in user.wallet ? (user.wallet as { frozen_balance?: number }).frozen_balance || 0 : 0)}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            )}
+            
             {/* Notifications */}
             <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
               <Bell className="w-5 h-5 text-gray-600" />

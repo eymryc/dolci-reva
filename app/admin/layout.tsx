@@ -11,7 +11,6 @@ import {
   MoreVertical,
   MessageSquare,
   Bell,
-  Search,
   Menu,
   LogOut,
   Home,
@@ -400,21 +399,13 @@ export default function AdminLayout({
 
         {/* Header */}
         <header className="h-auto min-h-[70px] sm:min-h-[80px] lg:h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-2 sm:px-3 lg:px-6 py-1.5 sm:py-2 lg:py-0 flex flex-row items-center justify-between gap-1.5 sm:gap-2 lg:gap-3 shadow-sm overflow-x-auto">
-          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 flex-1 min-w-0">
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 flex-shrink-0">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="lg:hidden p-1 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
             >
               <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
             </button>
-            <div className="hidden sm:block relative flex-1 min-w-0 sm:flex-initial sm:max-w-md">
-              <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full pl-8 sm:pl-9 lg:pl-11 pr-3 sm:pr-4 py-1.5 sm:py-2 lg:py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#f08400] focus:bg-white transition-all text-[11px] sm:text-xs lg:text-sm h-8 sm:h-9 lg:h-12"
-              />
-            </div>
           </div>
 
           <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-3 flex-shrink-0">

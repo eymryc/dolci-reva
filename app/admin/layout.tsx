@@ -182,7 +182,7 @@ export default function AdminLayout({
         <div className="absolute inset-0 bg-[#f08400]/5 pointer-events-none"></div>
 
         {/* Logo */}
-        <div className="relative z-10 h-20 flex items-center px-6 border-b border-gray-200/50">
+        <div className="relative z-10 h-16 sm:h-20 flex items-center px-3 sm:px-6 border-b border-gray-200/50">
           {/* Trait de division avec accent */}
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#f08400]/60 to-transparent shadow-[0_2px_8px_rgba(240,132,0,0.3)]"></div>
           <Link href="/admin/dashboard" className="group flex items-center relative">
@@ -192,13 +192,13 @@ export default function AdminLayout({
               alt="Dolci Rêva Logo"
               width={120}
               height={60}
-              className="h-12 w-auto transition-all duration-300 group-hover:scale-105 relative z-10"
+              className="h-8 sm:h-10 lg:h-12 w-auto transition-all duration-300 group-hover:scale-105 relative z-10"
             />
           </Link>
         </div>
 
         {/* Navigation */}
-        <nav className="relative z-10 flex-1 px-4 py-6 space-y-1 overflow-y-auto">
+        <nav className="relative z-10 flex-1 px-2 sm:px-4 py-3 sm:py-6 space-y-1 overflow-y-auto">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = pathname === item.href || (item.href !== "/admin" && pathname.startsWith(item.href + "/"));
@@ -206,19 +206,19 @@ export default function AdminLayout({
               <Link
                 key={item.name}
                 href={item.href}
-                className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
+                className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${isActive
                     ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                     : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
                   }`}
               >
-                <Icon className={`w-5 h-5 flex-shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
+                <Icon className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
                 {isSidebarOpen && (
-                  <span className={`text-sm font-medium transition-all ${isActive ? 'text-white' : 'text-gray-700'}`}>
+                  <span className={`text-xs sm:text-sm font-medium transition-all ${isActive ? 'text-white' : 'text-gray-700'}`}>
                     {item.name}
                   </span>
                 )}
                 {isActive && (
-                  <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                  <div className="absolute right-1 sm:right-2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-pulse"></div>
                 )}
               </Link>
             );
@@ -226,34 +226,34 @@ export default function AdminLayout({
 
           {/* Preferences Section */}
           {isSidebarOpen && (
-            <div className="pt-8 mt-8 border-t border-gray-200/50">
+            <div className="pt-4 sm:pt-8 mt-4 sm:mt-8 border-t border-gray-200/50">
               {isAnyAdmin() && (
                 <Link
                   href="/admin/settings"
-                  className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")
+                  className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")
                       ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
                     }`}
                 >
-                  <Settings className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? "rotate-90" : "group-hover:rotate-90"}`} />
-                  <span className={`text-sm font-medium transition-all ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? 'text-white' : 'text-gray-700'}`}>Settings</span>
+                  <Settings className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? "rotate-90" : "group-hover:rotate-90"}`} />
+                  <span className={`text-xs sm:text-sm font-medium transition-all ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? 'text-white' : 'text-gray-700'}`}>Settings</span>
                   {(pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")) && (
-                    <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                    <div className="absolute right-1 sm:right-2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-pulse"></div>
                   )}
                 </Link>
               )}
               {canManageUsers() && (
                 <Link
                   href="/admin/users"
-                  className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/")
+                  className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/")
                       ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
                     }`}
                 >
-                  <HelpCircle className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? "scale-110" : "group-hover:scale-110"}`} />
-                  <span className={`text-sm font-medium transition-all ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? 'text-white' : 'text-gray-700'}`}>Utilisateurs</span>
+                  <HelpCircle className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? "scale-110" : "group-hover:scale-110"}`} />
+                  <span className={`text-xs sm:text-sm font-medium transition-all ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? 'text-white' : 'text-gray-700'}`}>Utilisateurs</span>
                   {(pathname === "/admin/users" || pathname.startsWith("/admin/users/")) && (
-                    <div className="absolute right-2 w-2 h-2 rounded-full bg-white animate-pulse"></div>
+                    <div className="absolute right-1 sm:right-2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-pulse"></div>
                   )}
                 </Link>
               )}
@@ -262,21 +262,21 @@ export default function AdminLayout({
         </nav>
 
         {/* User Profile Card */}
-        <div className="relative z-10 p-4 border-t border-gray-200/50">
-          <div className="bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm rounded-2xl p-4 shadow-lg border border-gray-200/50 relative group hover:shadow-xl transition-all duration-300">
-            <div className="flex items-center gap-3">
+        <div className="relative z-10 p-2 sm:p-4 border-t border-gray-200/50">
+          <div className="bg-gradient-to-br from-white to-gray-50/50 backdrop-blur-sm rounded-xl sm:rounded-2xl p-2 sm:p-4 shadow-lg border border-gray-200/50 relative group hover:shadow-xl transition-all duration-300">
+            <div className="flex items-center gap-2 sm:gap-3">
               <div className="relative">
-                <div className="w-12 h-12 rounded-xl bg-[#f08400] flex items-center justify-center text-white font-bold text-sm shadow-lg">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 lg:w-12 lg:h-12 rounded-lg sm:rounded-xl bg-[#f08400] flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-lg">
                   {userInitials}
                 </div>
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 rounded-full border-2 border-white"></div>
+                <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-3 h-3 sm:w-4 sm:h-4 bg-green-500 rounded-full border-2 border-white"></div>
               </div>
               {isSidebarOpen && (
                 <div className="flex-1 min-w-0">
-                  <div className="font-semibold text-sm text-gray-900 truncate">
+                  <div className="font-semibold text-xs sm:text-sm text-gray-900 truncate">
                     {userFullName}
                   </div>
-                  <div className="text-xs text-gray-500 font-medium truncate">
+                  <div className="text-[10px] sm:text-xs text-gray-500 font-medium truncate">
                     {user.email || "Admin"}
                   </div>
                 </div>
@@ -284,8 +284,8 @@ export default function AdminLayout({
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="absolute top-3 right-3 p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200">
-                  <MoreVertical className="w-4 h-4" />
+                <button className="absolute top-2 right-2 sm:top-3 sm:right-3 p-1 sm:p-1.5 text-gray-400 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition-all duration-200">
+                  <MoreVertical className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 </button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
@@ -328,21 +328,21 @@ export default function AdminLayout({
         {/* Alerte de vérification pour les propriétaires non vérifiés */}
         {isOwnerNotVerified && showVerificationAlert && (
           <div className="relative bg-yellow-500 border-b border-yellow-600 shadow-lg z-10">
-            <div className="px-4 sm:px-6 py-3">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-                <div className="flex items-start sm:items-center gap-3 flex-1">
-                  <AlertCircle className="w-5 h-5 text-yellow-900 flex-shrink-0 mt-0.5 sm:mt-0" />
-                  <p className="text-xs sm:text-sm font-medium text-yellow-900">
+            <div className="px-3 sm:px-4 lg:px-6 py-2 sm:py-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 lg:gap-4">
+                <div className="flex items-start sm:items-center gap-2 sm:gap-3 flex-1">
+                  <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-900 flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <p className="text-[11px] sm:text-xs lg:text-sm font-medium text-yellow-900">
                     <span className="font-bold">Votre compte n&apos;est pas encore vérifié.</span>{" "}
                     <span className="hidden sm:inline">Vérifiez votre compte pour publier vos résidences et gagner la confiance des clients.</span>
                     <span className="sm:hidden">Vérifiez votre compte pour publier vos résidences.</span>
                   </p>
                 </div>
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
                   <Link href="/admin/profile?tab=verification" className="flex-1 sm:flex-initial">
                     <Button
                       size="sm"
-                      className="w-full sm:w-auto bg-yellow-900 hover:bg-yellow-950 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm"
+                      className="w-full sm:w-auto bg-yellow-900 hover:bg-yellow-950 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 text-[10px] sm:text-xs lg:text-sm h-7 sm:h-8 px-2 sm:px-3"
                       onClick={() => setShowVerificationAlert(false)}
                     >
                       Vérifier mon compte
@@ -352,9 +352,9 @@ export default function AdminLayout({
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowVerificationAlert(false)}
-                    className="text-yellow-900 hover:bg-yellow-600/20 h-8 w-8 p-0 flex-shrink-0"
+                    className="text-yellow-900 hover:bg-yellow-600/20 h-7 w-7 sm:h-8 sm:w-8 p-0 flex-shrink-0"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                   </Button>
                 </div>
               </div>
@@ -363,35 +363,35 @@ export default function AdminLayout({
         )}
 
         {/* Header */}
-        <header className="h-auto min-h-[80px] sm:h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-3 sm:px-4 lg:px-6 py-2 sm:py-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 shadow-sm">
-          <div className="flex items-center gap-2 sm:gap-4 flex-1 w-full sm:w-auto">
+        <header className="h-auto min-h-[70px] sm:min-h-[80px] lg:h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-2 sm:px-3 lg:px-6 py-1.5 sm:py-2 lg:py-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 lg:gap-0 shadow-sm">
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-4 flex-1 w-full sm:w-auto">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="lg:hidden p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors"
             >
-              <Menu className="w-5 h-5 text-gray-600" />
+              <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
             </button>
             <div className="relative flex-1 sm:flex-initial sm:max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+              <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5" />
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-full pl-9 sm:pl-11 pr-4 py-2 sm:py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#f08400] focus:bg-white transition-all text-xs sm:text-sm h-10 sm:h-12"
+                className="w-full pl-8 sm:pl-9 lg:pl-11 pr-3 sm:pr-4 py-1.5 sm:py-2 lg:py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#f08400] focus:bg-white transition-all text-[11px] sm:text-xs lg:text-sm h-8 sm:h-9 lg:h-12"
               />
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 w-full sm:w-auto justify-between sm:justify-end">
             {/* Wallet Balance Section */}
             {user?.wallet && (
-              <div className="hidden xl:flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20">
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="p-1.5 sm:p-2 bg-[#f08400]/10 rounded-lg">
-                    <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f08400]" />
+              <div className="hidden xl:flex items-center gap-2 lg:gap-3 xl:gap-4 px-2 lg:px-3 xl:px-4 py-1 lg:py-1.5 xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20">
+                <div className="flex items-center gap-1.5 lg:gap-2 xl:gap-3">
+                  <div className="p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded-lg">
+                    <Wallet className="w-3 h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-[#f08400]" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] sm:text-xs text-gray-500 font-medium">Solde normal</span>
-                    <span className="text-xs sm:text-sm font-bold text-gray-900">
+                    <span className="text-[9px] lg:text-[10px] xl:text-xs text-gray-500 font-medium">Solde normal</span>
+                    <span className="text-[10px] lg:text-xs xl:text-sm font-bold text-gray-900">
                       {new Intl.NumberFormat('fr-FR', {
                         style: 'currency',
                         currency: 'XOF',
@@ -400,14 +400,14 @@ export default function AdminLayout({
                     </span>
                   </div>
                 </div>
-                <div className="h-6 sm:h-8 w-px bg-gray-300"></div>
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="p-1.5 sm:p-2 bg-gray-100 rounded-lg">
-                    <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" />
+                <div className="h-5 lg:h-6 xl:h-8 w-px bg-gray-300"></div>
+                <div className="flex items-center gap-1.5 lg:gap-2 xl:gap-3">
+                  <div className="p-1 lg:p-1.5 xl:p-2 bg-gray-100 rounded-lg">
+                    <Lock className="w-3 h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-gray-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[10px] sm:text-xs text-gray-500 font-medium">Solde gelé</span>
-                    <span className="text-xs sm:text-sm font-bold text-gray-600">
+                    <span className="text-[9px] lg:text-[10px] xl:text-xs text-gray-500 font-medium">Solde gelé</span>
+                    <span className="text-[10px] lg:text-xs xl:text-sm font-bold text-gray-600">
                       {new Intl.NumberFormat('fr-FR', {
                         style: 'currency',
                         currency: 'XOF',
@@ -420,34 +420,34 @@ export default function AdminLayout({
             )}
 
             {/* Notifications */}
-            <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
+              <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
 
             {/* Messages */}
-            <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full border-2 border-white"></span>
+            <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
+              <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
+              <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full border-2 border-white"></span>
             </button>
 
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-2 sm:gap-3 pl-2 sm:pl-3 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity">
-                  <div className="text-right hidden md:block">
-                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate max-w-[120px] sm:max-w-[150px]">
+                <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 pl-1.5 sm:pl-2 lg:pl-3 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity">
+                  <div className="text-right hidden lg:block">
+                    <div className="text-[11px] xl:text-xs 2xl:text-sm font-semibold text-gray-900 truncate max-w-[100px] xl:max-w-[120px] 2xl:max-w-[150px]">
                       {userFullName}
                     </div>
-                    <div className="text-[10px] sm:text-xs text-gray-500 truncate max-w-[120px] sm:max-w-[150px]">
+                    <div className="text-[9px] xl:text-[10px] 2xl:text-xs text-gray-500 truncate max-w-[100px] xl:max-w-[120px] 2xl:max-w-[150px]">
                       {user.email || "Admin"}
                     </div>
                   </div>
                   <div className="relative">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#f08400] flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-shadow">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 lg:w-9 lg:h-9 xl:w-10 xl:h-10 rounded-lg bg-[#f08400] flex items-center justify-center text-white font-bold text-[10px] sm:text-xs lg:text-sm shadow-md hover:shadow-lg transition-shadow">
                       {userInitials}
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div className="absolute -bottom-0.5 -right-0.5 sm:-bottom-1 sm:-right-1 w-2 h-2 sm:w-2.5 sm:h-2.5 lg:w-3 lg:h-3 bg-green-500 rounded-full border-2 border-white"></div>
                   </div>
                 </div>
               </DropdownMenuTrigger>

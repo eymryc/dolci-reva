@@ -32,6 +32,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { QRCodeScannerModal } from "@/components/admin/QRCodeScannerModal";
 
 interface NavItem {
   name: string;
@@ -82,6 +83,7 @@ export default function AdminLayout({
   const { canManageUsers, isAnyAdmin, isOwner } = usePermissions();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true); // Ouvert par défaut
   const [isDesktop, setIsDesktop] = useState(false);
+  const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
   const isLoginPage = pathname === "/auth/sign-in";
   const [showVerificationAlert, setShowVerificationAlert] = useState(true);
 
@@ -106,7 +108,7 @@ export default function AdminLayout({
   const verificationStatus = user?.verification_status?.trim().toUpperCase();
   const isOwnerVerified = verificationStatus === "APPROVED";
   const isOwnerNotVerified = isOwner() && verificationStatus !== undefined && verificationStatus !== null && !isOwnerVerified;
-
+  
   // Réinitialiser showVerificationAlert quand l'utilisateur devient vérifié
   useEffect(() => {
     if (isOwnerVerified) {
@@ -198,18 +200,18 @@ export default function AdminLayout({
       >
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-[#f08400]/5 pointer-events-none"></div>
-
+        
         {/* Logo */}
         <div className="relative z-10 h-16 sm:h-20 flex items-center px-3 sm:px-6 border-b border-gray-200/50">
           {/* Trait de division avec accent */}
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#f08400]/60 to-transparent shadow-[0_2px_8px_rgba(240,132,0,0.3)]"></div>
           <Link href="/admin/dashboard" className="group flex items-center relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-            <Image
-              src="/logo/logo-custom.png"
-              alt="Dolci Rêva Logo"
-              width={120}
-              height={60}
+            <Image 
+              src="/logo/logo-custom.png" 
+              alt="Dolci Rêva Logo" 
+              width={120} 
+              height={60} 
               className="h-8 sm:h-10 lg:h-12 w-auto transition-all duration-300 group-hover:scale-105 relative z-10"
             />
           </Link>
@@ -233,7 +235,7 @@ export default function AdminLayout({
                 className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${isActive
                     ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                     : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
-                  }`}
+                }`}
               >
                 <Icon className={`w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
                 {(isSidebarOpen || isDesktop) && (
@@ -263,7 +265,7 @@ export default function AdminLayout({
                   className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")
                       ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
-                    }`}
+                  }`}
                 >
                   <Settings className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? "rotate-90" : "group-hover:rotate-90"}`} />
                   <span className={`text-xs sm:text-sm font-medium transition-all ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? 'text-white' : 'text-gray-700'}`}>Settings</span>
@@ -284,7 +286,7 @@ export default function AdminLayout({
                   className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/")
                       ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
-                    }`}
+                  }`}
                 >
                   <HelpCircle className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? "scale-110" : "group-hover:scale-110"}`} />
                   <span className={`text-xs sm:text-sm font-medium transition-all ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? 'text-white' : 'text-gray-700'}`}>Utilisateurs</span>
@@ -397,7 +399,7 @@ export default function AdminLayout({
             </div>
           </div>
         )}
-
+        
         {/* Header */}
         <header className="h-auto min-h-[60px] sm:min-h-[70px] lg:h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-1.5 sm:px-2 lg:px-6 py-1 sm:py-1.5 lg:py-0 flex flex-row items-center justify-between gap-1 sm:gap-1.5 lg:gap-3 shadow-sm overflow-x-auto">
           <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 flex-shrink-0">
@@ -408,7 +410,7 @@ export default function AdminLayout({
               <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
             </button>
           </div>
-
+          
           <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-3 flex-shrink-0">
             {/* Wallet Balance Section */}
             {user && (
@@ -425,8 +427,6 @@ export default function AdminLayout({
                         style: 'currency',
                         currency: 'XOF',
                         maximumFractionDigits: 0,
-                        notation: 'compact',
-                        compactDisplay: 'short'
                       }).format(Number(user.wallet?.balance) || 0)}
                     </span>
                   </div>
@@ -447,8 +447,6 @@ export default function AdminLayout({
                         style: 'currency',
                         currency: 'XOF',
                         maximumFractionDigits: 0,
-                        notation: 'compact',
-                        compactDisplay: 'short'
                       }).format(Number(user.wallet?.frozen_balance) || 0)}
                     </span>
                   </div>
@@ -461,7 +459,7 @@ export default function AdminLayout({
               <Bell className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
               <span className="absolute top-0 right-0 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full border border-white"></span>
             </button>
-
+            
             {/* Messages */}
             <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0">
               <MessageSquare className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
@@ -469,14 +467,14 @@ export default function AdminLayout({
             </button>
 
             {/* QR Code Scanner */}
-            <Link 
-              href="/admin/scan-qr"
+            <button
+              onClick={() => setIsQRScannerOpen(true)}
               className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 relative group"
               title="Scanner QR code"
             >
               <QrCode className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600 group-hover:text-[#f08400]" />
-            </Link>
-
+            </button>
+            
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -533,6 +531,9 @@ export default function AdminLayout({
 
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
+
+      {/* QR Code Scanner Modal */}
+      <QRCodeScannerModal open={isQRScannerOpen} onOpenChange={setIsQRScannerOpen} />
     </div>
   );
 }

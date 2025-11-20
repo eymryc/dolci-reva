@@ -82,16 +82,23 @@ export default function ScanQRPage() {
         await html5QrCodeRef.current.stop();
         await html5QrCodeRef.current.clear();
         html5QrCodeRef.current = null;
-        setIsScanning(false);
       } catch (error) {
         console.error("Erreur lors de l'arrêt du scanner:", error);
+      } finally {
+        // Toujours mettre à jour le state même en cas d'erreur
+        setIsScanning(false);
       }
+    } else {
+      // Si le scanner n'existe pas, s'assurer que le state est à false
+      setIsScanning(false);
     }
   };
 
   // Callback de succès du scan
   const onScanSuccess = async (decodedText: string) => {
     // Arrêter le scanner immédiatement après avoir scanné
+    // S'assurer que le state est mis à jour
+    setIsScanning(false);
     await stopScanning();
 
     // Extraire le token encodé du QR code

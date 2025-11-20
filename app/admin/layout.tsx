@@ -417,17 +417,18 @@ export default function AdminLayout({
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3 w-full sm:w-auto justify-between sm:justify-end">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-1.5 lg:gap-3 w-full sm:w-auto">
             {/* Wallet Balance Section */}
             {user?.wallet && (
-              <div className="hidden lg:flex items-center gap-2 xl:gap-3 2xl:gap-4 px-2 xl:px-3 2xl:px-4 py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20">
-                <div className="flex items-center gap-1.5 lg:gap-2 xl:gap-3">
-                  <div className="p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded-lg">
-                    <Wallet className="w-3 h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-[#f08400]" />
+              <div className="flex items-center gap-1.5 sm:gap-2 xl:gap-3 2xl:gap-4 px-2 sm:px-2.5 xl:px-3 2xl:px-4 py-1.5 sm:py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20 shadow-sm">
+                {/* Solde normal */}
+                <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 xl:gap-3">
+                  <div className="p-0.5 sm:p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded-lg">
+                    <Wallet className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-[#f08400]" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[9px] lg:text-[10px] xl:text-xs text-gray-500 font-medium">Solde normal</span>
-                    <span className="text-[10px] lg:text-xs xl:text-sm font-bold text-gray-900">
+                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] xl:text-xs text-gray-500 font-medium">Solde normal</span>
+                    <span className="text-[9px] sm:text-[10px] lg:text-xs xl:text-sm font-bold text-gray-900">
                       {new Intl.NumberFormat('fr-FR', {
                         style: 'currency',
                         currency: 'XOF',
@@ -436,36 +437,42 @@ export default function AdminLayout({
                     </span>
                   </div>
                 </div>
-                <div className="h-5 lg:h-6 xl:h-8 w-px bg-gray-300"></div>
-                <div className="flex items-center gap-1.5 lg:gap-2 xl:gap-3">
-                  <div className="p-1 lg:p-1.5 xl:p-2 bg-gray-100 rounded-lg">
-                    <Lock className="w-3 h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-gray-600" />
+                
+                {/* Séparateur */}
+                <div className="h-4 sm:h-5 lg:h-6 xl:h-8 w-px bg-gray-300"></div>
+                
+                {/* Solde gelé */}
+                <div className="flex items-center gap-1 sm:gap-1.5 lg:gap-2 xl:gap-3">
+                  <div className="p-0.5 sm:p-1 lg:p-1.5 xl:p-2 bg-gray-100 rounded-lg">
+                    <Lock className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-gray-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-[9px] lg:text-[10px] xl:text-xs text-gray-500 font-medium">Solde gelé</span>
-                    <span className="text-[10px] lg:text-xs xl:text-sm font-bold text-gray-600">
+                    <span className="text-[8px] sm:text-[9px] lg:text-[10px] xl:text-xs text-gray-500 font-medium">Solde gelé</span>
+                    <span className="text-[9px] sm:text-[10px] lg:text-xs xl:text-sm font-bold text-gray-600">
                       {new Intl.NumberFormat('fr-FR', {
                         style: 'currency',
                         currency: 'XOF',
                         maximumFractionDigits: 0
-                      }).format('frozen_balance' in user.wallet ? (user.wallet as { frozen_balance?: number }).frozen_balance || 0 : 0)}
+                      }).format((user.wallet as { frozen_balance?: number }).frozen_balance || 0)}
                     </span>
                   </div>
                 </div>
               </div>
             )}
 
-            {/* Notifications */}
-            <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
-              <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
+            <div className="flex items-center gap-1.5 sm:gap-2 lg:gap-3">
+              {/* Notifications */}
+              <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <Bell className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
+                <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full border-2 border-white"></span>
+              </button>
 
-            {/* Messages */}
-            <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
-              <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full border-2 border-white"></span>
-            </button>
+              {/* Messages */}
+              <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors">
+                <MessageSquare className="w-3.5 h-3.5 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600" />
+                <span className="absolute top-0.5 right-0.5 sm:top-1 sm:right-1 w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full border-2 border-white"></span>
+              </button>
+            </div>
 
             {/* User Menu */}
             <DropdownMenu>

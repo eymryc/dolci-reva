@@ -674,7 +674,7 @@ export default function AdminProfilePage() {
 
         {/* Compte */}
         <TabsContent value="account" className="space-y-6 mt-0">
-          <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
+          <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
             {/* Header compact */}
             <div className="bg-gradient-to-r from-purple-50 via-purple-50/50 to-transparent p-5 border-b border-gray-200/50">
               <div className="flex items-center gap-4">
@@ -777,7 +777,7 @@ export default function AdminProfilePage() {
         {isAnyAdmin() && (
           <TabsContent value="permissions" className="space-y-6 mt-0">
             {user.permissions && user.permissions.length > 0 ? (
-              <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
+              <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
                 {/* Header compact */}
                 <div className="bg-gradient-to-r from-green-50 via-green-50/50 to-transparent p-5 border-b border-gray-200/50">
                   <div className="flex items-center gap-4">
@@ -819,7 +819,7 @@ export default function AdminProfilePage() {
         {/* Business Types */}
         {user.businessTypes && user.businessTypes.length > 0 && (
           <TabsContent value="business" className="space-y-6 mt-0">
-            <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
+            <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
               {/* Header compact */}
               <div className="bg-gradient-to-r from-indigo-50 via-indigo-50/50 to-transparent p-5 border-b border-gray-200/50">
                 <div className="flex items-center gap-4">

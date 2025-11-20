@@ -411,7 +411,7 @@ export default function AdminLayout({
           <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-3 flex-shrink-0">
             {/* Wallet Balance Section */}
             {user && (
-              <div className="flex items-center gap-0.5 sm:gap-1 xl:gap-3 2xl:gap-4 px-1 sm:px-1.5 xl:px-3 2xl:px-4 py-0.5 sm:py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-md sm:rounded-lg border border-[#f08400]/20 shadow-sm">
+              <div className="flex items-center gap-0.5 sm:gap-1 xl:gap-3 2xl:gap-4 px-1 sm:px-1.5 xl:px-3 2xl:px-4 h-7 sm:h-auto sm:py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-md sm:rounded-lg border border-[#f08400]/20 shadow-sm">
                 {/* Solde normal */}
                 <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-2 xl:gap-3">
                   <div className="p-0.5 sm:p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded sm:rounded-lg">
@@ -426,7 +426,7 @@ export default function AdminLayout({
                         maximumFractionDigits: 0,
                         notation: 'compact',
                         compactDisplay: 'short'
-                      }).format(user.wallet?.balance || 0)}
+                      }).format(Number(user.wallet?.balance) || 0)}
                     </span>
                   </div>
                 </div>
@@ -448,7 +448,7 @@ export default function AdminLayout({
                         maximumFractionDigits: 0,
                         notation: 'compact',
                         compactDisplay: 'short'
-                      }).format(user.wallet?.frozen_balance || 0)}
+                      }).format(Number(user.wallet?.frozen_balance) || 0)}
                     </span>
                   </div>
                 </div>

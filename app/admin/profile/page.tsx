@@ -1180,7 +1180,7 @@ export default function AdminProfilePage() {
                     <div className="flex-1">
                       <p className="text-xs font-medium text-gray-600 mb-0.5">Solde disponible</p>
                       <p className="text-3xl font-bold text-gray-900">
-                        {user.wallet.balance.toFixed(2)} €
+                        {Number(user.wallet.balance || 0).toFixed(2)} €
                       </p>
                     </div>
                   </div>

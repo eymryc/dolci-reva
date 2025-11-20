@@ -80,7 +80,7 @@ export default function AdminLayout({
   const router = useRouter();
   const { user, loading, logout } = useAuth();
   const { canManageUsers, isAnyAdmin, isOwner } = usePermissions();
-  const isSidebarOpen = true;
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const isLoginPage = pathname === "/auth/sign-in";
   const [showVerificationAlert, setShowVerificationAlert] = useState(true);
 
@@ -89,7 +89,7 @@ export default function AdminLayout({
   const verificationStatus = user?.verification_status?.trim().toUpperCase();
   const isOwnerVerified = verificationStatus === "APPROVED";
   const isOwnerNotVerified = isOwner() && verificationStatus !== undefined && verificationStatus !== null && !isOwnerVerified;
-  
+
   // Réinitialiser showVerificationAlert quand l'utilisateur devient vérifié
   useEffect(() => {
     if (isOwnerVerified) {
@@ -160,27 +160,39 @@ export default function AdminLayout({
 
   return (
     <div className="flex h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-gray-50">
+      {/* Mobile Sidebar Overlay */}
+      {isSidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <aside
         className={`${
-          isSidebarOpen ? "w-72" : "w-20"
-        } relative z-10 transition-all duration-300 flex flex-col bg-white/80 backdrop-blur-xl border-r border-gray-200/50 shadow-xl`}
+          isSidebarOpen 
+            ? "translate-x-0" 
+            : "-translate-x-full lg:translate-x-0"
+        } ${
+          isSidebarOpen ? "w-72" : "w-72 lg:w-20"
+        } fixed lg:relative z-50 lg:z-10 transition-all duration-300 flex flex-col bg-white/80 backdrop-blur-xl border-r border-gray-200/50 shadow-xl h-full`}
       >
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-[#f08400]/5 pointer-events-none"></div>
-        
+
         {/* Logo */}
         <div className="relative z-10 h-20 flex items-center px-6 border-b border-gray-200/50">
           {/* Trait de division avec accent */}
           <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#f08400]/60 to-transparent shadow-[0_2px_8px_rgba(240,132,0,0.3)]"></div>
           <Link href="/admin/dashboard" className="group flex items-center relative">
             <div className="absolute inset-0 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-xl blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10" />
-            <Image 
-              src="/logo/logo-custom.png" 
-              alt="Dolci Rêva Logo" 
-              width={120} 
-              height={60} 
-              className="h-12 w-auto transition-all duration-300 group-hover:scale-105 relative z-10" 
+            <Image
+              src="/logo/logo-custom.png"
+              alt="Dolci Rêva Logo"
+              width={120}
+              height={60}
+              className="h-12 w-auto transition-all duration-300 group-hover:scale-105 relative z-10"
             />
           </Link>
         </div>
@@ -194,11 +206,10 @@ export default function AdminLayout({
               <Link
                 key={item.name}
                 href={item.href}
-                className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                  isActive
+                className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${isActive
                     ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                     : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
-                }`}
+                  }`}
               >
                 <Icon className={`w-5 h-5 flex-shrink-0 transition-transform ${isActive ? 'scale-110' : 'group-hover:scale-110'}`} />
                 {isSidebarOpen && (
@@ -219,11 +230,10 @@ export default function AdminLayout({
               {isAnyAdmin() && (
                 <Link
                   href="/admin/settings"
-                  className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")
+                  className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/")
                       ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
-                  }`}
+                    }`}
                 >
                   <Settings className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? "rotate-90" : "group-hover:rotate-90"}`} />
                   <span className={`text-sm font-medium transition-all ${pathname === "/admin/settings" || pathname.startsWith("/admin/settings/") ? 'text-white' : 'text-gray-700'}`}>Settings</span>
@@ -235,11 +245,10 @@ export default function AdminLayout({
               {canManageUsers() && (
                 <Link
                   href="/admin/users"
-                  className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${
-                    pathname === "/admin/users" || pathname.startsWith("/admin/users/")
+                  className={`group relative flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/")
                       ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
                       : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
-                  }`}
+                    }`}
                 >
                   <HelpCircle className={`w-5 h-5 transition-transform duration-300 ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? "scale-110" : "group-hover:scale-110"}`} />
                   <span className={`text-sm font-medium transition-all ${pathname === "/admin/users" || pathname.startsWith("/admin/users/") ? 'text-white' : 'text-gray-700'}`}>Utilisateurs</span>
@@ -319,20 +328,21 @@ export default function AdminLayout({
         {/* Alerte de vérification pour les propriétaires non vérifiés */}
         {isOwnerNotVerified && showVerificationAlert && (
           <div className="relative bg-yellow-500 border-b border-yellow-600 shadow-lg z-10">
-            <div className="px-6 py-3">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3 flex-1">
-                  <AlertCircle className="w-5 h-5 text-yellow-900 flex-shrink-0" />
-                  <p className="text-sm font-medium text-yellow-900">
+            <div className="px-4 sm:px-6 py-3">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
+                <div className="flex items-start sm:items-center gap-3 flex-1">
+                  <AlertCircle className="w-5 h-5 text-yellow-900 flex-shrink-0 mt-0.5 sm:mt-0" />
+                  <p className="text-xs sm:text-sm font-medium text-yellow-900">
                     <span className="font-bold">Votre compte n&apos;est pas encore vérifié.</span>{" "}
-                    Vérifiez votre compte pour publier vos résidences et gagner la confiance des clients.
+                    <span className="hidden sm:inline">Vérifiez votre compte pour publier vos résidences et gagner la confiance des clients.</span>
+                    <span className="sm:hidden">Vérifiez votre compte pour publier vos résidences.</span>
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Link href="/admin/profile?tab=verification">
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <Link href="/admin/profile?tab=verification" className="flex-1 sm:flex-initial">
                     <Button
                       size="sm"
-                      className="bg-yellow-900 hover:bg-yellow-950 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300"
+                      className="w-full sm:w-auto bg-yellow-900 hover:bg-yellow-950 text-white font-semibold shadow-md hover:shadow-lg transition-all duration-300 text-xs sm:text-sm"
                       onClick={() => setShowVerificationAlert(false)}
                     >
                       Vérifier mon compte
@@ -342,7 +352,7 @@ export default function AdminLayout({
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowVerificationAlert(false)}
-                    className="text-yellow-900 hover:bg-yellow-600/20 h-8 w-8 p-0"
+                    className="text-yellow-900 hover:bg-yellow-600/20 h-8 w-8 p-0 flex-shrink-0"
                   >
                     <X className="w-4 h-4" />
                   </Button>
@@ -351,90 +361,93 @@ export default function AdminLayout({
             </div>
           </div>
         )}
-        
+
         {/* Header */}
-        <header className="h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-6 flex items-center justify-between shadow-sm">
-          <div className="flex items-center gap-4 flex-1">
-            <button className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors">
+        <header className="h-auto min-h-[80px] sm:h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-3 sm:px-4 lg:px-6 py-2 sm:py-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0 shadow-sm">
+          <div className="flex items-center gap-2 sm:gap-4 flex-1 w-full sm:w-auto">
+            <button 
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className="lg:hidden p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
               <Menu className="w-5 h-5 text-gray-600" />
             </button>
-            <div className="relative hidden md:block flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+            <div className="relative flex-1 sm:flex-initial sm:max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder="Search..."
-                className="w-full pl-11 pr-4 py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#f08400] focus:bg-white transition-all text-sm h-12"
+                className="w-full pl-9 sm:pl-11 pr-4 py-2 sm:py-3 border border-gray-200 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-[#f08400] focus:bg-white transition-all text-xs sm:text-sm h-10 sm:h-12"
               />
             </div>
           </div>
-          
-          <div className="flex items-center gap-3">
+
+          <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto justify-between sm:justify-end">
             {/* Wallet Balance Section */}
             {user?.wallet && (
-              <div className="hidden lg:flex items-center gap-4 px-4 py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20">
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-[#f08400]/10 rounded-lg">
-                    <Wallet className="w-4 h-4 text-[#f08400]" />
+              <div className="hidden xl:flex items-center gap-3 sm:gap-4 px-3 sm:px-4 py-1.5 sm:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-lg border border-[#f08400]/20">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="p-1.5 sm:p-2 bg-[#f08400]/10 rounded-lg">
+                    <Wallet className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-[#f08400]" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-gray-500 font-medium">Solde normal</span>
-                    <span className="text-sm font-bold text-gray-900">
-                      {new Intl.NumberFormat('fr-FR', { 
-                        style: 'currency', 
+                    <span className="text-[10px] sm:text-xs text-gray-500 font-medium">Solde normal</span>
+                    <span className="text-xs sm:text-sm font-bold text-gray-900">
+                      {new Intl.NumberFormat('fr-FR', {
+                        style: 'currency',
                         currency: 'XOF',
-                        maximumFractionDigits: 0 
+                        maximumFractionDigits: 0
                       }).format(user.wallet.balance || 0)}
                     </span>
                   </div>
                 </div>
-                <div className="h-8 w-px bg-gray-300"></div>
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gray-100 rounded-lg">
-                    <Lock className="w-4 h-4 text-gray-600" />
+                <div className="h-6 sm:h-8 w-px bg-gray-300"></div>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="p-1.5 sm:p-2 bg-gray-100 rounded-lg">
+                    <Lock className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-600" />
                   </div>
                   <div className="flex flex-col">
-                    <span className="text-xs text-gray-500 font-medium">Solde gelé</span>
-                    <span className="text-sm font-bold text-gray-600">
-                      {new Intl.NumberFormat('fr-FR', { 
-                        style: 'currency', 
+                    <span className="text-[10px] sm:text-xs text-gray-500 font-medium">Solde gelé</span>
+                    <span className="text-xs sm:text-sm font-bold text-gray-600">
+                      {new Intl.NumberFormat('fr-FR', {
+                        style: 'currency',
                         currency: 'XOF',
-                        maximumFractionDigits: 0 
+                        maximumFractionDigits: 0
                       }).format('frozen_balance' in user.wallet ? (user.wallet as { frozen_balance?: number }).frozen_balance || 0 : 0)}
                     </span>
                   </div>
                 </div>
               </div>
             )}
-            
+
             {/* Notifications */}
             <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <Bell className="w-5 h-5 text-gray-600" />
+              <Bell className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
-            
+
             {/* Messages */}
             <button className="relative p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <MessageSquare className="w-5 h-5 text-gray-600" />
+              <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
               <span className="absolute top-1 right-1 w-2 h-2 bg-blue-500 rounded-full border-2 border-white"></span>
             </button>
-            
+
             {/* User Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <div className="flex items-center gap-3 pl-3 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity">
-                  <div className="text-right hidden sm:block">
-                    <div className="text-sm font-semibold text-gray-900 truncate max-w-[150px]">
+                <div className="flex items-center gap-2 sm:gap-3 pl-2 sm:pl-3 border-l border-gray-200 cursor-pointer hover:opacity-80 transition-opacity">
+                  <div className="text-right hidden md:block">
+                    <div className="text-xs sm:text-sm font-semibold text-gray-900 truncate max-w-[120px] sm:max-w-[150px]">
                       {userFullName}
                     </div>
-                    <div className="text-xs text-gray-500 truncate max-w-[150px]">
+                    <div className="text-[10px] sm:text-xs text-gray-500 truncate max-w-[120px] sm:max-w-[150px]">
                       {user.email || "Admin"}
                     </div>
                   </div>
                   <div className="relative">
-                    <div className="w-10 h-10 rounded-lg bg-[#f08400] flex items-center justify-center text-white font-bold text-sm shadow-md hover:shadow-lg transition-shadow">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-[#f08400] flex items-center justify-center text-white font-bold text-xs sm:text-sm shadow-md hover:shadow-lg transition-shadow">
                       {userInitials}
                     </div>
-                    <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                    <div className="absolute -bottom-1 -right-1 w-2.5 h-2.5 sm:w-3 sm:h-3 bg-green-500 rounded-full border-2 border-white"></div>
                   </div>
                 </div>
               </DropdownMenuTrigger>
@@ -472,7 +485,7 @@ export default function AdminLayout({
           </div>
         </header>
 
-        <main className="flex-1 overflow-y-auto p-8">{children}</main>
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">{children}</main>
       </div>
     </div>
   );

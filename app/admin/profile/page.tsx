@@ -365,7 +365,7 @@ export default function AdminProfilePage() {
 
       {/* Tabs pour organiser les sections - Vertical */}
       <Tabs defaultValue="overview" orientation="vertical" className="flex flex-col lg:flex-row gap-6">
-        <TabsList className="flex flex-col lg:flex-col bg-white/90 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-gray-200/60 h-auto w-full lg:w-auto lg:min-w-[200px]">
+        <TabsList className="flex flex-col lg:flex-col bg-white/90 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-gray-200/60 h-auto w-full lg:w-auto lg:min-w-[250px]">
           <TabsTrigger value="overview" className="flex items-center gap-2 px-4 py-3 w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
             <User className="w-4 h-4" />
             Vue d&apos;ensemble

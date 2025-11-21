@@ -205,23 +205,42 @@ export default function DetailPage() {
     return `${year}-${month}-${day}`;
   };
 
+  // Normalize date string to YYYY-MM-DD format
+  const normalizeDateString = (dateStr: string | null | undefined): string | null => {
+    if (!dateStr || typeof dateStr !== 'string') {
+      return null;
+    }
+    // Remove time part if present (handles formats like "2024-01-15T00:00:00" or "2024-01-15 00:00:00")
+    return dateStr.trim().split('T')[0].split(' ')[0];
+  };
+
   // Check if a date is unavailable
   const isDateUnavailable = (date: Date): boolean => {
     if (!date || isNaN(date.getTime())) {
       return false;
     }
     
-    if (!residence?.unavailable_dates || residence.unavailable_dates.length === 0) {
+    // Check if unavailable_dates exists and is an array
+    if (!residence?.unavailable_dates || !Array.isArray(residence.unavailable_dates) || residence.unavailable_dates.length === 0) {
       return false;
     }
     
     const dateStr = formatDateString(date);
     
     // Check against string array directly
-    return residence.unavailable_dates.some(unavailableDateStr => {
-      if (!unavailableDateStr) return false;
+    return residence.unavailable_dates.some(unavailableDate => {
+      // Skip null/undefined values
+      if (!unavailableDate) return false;
+      
+      // Ensure it's a string
+      if (typeof unavailableDate !== 'string') {
+        return false;
+      }
+      
       // Normalize the date string (remove time if present)
-      const normalizedUnavailable = unavailableDateStr.split('T')[0].split(' ')[0];
+      const normalizedUnavailable = normalizeDateString(unavailableDate);
+      if (!normalizedUnavailable) return false;
+      
       return normalizedUnavailable === dateStr;
     });
   };

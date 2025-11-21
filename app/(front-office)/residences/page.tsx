@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import ResidenceCard from '@/components/cards/ResidenceCard';
 import HeroSection from '@/components/sections/HeroSection';
 import { usePublicResidences, type PublicResidencesFilters, type GalleryImage } from '@/hooks/use-residences';
-import { Search, MapPin, Home, Filter, AlertCircle, RefreshCw } from "lucide-react";
+import { Search, MapPin, Home, Filter, AlertCircle, RefreshCw, ArrowUpDown } from "lucide-react";
 
 export default function ResidencesPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -174,6 +174,27 @@ export default function ResidencesPage() {
                   </div>
                 </div>
 
+                {/* Trier par prix */}
+                <div className="min-w-0">
+                  <label className="text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3 block">Trier par prix</label>
+                  <Select
+                    value={orderPrice || 'none'}
+                    onValueChange={(value) => setOrderPrice(value === 'none' ? '' : value as 'asc' | 'desc')}
+                  >
+                    <SelectTrigger className="h-11 sm:h-12 text-sm sm:text-base text-gray-900 bg-gray-50 hover:bg-white border-2 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-lg sm:rounded-xl transition-all duration-200 w-full">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
+                        <SelectValue placeholder="Trier par prix" className="truncate" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Trier par prix</SelectItem>
+                      <SelectItem value="asc">Prix croissant</SelectItem>
+                      <SelectItem value="desc">Prix décroissant</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 {/* Bouton Rechercher */}
                 <Button className="w-full h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
                   <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -181,13 +202,14 @@ export default function ResidencesPage() {
                 </Button>
 
                 {/* Bouton Réinitialiser */}
-                {(searchTerm || selectedCity || selectedType) && (
+                {(searchTerm || selectedCity || selectedType || orderPrice) && (
                   <Button
                     variant="outline"
                     onClick={() => {
                       setSearchTerm('');
                       setSelectedCity('');
                       setSelectedType('');
+                      setOrderPrice('');
                     }}
                     className="w-full h-11 sm:h-12 text-sm sm:text-base border-2 border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg sm:rounded-xl transition-all duration-200"
                   >
@@ -209,26 +231,13 @@ export default function ResidencesPage() {
                   </h2>
                   <p className="text-xs sm:text-sm text-gray-500">Découvrez nos meilleures offres</p>
                 </div>
-                {(searchTerm || selectedCity || selectedType) && (
+                {(searchTerm || selectedCity || selectedType || orderPrice) && (
                   <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-theme-primary/10 rounded-lg border border-theme-primary/20">
                     <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-theme-primary" />
                     <span className="text-xs font-semibold text-theme-primary">Filtres actifs</span>
                   </div>
                 )}
               </div>
-              <Select
-                value={orderPrice || 'none'}
-                onValueChange={(value) => setOrderPrice(value === 'none' ? '' : value as 'asc' | 'desc')}
-              >
-                <SelectTrigger className="w-full sm:w-48 md:w-56 text-sm sm:text-base text-gray-900 bg-white border-2 border-gray-200 hover:border-theme-primary/50 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-lg sm:rounded-xl transition-all duration-200">
-                  <SelectValue placeholder="Trier par prix" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Trier par prix</SelectItem>
-                  <SelectItem value="asc">Prix croissant</SelectItem>
-                  <SelectItem value="desc">Prix décroissant</SelectItem>
-                </SelectContent>
-              </Select>
             </div>
 
             {/* Liste des résidences */}

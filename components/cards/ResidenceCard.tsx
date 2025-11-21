@@ -34,7 +34,6 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
   location,
   address,
   type,
-  standing,
   max_guests,
   bedrooms,
   bathrooms,
@@ -234,14 +233,6 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
               {formattedTitle}
             </h3>
 
-            {/* Badges Type et Standing */}
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3">
-              {standing && (
-                <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 bg-amber-50 text-amber-700 rounded-md font-medium border border-amber-200 text-[10px] sm:text-xs">
-                  {formatLabel(standing)}
-                </span>
-              )}
-            </div>
 
             {/* Rating */}
             {rating !== undefined && (
@@ -256,15 +247,21 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
               </div>
             )}
 
-            {/* Amenities Names */}
+            {/* Amenities Names avec alternance de couleurs */}
             {displayAmenities.length > 0 && (
               <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap">
                 {displayAmenities.map((amenity, index) => {
                   const amenityName = amenity.name || '';
+                  // Alternance de couleurs : pair = theme-primary, impair = blue
+                  const isEven = index % 2 === 0;
+                  const bgColor = isEven ? 'bg-theme-primary/10' : 'bg-blue-50';
+                  const textColor = isEven ? 'text-theme-primary' : 'text-blue-700';
+                  const borderColor = isEven ? 'border-theme-primary/20' : 'border-blue-200';
+                  
                   return (
                     <span
                       key={amenity.id || index}
-                      className="inline-flex items-center px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-xs font-medium text-gray-700 bg-gray-100 rounded-md border border-gray-200"
+                      className={`inline-flex items-center px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-xs font-medium rounded-md border ${bgColor} ${textColor} ${borderColor}`}
                     >
                       {amenityName}
                     </span>

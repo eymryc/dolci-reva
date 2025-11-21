@@ -76,6 +76,52 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
     return value.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
+  // Créer un titre avec le type et l'adresse au format "Type disponible à Adresse"
+  const generateTitle = () => {
+    if (!type) return name;
+    
+    const typeLabel = formatLabel(type);
+    
+    // Extraire la ville depuis location (format: "Ville, Pays")
+    const city = location ? location.split(',')[0].trim() : '';
+    
+    // Extraire le reste de l'adresse (quartier, rue, etc.) depuis address
+    let addressDetails = '';
+    if (address) {
+      const addressParts = address.split(',').map(part => part.trim());
+      // Retirer la ville si elle est présente dans l'adresse
+      const filteredParts = addressParts.filter(part => 
+        part.toLowerCase() !== city.toLowerCase() && 
+        part.length > 0
+      );
+      // Prendre les parties pertinentes (quartier, rue, etc.)
+      if (filteredParts.length > 0) {
+        addressDetails = filteredParts.slice(0, 2).join(', ');
+      }
+    }
+    
+    // Construire le texte de localisation : ville en premier, puis le reste
+    let locationText = '';
+    if (city && addressDetails) {
+      locationText = `${city}, ${addressDetails}`;
+    } else if (city) {
+      locationText = city;
+    } else if (addressDetails) {
+      locationText = addressDetails;
+    } else if (address) {
+      locationText = address;
+    }
+    
+    // Générer le titre au format "Type disponible à Adresse"
+    if (locationText) {
+      return `${typeLabel} disponible à ${locationText}`;
+    }
+    
+    return `${typeLabel} disponible`;
+  };
+
+  const formattedTitle = generateTitle();
+
   // Rendre les étoiles pour le rating
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -182,9 +228,9 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
               </button>
             </div>
 
-            {/* Title */}
+            {/* Title avec type et adresse */}
             <h3 className="text-base sm:text-lg md:text-xl text-gray-900 mb-2 sm:mb-3 line-clamp-2 font-semibold">
-              {name}
+              {formattedTitle}
             </h3>
 
             {/* Badges Type et Standing */}

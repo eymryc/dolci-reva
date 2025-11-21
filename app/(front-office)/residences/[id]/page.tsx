@@ -431,7 +431,7 @@ export default function DetailPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header avec navigation amélioré */}
-      <div className="bg-white/80 backdrop-blur-md shadow-md border-b sticky top-0 z-50">
+      <div className="bg-white/95 backdrop-blur-md shadow-md border-b fixed top-0 left-0 right-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
             <Link 
@@ -468,7 +468,7 @@ export default function DetailPage() {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-6 lg:pt-24 lg:pb-8">
         {/* Galerie d'images */}
         <section className="mb-6">
           <Carousel images={images} />

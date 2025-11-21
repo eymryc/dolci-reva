@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import HebergementCard from '@/components/cards/HebergementCard';
 import HeroSection from '@/components/sections/HeroSection';
 import { usePublicDwellings, type PublicDwellingsFilters, type GalleryImage } from '@/hooks/use-dwellings';
-import { Search, MapPin, Home, AlertCircle, RefreshCw } from "lucide-react";
+import { Search, MapPin, Home, AlertCircle, RefreshCw, ArrowUpDown } from "lucide-react";
 
 export default function SeLogerPage() {
    const [searchTerm, setSearchTerm] = useState('');
@@ -179,6 +179,27 @@ export default function SeLogerPage() {
                   </div>
                 </div>
 
+                {/* Trier par prix */}
+                <div className="min-w-0">
+                  <label className="text-sm sm:text-base font-semibold text-gray-700 mb-2 sm:mb-3 block">Trier par prix</label>
+                  <Select
+                    value={orderPrice || 'none'}
+                    onValueChange={(value) => setOrderPrice(value === 'none' ? '' : value as 'asc' | 'desc')}
+                  >
+                    <SelectTrigger className="h-11 sm:h-12 text-sm sm:text-base text-gray-900 bg-gray-50 hover:bg-white border-2 border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20 rounded-lg sm:rounded-xl transition-all duration-200 w-full">
+                      <div className="flex items-center gap-2 min-w-0">
+                        <ArrowUpDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" />
+                        <SelectValue placeholder="Trier par prix" className="truncate" />
+                      </div>
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Trier par prix</SelectItem>
+                      <SelectItem value="asc">Prix croissant</SelectItem>
+                      <SelectItem value="desc">Prix décroissant</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 {/* Bouton Rechercher */}
                 <Button className="w-full h-11 sm:h-12 text-sm sm:text-base bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white font-semibold rounded-lg sm:rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
                   <Search className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
@@ -186,13 +207,14 @@ export default function SeLogerPage() {
                 </Button>
 
                 {/* Bouton Réinitialiser */}
-                {(searchTerm || selectedCity || selectedType) && (
+                {(searchTerm || selectedCity || selectedType || orderPrice) && (
                   <Button
                     variant="outline"
                     onClick={() => {
                       setSearchTerm('');
                       setSelectedCity('');
                       setSelectedType('');
+                      setOrderPrice('');
                     }}
                     className="w-full h-11 sm:h-12 text-sm sm:text-base border-2 border-gray-200 text-gray-700 hover:bg-gray-50 rounded-lg sm:rounded-xl transition-all duration-200"
                   >

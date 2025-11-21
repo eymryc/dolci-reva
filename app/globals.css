@@ -400,8 +400,7 @@ body {
 }
 
 .react-datepicker__day--today {
-  font-weight: 700;
-  border: 2px solid #f08400;
+  font-weight: 500;
 }
 
 .react-datepicker__navigation {

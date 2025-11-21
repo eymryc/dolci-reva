@@ -404,7 +404,7 @@ export default function DetailPage() {
     ? residence.gallery_images.map(img => img.url || img.medium_url || img.large_url || img.thumb_url)
     : residence.main_image_url
     ? [residence.main_image_url]
-    : ['/media/hotels/hotel1.jpg'];
+    : [];
 
   // Map amenities to display format
   const amenities = residence.amenities?.map((amenity) => ({
@@ -950,6 +950,7 @@ export default function DetailPage() {
                         className="w-full"
                         wrapperClassName="w-full"
                         isClearable
+                        highlightDates={[]}
                       />
                       <p className="text-xs text-gray-500 mt-2 font-medium">Arrivée</p>
                     </div>
@@ -968,6 +969,7 @@ export default function DetailPage() {
                         wrapperClassName="w-full"
                         isClearable
                         disabled={!startDate}
+                        highlightDates={[]}
                       />
                       <p className="text-xs text-gray-500 mt-2 font-medium">Départ</p>
                     </div>

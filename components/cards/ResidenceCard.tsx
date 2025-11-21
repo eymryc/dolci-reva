@@ -281,7 +281,7 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
                 <div className="flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 bg-white/20 backdrop-blur-sm rounded-lg border border-white/30">
                   <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
                   <span className="text-xs sm:text-sm font-bold text-white">{max_guests}</span>
-                  <span className="text-[10px] sm:text-xs font-medium text-white/90">voyageur{max_guests > 1 ? 's' : ''}</span>
+                  <span className="text-[10px] sm:text-xs font-medium text-white/90">personne{max_guests > 1 ? 's' : ''}</span>
                 </div>
               )}
               {piece_number != null && (

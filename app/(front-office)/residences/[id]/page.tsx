@@ -3,7 +3,12 @@
 import { useState } from 'react';
 import { useParams } from 'next/navigation';
 import DatePicker from 'react-datepicker';
+import { registerLocale } from 'react-datepicker';
+import { fr } from 'date-fns/locale';
 import 'react-datepicker/dist/react-datepicker.css';
+
+// Enregistrer la locale française
+registerLocale('fr', fr);
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -947,6 +952,7 @@ export default function DetailPage() {
                         filterDate={filterDate}
                         placeholderText="Date d'arrivée"
                         dateFormat="dd/MM/yyyy"
+                        locale="fr"
                         className="w-full"
                         wrapperClassName="w-full"
                         isClearable
@@ -965,6 +971,7 @@ export default function DetailPage() {
                         filterDate={filterDate}
                         placeholderText="Date de départ"
                         dateFormat="dd/MM/yyyy"
+                        locale="fr"
                         className="w-full"
                         wrapperClassName="w-full"
                         isClearable

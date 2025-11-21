@@ -8,7 +8,7 @@ import { Card } from '@/components/ui/card';
 import ResidenceCard from '@/components/cards/ResidenceCard';
 import HeroSection from '@/components/sections/HeroSection';
 import { usePublicResidences, type PublicResidencesFilters, type GalleryImage } from '@/hooks/use-residences';
-import { Search, MapPin, Home, Filter, AlertCircle, RefreshCw, ArrowUpDown } from "lucide-react";
+import { Search, MapPin, Home, AlertCircle, RefreshCw, ArrowUpDown } from "lucide-react";
 
 export default function ResidencesPage() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -222,24 +222,6 @@ export default function ResidencesPage() {
 
           {/* Cards Section - Right */}
           <div>
-            {/* Résultats Header */}
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4 mb-6 sm:mb-8">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4 w-full sm:w-auto">
-                <div>
-                  <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-1">
-                    {residences.length} résidence{residences.length > 1 ? 's' : ''} trouvée{residences.length > 1 ? 's' : ''}
-                  </h2>
-                  <p className="text-xs sm:text-sm text-gray-500">Découvrez nos meilleures offres</p>
-                </div>
-                {(searchTerm || selectedCity || selectedType || orderPrice) && (
-                  <div className="flex items-center gap-2 px-2.5 sm:px-3 py-1 sm:py-1.5 bg-theme-primary/10 rounded-lg border border-theme-primary/20">
-                    <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-theme-primary" />
-                    <span className="text-xs font-semibold text-theme-primary">Filtres actifs</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
             {/* Liste des résidences */}
             {isLoading ? (
               <div className="space-y-4 sm:space-y-6 animate-fade-in">

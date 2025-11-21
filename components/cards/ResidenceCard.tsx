@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Wifi, Car, UtensilsCrossed, Wind, Tv, WashingMachine, Maximize2, Home, MapPin, ArrowRight, Users, Star } from "lucide-react";
+import { Maximize2, Home, MapPin, ArrowRight, Users, Star } from "lucide-react";
 import { type Amenity, type AvailabilityStatus } from "@/hooks/use-residences";
 
 export interface ResidenceCardProps {
@@ -27,22 +27,6 @@ export interface ResidenceCardProps {
   availability_status?: AvailabilityStatus;
   isPopular?: boolean;
 }
-
-// Mapping des équipements vers leurs icônes
-const amenityIcons: Record<string, React.ComponentType<{ className?: string }>> = {
-  'Wi-Fi': Wifi,
-  'Wifi': Wifi,
-  'WiFi': Wifi,
-  'Parking': Car,
-  'Cuisine': UtensilsCrossed,
-  'Kitchen': UtensilsCrossed,
-  'Climatisation': Wind,
-  'Air Conditioning': Wind,
-  'TV': Tv,
-  'Télévision': Tv,
-  'Lave-linge': WashingMachine,
-  'Washing Machine': WashingMachine,
-};
 
 const ResidenceCard: React.FC<ResidenceCardProps> = ({
   image,
@@ -84,18 +68,7 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
     });
   };
 
-  // Obtenir les icônes pour les équipements
-  const getAmenityIcon = (amenityName: string) => {
-    const normalizedName = amenityName.toLowerCase();
-    for (const [key, Icon] of Object.entries(amenityIcons)) {
-      if (normalizedName.includes(key.toLowerCase())) {
-        return Icon;
-      }
-    }
-    return null;
-  };
-
-  // Afficher les 5-6 premiers équipements avec icônes
+  // Afficher les 5-6 premiers équipements
   const displayAmenities = amenities.slice(0, 6);
 
   // Formater les labels pour un affichage plus lisible
@@ -236,24 +209,18 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
               </div>
             )}
 
-            {/* Amenities Icons */}
+            {/* Amenities Names */}
             {displayAmenities.length > 0 && (
-              <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 flex-wrap">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 flex-wrap">
                 {displayAmenities.map((amenity, index) => {
                   const amenityName = amenity.name || '';
-                  const Icon = getAmenityIcon(amenityName);
                   return (
-                    <div
+                    <span
                       key={amenity.id || index}
-                      className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 text-gray-500"
-                      title={amenityName}
+                      className="inline-flex items-center px-2 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-xs font-medium text-gray-700 bg-gray-100 rounded-md border border-gray-200"
                     >
-                      {Icon ? (
-                        <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
-                      ) : (
-                        <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-gray-400" />
-                      )}
-                    </div>
+                      {amenityName}
+                    </span>
                   );
                 })}
               </div>

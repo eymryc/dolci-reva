@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Wifi, Car, UtensilsCrossed, Wind, Tv, WashingMachine, Maximize2, Home, MapPin, ArrowRight, Users, Star, Shield } from "lucide-react";
+import { Wifi, Car, UtensilsCrossed, Wind, Tv, WashingMachine, Maximize2, Home, MapPin, ArrowRight, Users, Star } from "lucide-react";
 import { type Amenity, type AvailabilityStatus } from "@/hooks/use-residences";
 
 export interface ResidenceCardProps {
@@ -48,9 +48,6 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
   image,
   name,
   location,
-  address,
-  city,
-  country,
   type,
   standing,
   max_guests,
@@ -243,11 +240,11 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
             {displayAmenities.length > 0 && (
               <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-3 flex-wrap">
                 {displayAmenities.map((amenity, index) => {
-                  const Icon = getAmenityIcon(amenity.name || amenity);
-                  const amenityName = typeof amenity === 'string' ? amenity : amenity.name;
+                  const amenityName = amenity.name || '';
+                  const Icon = getAmenityIcon(amenityName);
                   return (
                     <div
-                      key={index}
+                      key={amenity.id || index}
                       className="flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 text-gray-500"
                       title={amenityName}
                     >

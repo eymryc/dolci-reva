@@ -24,6 +24,7 @@ export interface ResidenceCardProps {
   price: string | number; // Prix par nuit
   id?: number;
   images?: string[];
+  description?: string;
   availability_status?: AvailabilityStatus;
   isPopular?: boolean;
 }
@@ -44,6 +45,7 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
   price,
   id,
   images = [],
+  description,
   availability_status,
   isPopular = false,
 }) => {
@@ -233,6 +235,12 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
               {formattedTitle}
             </h3>
 
+            {/* Description */}
+            {description && (
+              <p className="text-xs sm:text-sm text-gray-600 mb-2 sm:mb-3 line-clamp-2">
+                {description}
+              </p>
+            )}
 
             {/* Rating */}
             {rating !== undefined && (

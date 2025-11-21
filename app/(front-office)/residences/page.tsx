@@ -93,6 +93,7 @@ export default function ResidencesPage() {
         price: parseFloat(residence.price),
         image: residence.main_image_url || residence.main_image_thumb_url || "/media/hotels/hotel1.jpg",
         images: images.length > 0 ? images : undefined,
+        description: residence.description || undefined,
         availability_status: residence.availability_status,
         isPopular: residence.has_ratings || residence.rating_count > 0,
       };
@@ -310,6 +311,7 @@ export default function ResidencesPage() {
                       reviews={residence.reviews}
                       price={residence.price}
                       images={residence.images}
+                      description={residence.description}
                       availability_status={residence.availability_status}
                       isPopular={residence.isPopular}
                     />

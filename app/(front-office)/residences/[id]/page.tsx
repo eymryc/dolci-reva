@@ -466,7 +466,7 @@ export default function DetailPage() {
       {/* Header avec navigation amélioré */}
   
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-6 lg:pt-24 lg:pb-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6 lg:pt-12 lg:pb-8">
         {/* Galerie d'images */}
         <section className="mb-6">
           <Carousel images={images} />

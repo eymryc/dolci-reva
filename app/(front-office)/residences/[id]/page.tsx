@@ -20,11 +20,8 @@ import { Calendar } from 'lucide-react';
 import { 
   MapPin, 
   Star, 
-  Heart, 
-  Share2, 
   Shield,
   Users,
-  ArrowLeft,
   ChevronLeft,
   ChevronRight,
   Check,
@@ -173,7 +170,6 @@ export default function DetailPage() {
   const bookResidence = useBookResidence();
   const { user } = useAuth();
   
-  const [isFavorite, setIsFavorite] = useState(false);
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -201,31 +197,41 @@ export default function DetailPage() {
     return diffDays > 0 ? diffDays : 0;
   };
 
-  // Convert unavailable dates strings to Date objects
-  const getUnavailableDates = (): Date[] => {
-    if (!residence?.unavailable_dates || residence.unavailable_dates.length === 0) {
-      return [];
-    }
-    return residence.unavailable_dates.map(dateStr => {
-      const date = new Date(dateStr);
-      // Reset time to midnight to avoid timezone issues
-      date.setHours(0, 0, 0, 0);
-      return date;
-    });
+  // Format date to YYYY-MM-DD string
+  const formatDateString = (date: Date): string => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
   };
 
   // Check if a date is unavailable
   const isDateUnavailable = (date: Date): boolean => {
-    const unavailableDates = getUnavailableDates();
-    const dateStr = date.toISOString().split('T')[0];
-    return unavailableDates.some(unavailableDate => {
-      const unavailableDateStr = unavailableDate.toISOString().split('T')[0];
-      return unavailableDateStr === dateStr;
+    if (!date || isNaN(date.getTime())) {
+      return false;
+    }
+    
+    if (!residence?.unavailable_dates || residence.unavailable_dates.length === 0) {
+      return false;
+    }
+    
+    const dateStr = formatDateString(date);
+    
+    // Check against string array directly
+    return residence.unavailable_dates.some(unavailableDateStr => {
+      if (!unavailableDateStr) return false;
+      // Normalize the date string (remove time if present)
+      const normalizedUnavailable = unavailableDateStr.split('T')[0].split(' ')[0];
+      return normalizedUnavailable === dateStr;
     });
   };
 
   // Check if any date in the selected range is unavailable
-  const isDateRangeUnavailable = (start: Date, end: Date): boolean => {
+  const isDateRangeUnavailable = (start: Date | null, end: Date | null): boolean => {
+    if (!start || !end || isNaN(start.getTime()) || isNaN(end.getTime())) {
+      return false;
+    }
+    
     const currentDate = new Date(start);
     currentDate.setHours(0, 0, 0, 0);
     const endDate = new Date(end);
@@ -241,15 +247,23 @@ export default function DetailPage() {
   };
 
   // Filter function for react-datepicker
-  const filterDate = (date: Date): boolean => {
+  const filterDate = (date: Date | null): boolean => {
+    if (!date || isNaN(date.getTime())) {
+      return false;
+    }
+    
     // Don't allow past dates
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    if (date < today) {
+    const checkDate = new Date(date);
+    checkDate.setHours(0, 0, 0, 0);
+    
+    if (checkDate < today) {
       return false;
     }
+    
     // Don't allow unavailable dates
-    return !isDateUnavailable(date);
+    return !isDateUnavailable(checkDate);
   };
 
   // Handle booking
@@ -431,42 +445,7 @@ export default function DetailPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header avec navigation amélioré */}
-      <div className="bg-white/95 backdrop-blur-md shadow-md border-b fixed top-0 left-0 right-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link 
-              href="/residences" 
-              className="flex items-center gap-2 text-gray-700 hover:text-theme-primary transition-all duration-300 group font-medium"
-            >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-              <span>Retour aux résidences</span>
-            </Link>
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center gap-2 hover:bg-theme-primary/5 hover:border-theme-primary/30 transition-all"
-              >
-                <Share2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Partager</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={`flex items-center gap-2 transition-all duration-300 ${
-                  isFavorite 
-                    ? 'text-red-500 border-red-500 bg-red-50 hover:bg-red-100' 
-                    : 'hover:bg-gray-50'
-                }`}
-                onClick={() => setIsFavorite(!isFavorite)}
-              >
-                <Heart className={`w-4 h-4 transition-all ${isFavorite ? 'fill-current scale-110' : ''}`} />
-                <span className="hidden sm:inline">{isFavorite ? 'Favori' : 'Ajouter aux favoris'}</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+  
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-6 lg:pt-24 lg:pb-8">
         {/* Galerie d'images */}

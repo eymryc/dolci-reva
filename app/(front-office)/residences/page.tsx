@@ -14,7 +14,6 @@ export default function ResidencesPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedType, setSelectedType] = useState('');
-  const [selectedStanding, setSelectedStanding] = useState('');
   const [orderPrice, setOrderPrice] = useState<'asc' | 'desc' | ''>('');
 
   // Construire les filtres pour l'API
@@ -24,11 +23,10 @@ export default function ResidencesPage() {
     if (searchTerm.trim()) apiFilters.search = searchTerm.trim();
     if (selectedCity.trim()) apiFilters.city = selectedCity.trim();
     if (selectedType && selectedType !== 'all') apiFilters.type = selectedType;
-    if (selectedStanding && selectedStanding !== 'all') apiFilters.standing = selectedStanding;
     if (orderPrice) apiFilters.order_price = orderPrice as 'asc' | 'desc';
     
     return apiFilters;
-  }, [searchTerm, selectedCity, selectedType, selectedStanding, orderPrice]);
+  }, [searchTerm, selectedCity, selectedType, orderPrice]);
 
   // Récupération des résidences depuis l'API avec les filtres
   const { data: residencesData, isLoading, error } = usePublicResidences(filters);
@@ -49,18 +47,6 @@ export default function ResidencesPage() {
     { value: 'MAISON', label: 'Maison' },
     { value: 'LOFT', label: 'Loft' },
     { value: 'DUPLEX', label: 'Duplex' }
-  ];
-
-  const standings = [
-    { value: 'all', label: 'Tous les standings' },
-    { value: 'STANDARD', label: 'Standard' },
-    { value: 'SUPERIEUR', label: 'Supérieur' },
-    { value: 'DELUXE', label: 'Deluxe' },
-    { value: 'EXECUTIVE', label: 'Executive' },
-    { value: 'SUITE', label: 'Suite' },
-    { value: 'SUITE_JUNIOR', label: 'Suite Junior' },
-    { value: 'SUITE_EXECUTIVE', label: 'Suite Executive' },
-    { value: 'SUITE_PRESIDENTIELLE', label: 'Suite Présidentielle' }
   ];
 
   // Récupérer les villes uniques depuis les résidences (pour le dropdown)
@@ -109,7 +95,7 @@ export default function ResidencesPage() {
         <div className="text-center">
           {/* Barre de recherche */}
           <div className="max-w-5xl mx-auto bg-white rounded-2xl p-6 shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 z-10 pointer-events-none" />
                 <Input
@@ -140,18 +126,6 @@ export default function ResidencesPage() {
                   {types.map((type) => (
                     <SelectItem key={type.value} value={type.value}>
                       {type.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <Select value={selectedStanding || 'all'} onValueChange={(value) => setSelectedStanding(value === 'all' ? '' : value)}>
-                <SelectTrigger className="h-12 text-gray-900 bg-white border-gray-200 focus:border-theme-primary focus:ring-2 focus:ring-theme-primary/20">
-                  <SelectValue placeholder="Standing" />
-                </SelectTrigger>
-                <SelectContent>
-                  {standings.map((standing) => (
-                    <SelectItem key={standing.value} value={standing.value}>
-                      {standing.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -212,7 +186,6 @@ export default function ResidencesPage() {
               setSearchTerm('');
               setSelectedCity('');
               setSelectedType('');
-              setSelectedStanding('');
               setOrderPrice('');
             }}>Réinitialiser les filtres</Button>
           </div>

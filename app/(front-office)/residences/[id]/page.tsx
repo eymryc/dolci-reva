@@ -271,14 +271,27 @@ export default function DetailPage() {
       return false;
     }
     
-    // Don't allow past dates
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
     const checkDate = new Date(date);
     checkDate.setHours(0, 0, 0, 0);
     
+    // Don't allow past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
     if (checkDate < today) {
       return false;
+    }
+    
+    // If residence has next_available_date, don't allow dates before it
+    if (residence?.next_available_date) {
+      try {
+        const nextAvailable = new Date(residence.next_available_date);
+        nextAvailable.setHours(0, 0, 0, 0);
+        if (checkDate < nextAvailable) {
+          return false;
+        }
+      } catch (error) {
+        console.warn('Error parsing next_available_date:', residence.next_available_date, error);
+      }
     }
     
     // Don't allow unavailable dates

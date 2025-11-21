@@ -201,6 +201,57 @@ export default function DetailPage() {
     return diffDays > 0 ? diffDays : 0;
   };
 
+  // Convert unavailable dates strings to Date objects
+  const getUnavailableDates = (): Date[] => {
+    if (!residence?.unavailable_dates || residence.unavailable_dates.length === 0) {
+      return [];
+    }
+    return residence.unavailable_dates.map(dateStr => {
+      const date = new Date(dateStr);
+      // Reset time to midnight to avoid timezone issues
+      date.setHours(0, 0, 0, 0);
+      return date;
+    });
+  };
+
+  // Check if a date is unavailable
+  const isDateUnavailable = (date: Date): boolean => {
+    const unavailableDates = getUnavailableDates();
+    const dateStr = date.toISOString().split('T')[0];
+    return unavailableDates.some(unavailableDate => {
+      const unavailableDateStr = unavailableDate.toISOString().split('T')[0];
+      return unavailableDateStr === dateStr;
+    });
+  };
+
+  // Check if any date in the selected range is unavailable
+  const isDateRangeUnavailable = (start: Date, end: Date): boolean => {
+    const currentDate = new Date(start);
+    currentDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(end);
+    endDate.setHours(0, 0, 0, 0);
+    
+    while (currentDate <= endDate) {
+      if (isDateUnavailable(currentDate)) {
+        return true;
+      }
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+    return false;
+  };
+
+  // Filter function for react-datepicker
+  const filterDate = (date: Date): boolean => {
+    // Don't allow past dates
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    if (date < today) {
+      return false;
+    }
+    // Don't allow unavailable dates
+    return !isDateUnavailable(date);
+  };
+
   // Handle booking
   const handleBooking = () => {
     // Vérifier si l'utilisateur est connecté
@@ -210,11 +261,6 @@ export default function DetailPage() {
     }
     if (!residence) {
       toast.error("Erreur : résidence introuvable");
-      return;
-    }
-
-    if (!residence.is_available) {
-      toast.error("Cette résidence n'est actuellement pas disponible pour la réservation");
       return;
     }
 
@@ -236,6 +282,12 @@ export default function DetailPage() {
     const nights = calculateNights();
     if (nights < 1) {
       toast.error("La date de départ doit être après la date d'arrivée");
+      return;
+    }
+
+    // Vérifier si les dates sélectionnées sont disponibles
+    if (isDateRangeUnavailable(startDate, endDate)) {
+      toast.error("Certaines dates sélectionnées ne sont pas disponibles. Veuillez choisir d'autres dates.");
       return;
     }
 
@@ -881,6 +933,7 @@ export default function DetailPage() {
                         startDate={startDate}
                         endDate={endDate}
                         minDate={new Date()}
+                        filterDate={filterDate}
                         placeholderText="Date d'arrivée"
                         dateFormat="dd/MM/yyyy"
                         className="w-full"
@@ -897,6 +950,7 @@ export default function DetailPage() {
                         startDate={startDate}
                         endDate={endDate}
                         minDate={startDate || new Date()}
+                        filterDate={filterDate}
                         placeholderText="Date de départ"
                         dateFormat="dd/MM/yyyy"
                         className="w-full"
@@ -928,13 +982,7 @@ export default function DetailPage() {
                 </div>
               </div>
 
-              {!residence.is_available ? (
-                <div className="mb-8 p-5 bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl border-2 border-red-200 text-center">
-                  <X className="w-8 h-8 text-red-500 mx-auto mb-3" />
-                  <p className="text-red-700 font-semibold text-base mb-2">Résidence indisponible</p>
-                  <p className="text-red-600 text-sm">Cette résidence n&apos;est actuellement pas disponible pour la réservation.</p>
-                </div>
-              ) : startDate && endDate && calculateNights() > 0 ? (
+              {startDate && endDate && calculateNights() > 0 ? (
                 <div className="space-y-3 mb-8 p-5 bg-gradient-to-br from-gray-50 to-white rounded-2xl border border-gray-100">
                   <div className="flex justify-between text-sm py-2 border-b border-gray-200">
                     <span className="text-gray-600">
@@ -969,7 +1017,7 @@ export default function DetailPage() {
 
               <Button 
                 onClick={handleBooking}
-                disabled={!residence.is_available || !startDate || !endDate || calculateNights() < 1 || bookResidence.isPending}
+                disabled={!startDate || !endDate || calculateNights() < 1 || bookResidence.isPending || (startDate && endDate && isDateRangeUnavailable(startDate, endDate))}
                 className="w-full bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
               >
                 {bookResidence.isPending ? (
@@ -977,8 +1025,8 @@ export default function DetailPage() {
                     <Loader2 className="w-5 h-5 mr-2 animate-spin inline-block" />
                     Réservation en cours...
                   </>
-                ) : !residence.is_available ? (
-                  "Résidence indisponible"
+                ) : startDate && endDate && isDateRangeUnavailable(startDate, endDate) ? (
+                  "Dates non disponibles"
                 ) : (
                   "Réserver maintenant"
                 )}

@@ -32,6 +32,7 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
   image,
   name,
   location,
+  address,
   type,
   standing,
   max_guests,

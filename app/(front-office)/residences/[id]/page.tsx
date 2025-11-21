@@ -21,12 +21,11 @@ import { usePublicOpinions, useCreateOpinion } from '@/hooks/use-opinions';
 import { useAuth } from '@/context/AuthContext';
 import { CustomerSignUpModal } from '@/components/auth/CustomerSignUpModal';
 import { toast } from 'sonner';
-import { Calendar } from 'lucide-react';
+import { Calendar, Home, MapPin, Droplet, Users, Star, Shield } from 'lucide-react';
 import { 
-  MapPin, 
-  Star, 
-  Shield,
-  Users,
+  Heart, 
+  Share2, 
+  ArrowLeft,
   ChevronLeft,
   ChevronRight,
   Check,
@@ -54,15 +53,15 @@ function Carousel({ images }: { images: string[] }) {
 
   // Si une seule image, affichage simple
   if (!hasMultipleImages) {
-  return (
-    <div className="relative w-full group">
-      <div className="w-full aspect-[16/10] rounded-3xl overflow-hidden bg-gray-100 shadow-2xl">
-        <Image
+    return (
+      <div className="relative w-full group">
+        <div className="w-full aspect-[16/10] rounded-3xl overflow-hidden bg-gray-100 shadow-2xl">
+          <Image
             src={images[0]}
             alt="Photo principale"
-          fill
-          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-          sizes="(max-width: 768px) 100vw, 1200px"
+            fill
+            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
+            sizes="(max-width: 768px) 100vw, 1200px"
             priority
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
@@ -71,7 +70,7 @@ function Carousel({ images }: { images: string[] }) {
     );
   }
 
-  // Disposition avec miniatures - affichage de toutes les images
+  // Disposition avec miniatures
   const maxVisibleThumbnails = 6;
   const shouldShowAll = images.length <= maxVisibleThumbnails;
   const visibleThumbnails = shouldShowAll ? images : images.slice(0, maxVisibleThumbnails - 1);
@@ -89,40 +88,39 @@ function Carousel({ images }: { images: string[] }) {
           sizes="(max-width: 768px) 100vw, 50vw"
           priority={current === 0}
         />
-        {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
         
         {/* Compteur d'images */}
         <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-medium z-10">
           {current + 1} / {total}
-      </div>
+        </div>
       
         {/* Flèches de navigation */}
-      <button
-        onClick={prev}
+        <button
+          onClick={prev}
           className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-theme-primary hover:text-white transition-all duration-300 p-1.5 rounded-full shadow-md border border-gray-200 z-10 opacity-100 hover:scale-110"
           aria-label="Photo précédente"
-      >
+        >
           <ChevronLeft className="w-4 h-4" />
-      </button>
-      <button
-        onClick={next}
+        </button>
+        <button
+          onClick={next}
           className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-theme-primary hover:text-white transition-all duration-300 p-1.5 rounded-full shadow-md border border-gray-200 z-10 opacity-100 hover:scale-110"
           aria-label="Photo suivante"
-      >
+        >
           <ChevronRight className="w-4 h-4" />
-      </button>
+        </button>
       </div>
       
       {/* Miniatures en grille 3 colonnes - 50% */}
       <div className="w-full lg:w-1/2">
         <div className="grid grid-cols-3 gap-2">
           {visibleThumbnails.map((image, idx) => (
-          <button
-            key={idx}
-            onClick={() => goTo(idx)}
+            <button
+              key={idx}
+              onClick={() => goTo(idx)}
               className={`relative aspect-square rounded-lg overflow-hidden transition-all duration-300 ${
-              idx === current 
+                idx === current 
                   ? 'ring-2 ring-theme-primary shadow-md'
                   : 'ring-1 ring-gray-200 hover:ring-theme-primary/50 opacity-70 hover:opacity-100'
               }`}
@@ -138,7 +136,6 @@ function Carousel({ images }: { images: string[] }) {
               {idx === current && (
                 <div className="absolute inset-0 bg-theme-primary/15 border-2 border-theme-primary" />
               )}
-              {/* Overlay pour meilleure visibilité */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
             </button>
           ))}
@@ -147,7 +144,6 @@ function Carousel({ images }: { images: string[] }) {
           {hasMoreThanMax && (
             <button
               onClick={() => {
-                // Aller à la prochaine image non visible
                 const nextIndex = visibleThumbnails.length;
                 goTo(nextIndex);
               }}
@@ -166,7 +162,12 @@ function Carousel({ images }: { images: string[] }) {
   );
 }
 
-export default function DetailPage() {
+// Formater les labels
+const formatLabel = (value: string) => {
+  return value.replace(/_/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
+export default function ResidenceDetailPage() {
   const params = useParams();
   const id = parseInt(params.id as string);
   const { data: residence, isLoading, error } = usePublicResidence(id);
@@ -175,6 +176,7 @@ export default function DetailPage() {
   const bookResidence = useBookResidence();
   const { user } = useAuth();
   
+  const [isFavorite, setIsFavorite] = useState(false);
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -187,8 +189,9 @@ export default function DetailPage() {
   const [guests, setGuests] = useState<number>(1);
   
   // Format price with space separator
-  const formatPrice = (price: string) => {
-    return parseFloat(price).toLocaleString('fr-FR', { 
+  const formatPrice = (price: string | number) => {
+    const numPrice = typeof price === 'string' ? parseFloat(price) : price;
+    return numPrice.toLocaleString('fr-FR', { 
       minimumFractionDigits: 0,
       maximumFractionDigits: 0 
     });
@@ -215,7 +218,6 @@ export default function DetailPage() {
     if (!dateStr || typeof dateStr !== 'string') {
       return null;
     }
-    // Remove time part if present (handles formats like "2024-01-15T00:00:00" or "2024-01-15 00:00:00")
     return dateStr.trim().split('T')[0].split(' ')[0];
   };
 
@@ -225,27 +227,19 @@ export default function DetailPage() {
       return false;
     }
     
-    // Check if unavailable_dates exists and is an array
     if (!residence?.unavailable_dates || !Array.isArray(residence.unavailable_dates) || residence.unavailable_dates.length === 0) {
       return false;
     }
     
     const dateStr = formatDateString(date);
     
-    // Check against string array directly
     return residence.unavailable_dates.some(unavailableDate => {
-      // Skip null/undefined values
       if (!unavailableDate) return false;
-      
-      // Ensure it's a string
       if (typeof unavailableDate !== 'string') {
         return false;
       }
-      
-      // Normalize the date string (remove time if present)
       const normalizedUnavailable = normalizeDateString(unavailableDate);
       if (!normalizedUnavailable) return false;
-      
       return normalizedUnavailable === dateStr;
     });
   };
@@ -279,14 +273,12 @@ export default function DetailPage() {
     const checkDate = new Date(date);
     checkDate.setHours(0, 0, 0, 0);
     
-    // Don't allow past dates
     const today = new Date();
     today.setHours(0, 0, 0, 0);
     if (checkDate < today) {
       return false;
     }
     
-    // If residence has next_available_date, don't allow dates before it
     if (residence?.next_available_date) {
       try {
         const nextAvailable = new Date(residence.next_available_date);
@@ -299,13 +291,11 @@ export default function DetailPage() {
       }
     }
     
-    // Don't allow unavailable dates
     return !isDateUnavailable(checkDate);
   };
 
   // Handle booking
   const handleBooking = () => {
-    // Vérifier si l'utilisateur est connecté
     if (!user) {
       setShowSignUpModal(true);
       return;
@@ -336,13 +326,11 @@ export default function DetailPage() {
       return;
     }
 
-    // Vérifier si les dates sélectionnées sont disponibles
     if (isDateRangeUnavailable(startDate, endDate)) {
       toast.error("Certaines dates sélectionnées ne sont pas disponibles. Veuillez choisir d'autres dates.");
       return;
     }
 
-    // Format dates as YYYY-MM-DD
     const formatDate = (date: Date) => {
       const year = date.getFullYear();
       const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -360,12 +348,9 @@ export default function DetailPage() {
     }, {
       onSuccess: (response) => {
         if (response?.payment_url) {
-          // Afficher un message de succès avec compte à rebours
           toast.success("Redirection vers la page de paiement dans 3 secondes...", {
             duration: 3000,
           });
-          
-          // Redirection après 3 secondes
           setTimeout(() => {
             if (response.payment_url) {
               window.location.href = response.payment_url;
@@ -421,16 +406,11 @@ export default function DetailPage() {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     const now = new Date();
-    
-    // Normaliser les dates pour comparer seulement les jours (sans heures/minutes/secondes)
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const targetDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    
-    // Calculer la différence en jours
     const diffTime = today.getTime() - targetDate.getTime();
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
     
-    // Si c'est aujourd'hui, calculer la différence en minutes
     if (diffDays === 0) {
       const diffMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
       if (diffMinutes < 1) return "À l'instant";
@@ -482,9 +462,44 @@ export default function DetailPage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
       {/* Header avec navigation amélioré */}
-  
+      <div className="bg-white/80 backdrop-blur-md shadow-md border-b sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            <Link 
+              href="/residences" 
+              className="flex items-center gap-2 text-gray-700 hover:text-theme-primary transition-all duration-300 group font-medium"
+            >
+              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+              <span>Retour aux résidences</span>
+            </Link>
+            <div className="flex items-center gap-3">
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="flex items-center gap-2 hover:bg-theme-primary/5 hover:border-theme-primary/30 transition-all"
+              >
+                <Share2 className="w-4 h-4" />
+                <span className="hidden sm:inline">Partager</span>
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className={`flex items-center gap-2 transition-all duration-300 ${
+                  isFavorite 
+                    ? 'text-red-500 border-red-500 bg-red-50 hover:bg-red-100' 
+                    : 'hover:bg-gray-50'
+                }`}
+                onClick={() => setIsFavorite(!isFavorite)}
+              >
+                <Heart className={`w-4 h-4 transition-all ${isFavorite ? 'fill-current scale-110' : ''}`} />
+                <span className="hidden sm:inline">{isFavorite ? 'Favori' : 'Ajouter aux favoris'}</span>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-6 lg:pt-12 lg:pb-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         {/* Galerie d'images */}
         <section className="mb-6">
           <Carousel images={images} />
@@ -496,12 +511,22 @@ export default function DetailPage() {
             <div className="flex-1">
               <div className="flex items-center justify-between gap-4 mb-2">
                 <h1 className="text-3xl lg:text-4xl font-bold text-gray-900 leading-tight flex-1">{residence.name}</h1>
-                <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-100">
-                  <Users className="w-4 h-4 text-theme-primary" />
-                  <span className="font-semibold text-sm text-gray-900 whitespace-nowrap">
-                    {residence.max_guests} voyageur{residence.max_guests > 1 ? 's' : ''}
-                  </span>
-                </div>
+                {residence.piece_number && (
+                  <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-100">
+                    <Home className="w-4 h-4 text-theme-primary" />
+                    <span className="font-semibold text-sm text-gray-900 whitespace-nowrap">
+                      {residence.piece_number} pièce{residence.piece_number > 1 ? 's' : ''}
+                    </span>
+                  </div>
+                )}
+                {!residence.piece_number && residence.max_guests && (
+                  <div className="flex items-center gap-2 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-100">
+                    <Users className="w-4 h-4 text-theme-primary" />
+                    <span className="font-semibold text-sm text-gray-900 whitespace-nowrap">
+                      {residence.max_guests} voyageur{residence.max_guests > 1 ? 's' : ''}
+                    </span>
+                  </div>
+                )}
               </div>
               <div className="flex flex-wrap items-center gap-2 mb-3">
                 {residence.type && (
@@ -509,7 +534,7 @@ export default function DetailPage() {
                     variant="secondary" 
                     className="px-3 py-1 text-xs font-medium bg-theme-primary/10 text-theme-primary border border-theme-primary/20"
                   >
-                    {residence.type}
+                    {formatLabel(residence.type)}
                   </Badge>
                 )}
                 {residence.standing && (
@@ -517,13 +542,17 @@ export default function DetailPage() {
                     variant="secondary" 
                     className="px-3 py-1 text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200"
                   >
-                    {residence.standing}
+                    {formatLabel(residence.standing)}
                   </Badge>
                 )}
               </div>
               <div className="flex items-center gap-2 text-gray-600 mb-4 text-base">
                 <MapPin className="w-4 h-4 text-theme-primary flex-shrink-0" />
-                <span className="truncate">{residence.address}, {residence.city}, {residence.country}</span>
+                <span className="truncate">
+                  {residence.address && `${residence.address}, `}
+                  {residence.city && `${residence.city}, `}
+                  {residence.country}
+                </span>
               </div>
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-1.5 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-100">
@@ -545,8 +574,8 @@ export default function DetailPage() {
                 >
                   {residence.is_available ? (
                     <>
-                  <Check className="w-3 h-3 mr-1" />
-                  Disponible
+                      <Check className="w-3 h-3 mr-1" />
+                      Disponible
                     </>
                   ) : (
                     <>
@@ -575,9 +604,60 @@ export default function DetailPage() {
               ) : (
                 <p className="text-gray-700 leading-relaxed text-base">
                   Découvrez cette résidence exceptionnelle située à {residence.city}, {residence.country}. 
-                  Une expérience de séjour unique vous attend dans cette résidence de type {residence.type.toLowerCase()} avec un standing {residence.standing.toLowerCase()}.
+                  Une expérience de séjour unique vous attend dans cette résidence de type {residence.type ? formatLabel(residence.type).toLowerCase() : 'premium'} avec un standing {residence.standing ? formatLabel(residence.standing).toLowerCase() : 'exceptionnel'}.
                 </p>
               )}
+            </Card>
+
+            {/* Informations détaillées */}
+            <Card className="p-4 lg:p-6 shadow-md border border-gray-100 bg-white">
+              <h2 className="text-xl lg:text-2xl font-bold mb-4 text-gray-900 border-b border-gray-100 pb-3">Informations détaillées</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {residence.piece_number != null && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100">
+                    <div className="w-10 h-10 bg-theme-primary/10 rounded-lg flex items-center justify-center">
+                      <Home className="w-5 h-5 text-theme-primary" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Nombre de pièces</p>
+                      <p className="font-semibold text-gray-900">{residence.piece_number}</p>
+                    </div>
+                  </div>
+                )}
+                {residence.bedrooms != null && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100">
+                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                      <Home className="w-5 h-5 text-blue-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Chambres</p>
+                      <p className="font-semibold text-gray-900">{residence.bedrooms}</p>
+                    </div>
+                  </div>
+                )}
+                {residence.bathrooms != null && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100">
+                    <div className="w-10 h-10 bg-cyan-100 rounded-lg flex items-center justify-center">
+                      <Droplet className="w-5 h-5 text-cyan-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Salles de bain</p>
+                      <p className="font-semibold text-gray-900">{residence.bathrooms}</p>
+                    </div>
+                  </div>
+                )}
+                {residence.max_guests != null && (
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100">
+                    <div className="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                      <Users className="w-5 h-5 text-purple-600" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-gray-500 uppercase tracking-wide">Voyageurs max</p>
+                      <p className="font-semibold text-gray-900">{residence.max_guests}</p>
+                    </div>
+                  </div>
+                )}
+              </div>
             </Card>
 
             {/* Équipements améliorés */}
@@ -585,14 +665,14 @@ export default function DetailPage() {
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
                 <h2 className="text-xl lg:text-2xl font-bold text-gray-900">Équipements et services</h2>
                 {amenities.length > 6 && (
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => setShowAllAmenities(!showAllAmenities)}
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => setShowAllAmenities(!showAllAmenities)}
                     className="hover:bg-theme-primary/5 hover:border-theme-primary/30 transition-all"
-                >
-                  {showAllAmenities ? 'Voir moins' : 'Voir tout'}
-                </Button>
+                  >
+                    {showAllAmenities ? 'Voir moins' : 'Voir tout'}
+                  </Button>
                 )}
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -670,7 +750,6 @@ export default function DetailPage() {
                         comment: reviewForm.comment
                       }, {
                         onSuccess: () => {
-                          // Réinitialiser le formulaire
                           setReviewForm({ note: 0, comment: '' });
                           setShowReviewForm(false);
                         }
@@ -756,8 +835,8 @@ export default function DetailPage() {
                       <div className="flex items-start gap-4">
                         <div className="w-12 h-12 bg-gradient-to-br from-theme-primary to-theme-accent text-white rounded-full flex items-center justify-center font-bold text-lg shadow-md flex-shrink-0">
                           {opinion.firstName.charAt(0)}{opinion.lastName.charAt(0)}
-                      </div>
-                      <div className="flex-1">
+                        </div>
+                        <div className="flex-1">
                           <div className="mb-3">
                             <div className="flex flex-wrap items-center justify-between gap-3 mb-2">
                               <span className="font-bold text-gray-900 text-base">{opinion.name}</span>
@@ -768,7 +847,7 @@ export default function DetailPage() {
                                   </Badge>
                                 )}
                                 <div className="flex items-center gap-0.5">
-                            {[...Array(5)].map((_, i) => (
+                                  {[...Array(5)].map((_, i) => (
                                     <Star key={i} className={`w-4 h-4 ${i < Math.floor(opinion.rating) ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
                                   ))}
                                 </div>
@@ -781,11 +860,11 @@ export default function DetailPage() {
                             )}
                           </div>
                           <p className="text-gray-700 leading-relaxed text-base">{opinion.comment}</p>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
               ) : (
                 <div className="text-center py-8 text-gray-500">
                   <p>Aucun avis pour le moment. Soyez le premier à laisser un avis !</p>
@@ -874,41 +953,6 @@ export default function DetailPage() {
                   </div>
                 </div>
               )}
-
-              {/* Informations supplémentaires */}
-              <div className="mt-6 grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:border-theme-primary/20 transition-all">
-                  <div className="w-10 h-10 bg-theme-primary/10 rounded-lg flex items-center justify-center">
-                    <MapPin className="w-5 h-5 text-theme-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wide">Ville</p>
-                    <p className="font-semibold text-gray-900">{residence.city}</p>
-                  </div>
-                </div>
-                {residence.type && (
-                  <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:border-theme-primary/20 transition-all">
-                    <div className="w-10 h-10 bg-theme-primary/10 rounded-lg flex items-center justify-center">
-                      <Users className="w-5 h-5 text-theme-primary" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Type</p>
-                      <p className="font-semibold text-gray-900">{residence.type}</p>
-                    </div>
-                  </div>
-                )}
-                {residence.standing && (
-                  <div className="flex items-center gap-3 p-4 rounded-xl bg-gradient-to-r from-gray-50 to-white border border-gray-100 hover:border-theme-primary/20 transition-all">
-                    <div className="w-10 h-10 bg-theme-primary/10 rounded-lg flex items-center justify-center">
-                      <Star className="w-5 h-5 text-theme-primary" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 uppercase tracking-wide">Standing</p>
-                      <p className="font-semibold text-gray-900">{residence.standing}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
             </Card>
           </div>
 
@@ -1068,4 +1112,4 @@ export default function DetailPage() {
       <CustomerSignUpModal open={showSignUpModal} onOpenChange={setShowSignUpModal} />
     </div>
   );
-} 
+}

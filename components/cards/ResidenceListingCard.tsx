@@ -3,7 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { type Amenity, type AvailabilityStatus } from "@/hooks/use-residences";
 
-export interface ListingCardProps {
+export interface ResidenceListingCardProps {
   image: string;
   name: string;
   city: string;
@@ -21,7 +21,7 @@ export interface ListingCardProps {
   images?: string[];
 }
 
-const ListingCard: React.FC<ListingCardProps> = ({
+const ResidenceListingCard: React.FC<ResidenceListingCardProps> = ({
   image,
   name,
   city,
@@ -196,4 +196,5 @@ const ListingCard: React.FC<ListingCardProps> = ({
   );
 };
 
-export default ListingCard; 
+export default ResidenceListingCard;
+

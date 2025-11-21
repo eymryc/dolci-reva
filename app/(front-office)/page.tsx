@@ -3,7 +3,7 @@
 import TrueFocus from '@/components/animations/textanimate/TextAnimations/TrueFocus/TrueFocus';
 import SectionHeader from '@/components/ui/SectionHeader';
 import AnimatedButton from '@/components/ui/AnimatedButton';
-import ListingCard from '@/components/cards/ListingCard';
+import ResidenceListingCard from '@/components/cards/ResidenceListingCard';
 import HebergementListingCard from '@/components/cards/HebergementListingCard';
 import React from 'react';
 import { usePublicResidences } from '@/hooks/use-residences';
@@ -173,7 +173,7 @@ export default function Home() {
                 const images = [...allImages, ...galleryImages].filter(Boolean);
 
                 return (
-                  <ListingCard
+                  <ResidenceListingCard
                     key={residence.id}
                     id={residence.id}
                     image={residence.main_image_url || residence.main_image_thumb_url || "/media/hotels/hotel1.jpg"}

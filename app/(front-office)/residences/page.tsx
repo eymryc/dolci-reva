@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card } from '@/components/ui/card';
-import ListingCard from '@/components/cards/ListingCard';
+import ResidenceListingCard from '@/components/cards/ResidenceListingCard';
 import HeroSection from '@/components/sections/HeroSection';
 import { usePublicResidences, type PublicResidencesFilters } from '@/hooks/use-residences';
 import { Search } from "lucide-react";
@@ -192,7 +192,7 @@ export default function ResidencesPage() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {residences.map((residence) => (
-              <ListingCard
+              <ResidenceListingCard
                 key={residence.id}
                 id={residence.id}
                 image={residence.image}

@@ -138,7 +138,7 @@ const ResidenceCard: React.FC<ResidenceCardProps> = ({
   return (
     <Link href={linkHref} className="block group/card">
       <div className="bg-white rounded-xl sm:rounded-2xl shadow-md overflow-hidden flex flex-col sm:flex-row min-h-[280px] h-auto group transition-all duration-300 hover:shadow-2xl hover:-translate-y-1 border border-gray-100 cursor-pointer">
-        {/* Image Section (Left) - 40-50% width */}
+        {/* Image Section (Left) - 40-50% width s */}
         <div className="relative w-full sm:w-2/5 h-48 sm:h-auto sm:min-w-[280px] sm:min-h-[280px] overflow-hidden">
           <Image 
             src={allImages[currentImageIndex] || imageSrc} 

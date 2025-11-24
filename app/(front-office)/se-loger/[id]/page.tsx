@@ -10,6 +10,7 @@ import Link from "next/link";
 import { usePublicDwelling, GalleryImage } from '@/hooks/use-dwellings';
 import { useAuth } from '@/context/AuthContext';
 import { CustomerSignUpModal } from '@/components/auth/CustomerSignUpModal';
+import { VisitRequestModal } from '@/components/VisitRequestModal';
 import { Calendar, Home, MapPin, Droplet, Sofa, Building2, Eye } from 'lucide-react';
 import { 
   Heart, 
@@ -20,7 +21,6 @@ import {
   ChevronRight,
   Loader2
 } from "lucide-react";
-import { toast } from 'sonner';
 
 // Carousel amélioré avec disposition moderne
 function Carousel({ images }: { images: string[] }) {
@@ -165,6 +165,7 @@ export default function HebergementDetailPage() {
   
   const [isFavorite, setIsFavorite] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
+  const [showVisitModal, setShowVisitModal] = useState(false);
   
   // Format price
   const formatPrice = (price: number) => {
@@ -605,17 +606,16 @@ export default function HebergementDetailPage() {
                   if (!user) {
                     setShowSignUpModal(true);
                   } else {
-                    // TODO: Implémenter la logique de contact
-                    toast.success("Fonctionnalité de contact à venir");
+                    setShowVisitModal(true);
                   }
                 }}
                 className="w-full bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-primary/90 hover:to-theme-accent/90 text-white py-5 rounded-xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-0.5"
               >
-                Contacter le propriétaire ou démarcheur
+                Demander une visite
               </Button>
               
               <div className="text-center mt-6 space-y-3">
-                <p className="text-gray-500 text-sm font-medium">Nous vous mettrons en contact avec le propriétaire ou le démarcheur</p>
+                <p className="text-gray-500 text-sm font-medium">Demandez une visite de cet hébergement</p>
                 <div className="flex items-center justify-center gap-2 text-xs text-gray-500 bg-gray-50 px-4 py-2 rounded-full">
                   <Shield className="w-4 h-4 text-theme-primary" />
                   <span className="font-medium">Service sécurisé</span>
@@ -628,6 +628,15 @@ export default function HebergementDetailPage() {
 
       {/* Modal d'inscription Customer */}
       <CustomerSignUpModal open={showSignUpModal} onOpenChange={setShowSignUpModal} />
+      
+      {/* Modal de demande de visite */}
+      {dwelling && (
+        <VisitRequestModal 
+          open={showVisitModal} 
+          onOpenChange={setShowVisitModal} 
+          dwellingId={dwelling.id}
+        />
+      )}
     </div>
   );
 }

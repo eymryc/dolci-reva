@@ -57,13 +57,19 @@ export function QRCodeScannerModal({ open, onOpenChange }: QRCodeScannerModalPro
       const timer = setTimeout(() => {
         startScanning();
       }, 300);
-      return () => clearTimeout(timer);
+      return () => {
+        clearTimeout(timer);
+        if (open) {
+          stopScanning();
+        }
+      };
     }
     return () => {
       if (open) {
         stopScanning();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, isMobile]);
 
   // Nettoyer le scanner quand le modal se ferme

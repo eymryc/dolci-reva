@@ -17,13 +17,14 @@ export function useRechargeWallet() {
   return useMutation({
     mutationFn: async (data: RechargeWalletData) => {
       const response = await api.post<ApiResponse<RechargeWalletResponse>>('/wallets/recharge', data);
+      console.log(response);
       return {
         data: response.data.data as RechargeWalletResponse,
         message: response.data.message,
       };
     },
     onSuccess: (result) => {
-      console.log(result);
+      // console.log(result);
       // Rediriger vers l'URL de paiement
       if (result.data.payment_url) {
         window.location.href = result.data.payment_url;

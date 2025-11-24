@@ -464,6 +464,26 @@ export default function AdminLayout({
                     </span>
                   </div>
                 </div>
+                
+                {/* Séparateur */}
+                <div className="h-3 sm:h-4 lg:h-6 xl:h-8 w-px bg-gray-300"></div>
+                
+                {/* Solde de recharge */}
+                <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-2 xl:gap-3">
+                  <div className="p-0.5 sm:p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded sm:rounded-lg">
+                    <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-[#f08400]" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="hidden sm:inline text-[8px] lg:text-[10px] xl:text-xs text-gray-500 font-medium leading-tight">Recharge</span>
+                    <span className="text-[9px] sm:text-[10px] lg:text-xs xl:text-sm font-bold text-gray-900 leading-tight whitespace-nowrap">
+                      {new Intl.NumberFormat('fr-FR', {
+                        style: 'currency',
+                        currency: 'XOF',
+                        maximumFractionDigits: 0,
+                      }).format(Number(user.wallet?.recharge_balance) || 0)}
+                    </span>
+                  </div>
+                </div>
               </div>
             )}
 

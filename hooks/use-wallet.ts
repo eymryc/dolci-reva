@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { toast } from 'sonner';
 import { ApiResponse, ValidationErrorResponse } from '@/types/api-responses';
@@ -14,19 +14,20 @@ export interface RechargeWalletResponse {
 }
 
 export function useRechargeWallet() {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (data: RechargeWalletData) => {
       const response = await api.post<ApiResponse<RechargeWalletResponse>>('/wallets/recharge', data);
-      return response.data.data as RechargeWalletResponse;
+      return {
+        data: response.data.data as RechargeWalletResponse,
+        message: response.data.message,
+      };
     },
-    onSuccess: (data) => {
+    onSuccess: (result) => {
       // Rediriger vers l'URL de paiement
-      if (data.payment_url) {
-        window.location.href = data.payment_url;
+      if (result.data.payment_url) {
+        window.location.href = result.data.payment_url;
       }
-      toast.success('Redirection vers le paiement...');
+      toast.success(result.message || 'Redirection vers le paiement...');
     },
     onError: (error: unknown) => {
       const axiosError = error as {

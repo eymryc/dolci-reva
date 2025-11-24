@@ -24,7 +24,7 @@ export function useRechargeWallet() {
       };
     },
     onSuccess: (result) => {
-      // console.log(result);
+      console.log(result);
       // Rediriger vers l'URL de paiement
       if (result.data.payment_url) {
         window.location.href = result.data.payment_url;

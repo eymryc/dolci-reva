@@ -152,3 +152,50 @@ export function useCreateVisit() {
   });
 }
 
+// POST - Confirm visit
+export function useConfirmVisit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const response = await api.post(`/visits/${id}/confirm`);
+      return response.data as StandardApiResponse;
+    },
+    onSuccess: (data, visitId) => {
+      queryClient.invalidateQueries({ queryKey: ['visits'] });
+      queryClient.invalidateQueries({ queryKey: ['visits', visitId] });
+      toast.success(data.message || 'Visite confirmée avec succès !');
+    },
+    onError: (error: unknown) => {
+      const axiosError = error as { 
+        response?: { 
+          status?: number;
+          data?: StandardApiResponse | ValidationErrorResponse | { message?: string; error?: string } 
+        } 
+      };
+      
+      // Gérer les erreurs de validation (422)
+      if (axiosError.response?.status === 422) {
+        const validationError = axiosError.response.data as ValidationErrorResponse;
+        if (validationError?.data) {
+          const errorMessages = Object.values(validationError.data)
+            .flat()
+            .join(', ');
+          toast.error(errorMessages || validationError.message || 'Erreurs de validation');
+        } else {
+          toast.error(validationError?.message || 'Erreurs de validation');
+        }
+      } else {
+        // Autres erreurs
+        const errorData = axiosError.response?.data as StandardApiResponse | { message?: string; error?: string };
+        toast.error(
+          (errorData as StandardApiResponse)?.message ||
+          (errorData as { message?: string; error?: string })?.message ||
+          (errorData as { message?: string; error?: string })?.error ||
+          'Erreur lors de la confirmation de la visite'
+        );
+      }
+    },
+  });
+}
+

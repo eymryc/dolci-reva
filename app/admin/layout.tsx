@@ -20,6 +20,7 @@ import {
   Wallet,
   Lock,
   QrCode,
+  Plus,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
@@ -33,6 +34,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { QRCodeScannerModal } from "@/components/admin/QRCodeScannerModal";
+import { RechargeWalletModal } from "@/components/admin/RechargeWalletModal";
 
 interface NavItem {
   name: string;
@@ -90,6 +92,7 @@ export default function AdminLayout({
   });
   const [isDesktop, setIsDesktop] = useState(false);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
+  const [isRechargeModalOpen, setIsRechargeModalOpen] = useState(false);
   const isLoginPage = pathname === "/auth/sign-in";
   const [showVerificationAlert, setShowVerificationAlert] = useState(true);
 
@@ -421,7 +424,7 @@ export default function AdminLayout({
             </button>
           </div>
           
-          <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-3 flex-shrink-0">
+          <div className="flex items-stretch gap-0.5 sm:gap-1 lg:gap-3 flex-shrink-0">
             {/* Wallet Balance Section */}
             {user && (
               <div className="flex items-center gap-0.5 sm:gap-1 xl:gap-3 2xl:gap-4 px-1 sm:px-1.5 xl:px-3 2xl:px-4 h-7 sm:h-auto sm:py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400]/10 to-[#f08400]/5 rounded-md sm:rounded-lg border border-[#f08400]/20 shadow-sm">
@@ -463,6 +466,18 @@ export default function AdminLayout({
                 </div>
               </div>
             )}
+
+            {/* Recharger le solde */}
+            <button 
+              onClick={() => setIsRechargeModalOpen(true)}
+              className="flex items-center gap-0.5 sm:gap-1 xl:gap-3 2xl:gap-4 px-1 sm:px-1.5 xl:px-3 2xl:px-4 h-7 sm:h-auto sm:py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400] to-[#d87200] hover:from-[#d87200] hover:to-[#c06000] rounded-md sm:rounded-lg shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 group self-stretch">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
+                <Plus className="w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-2.5 lg:h-2.5 xl:w-3 xl:h-3 text-[#f08400] font-bold" strokeWidth={3} />
+              </div>
+              <span className="text-white font-bold text-[9px] sm:text-[10px] lg:text-xs xl:text-sm leading-tight whitespace-nowrap">
+                0 F
+              </span>
+            </button>
 
             {/* Notifications */}
             <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0">
@@ -544,6 +559,9 @@ export default function AdminLayout({
 
       {/* QR Code Scanner Modal */}
       <QRCodeScannerModal open={isQRScannerOpen} onOpenChange={setIsQRScannerOpen} />
+      
+      {/* Recharge Wallet Modal */}
+      <RechargeWalletModal open={isRechargeModalOpen} onOpenChange={setIsRechargeModalOpen} />
     </div>
   );
 }

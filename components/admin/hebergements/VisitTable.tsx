@@ -31,7 +31,17 @@ import {
   Calendar,
   MapPin,
   User,
+  MoreVertical,
+  CheckCircle2,
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useConfirmVisit } from "@/hooks/use-visits";
+import { ConfirmationDialog } from "@/components/admin/shared/ConfirmationDialog";
 
 interface VisitTableProps {
   data: Visit[];
@@ -89,10 +99,13 @@ export function VisitTable({
   onRefresh,
   isRefreshing = false,
 }: VisitTableProps) {
+  const confirmVisitMutation = useConfirmVisit();
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [visitToConfirm, setVisitToConfirm] = useState<Visit | null>(null);
 
   const columns = useMemo<ColumnDef<Visit>[]>(
     () => [
@@ -170,9 +183,23 @@ export function VisitTable({
         header: "Visiteur",
         cell: ({ row }) => {
           const visitor = row.original.visitor;
-          if (!visitor) {
-            return <span className="text-gray-400 text-xs sm:text-sm">-</span>;
+          const status = row.original.status;
+          const isConfirmed = status === "CONFIRMED";
+          
+          if (!visitor || !isConfirmed) {
+            return (
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-gray-300" />
+                <div className="text-xs sm:text-sm">
+                  <div className="flex items-center gap-1.5 text-red-500">
+                    <span className="text-xs">🔒</span>
+                    <span className="italic">Données disponibles après confirmation</span>
+                  </div>
+                </div>
+              </div>
+            );
           }
+          
           return (
             <div className="flex items-center gap-2">
               <User className="w-4 h-4 text-gray-400" />
@@ -229,6 +256,46 @@ export function VisitTable({
         header: "Statut",
         cell: ({ row }) => {
           return getStatusBadge(row.getValue("status"));
+        },
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+          const visit = row.original;
+          const isConfirmed = visit.status === "CONFIRMED";
+          
+          // Masquer complètement le dropdown si déjà confirmé
+          if (isConfirmed) {
+            return null;
+          }
+          
+          return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 hover:bg-gray-100"
+                >
+                  <span className="sr-only">Ouvrir le menu</span>
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-48">
+                <DropdownMenuItem
+                  onClick={() => {
+                    setVisitToConfirm(visit);
+                    setIsConfirmDialogOpen(true);
+                  }}
+                  className="cursor-pointer"
+                >
+                  <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
+                  Confirmer la visite
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          );
         },
       },
     ],
@@ -383,6 +450,28 @@ export function VisitTable({
           </Button>
         </div>
       </div>
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        open={isConfirmDialogOpen}
+        onOpenChange={setIsConfirmDialogOpen}
+        onConfirm={() => {
+          if (visitToConfirm) {
+            confirmVisitMutation.mutate(visitToConfirm.id, {
+              onSuccess: () => {
+                setIsConfirmDialogOpen(false);
+                setVisitToConfirm(null);
+              },
+            });
+          }
+        }}
+        title="Confirmer la visite"
+        description="Êtes-vous sûr de vouloir confirmer cette visite ? Une fois confirmée, les informations du visiteur seront visibles."
+        itemName={visitToConfirm?.visit_reference}
+        isLoading={confirmVisitMutation.isPending}
+        confirmText="Confirmer"
+        cancelText="Annuler"
+      />
     </div>
   );
 }

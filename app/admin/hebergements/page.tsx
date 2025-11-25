@@ -152,73 +152,73 @@ export default function HebergementsPage() {
 
           {/* Hébergements Tab */}
           <TabsContent value="hebergements" className="space-y-6">
-            {/* Alerte pour les propriétaires non vérifiés */}
-            {isOwner() && !isOwnerApproved && (
+        {/* Alerte pour les propriétaires non vérifiés */}
+        {isOwner() && !isOwnerApproved && (
               <div className="bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded-lg">
-                <div className="flex items-start">
-                  <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
-                  <div className="flex-1">
-                    <h3 className="text-sm font-semibold text-yellow-800 mb-1">
-                      Vérification requise
-                    </h3>
-                    <p className="text-sm text-yellow-700">
-                      Votre compte doit être vérifié et approuvé avant de pouvoir ajouter un hébergement. 
-                      Veuillez compléter votre vérification dans votre profil.
-                    </p>
-                    <Button
-                      variant="link"
-                      className="mt-2 p-0 h-auto text-yellow-800 hover:text-yellow-900 underline"
-                      onClick={() => router.push("/admin/profile?tab=verification")}
-                    >
-                      Vérifier mon compte
-                    </Button>
-                  </div>
-                </div>
+            <div className="flex items-start">
+              <AlertCircle className="w-5 h-5 text-yellow-600 mt-0.5 mr-3 flex-shrink-0" />
+              <div className="flex-1">
+                <h3 className="text-sm font-semibold text-yellow-800 mb-1">
+                  Vérification requise
+                </h3>
+                <p className="text-sm text-yellow-700">
+                  Votre compte doit être vérifié et approuvé avant de pouvoir ajouter un hébergement. 
+                  Veuillez compléter votre vérification dans votre profil.
+                </p>
+                <Button
+                  variant="link"
+                  className="mt-2 p-0 h-auto text-yellow-800 hover:text-yellow-900 underline"
+                  onClick={() => router.push("/admin/profile?tab=verification")}
+                >
+                  Vérifier mon compte
+                </Button>
               </div>
-            )}
+            </div>
+          </div>
+        )}
 
-            {/* Hébergement Table */}
-            {isLoadingDwellings ? (
-              <div className="flex flex-col items-center justify-center py-16">
-                <Loader2 className="w-12 h-12 animate-spin text-[#f08400] mb-4" />
-                <p className="text-gray-500 text-sm">Chargement des hébergements...</p>
-              </div>
-            ) : (
-              <DwellingTable
-                data={dwellings}
-                onEdit={handleEditDwelling}
-                onDelete={handleDeleteDwelling}
-                isLoading={deleteDwellingMutation.isPending}
-                onRefresh={() => refetchDwellings()}
-                isRefreshing={isRefetchingDwellings}
-                addButton={
-                  <Button
-                    onClick={handleCreateDwelling}
-                    className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-10 sm:h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed px-2 sm:px-4"
-                    disabled={isLoadingDwellings || (isOwner() && !isOwnerApproved)}
-                    title={isOwner() && !isOwnerApproved ? "Votre compte doit être vérifié pour ajouter un hébergement" : undefined}
-                  >
-                    {isLoadingDwellings ? (
-                      <Loader2 className="w-4 h-4 sm:mr-2 animate-spin" />
-                    ) : (
-                      <Plus className="w-4 h-4 sm:mr-2" />
-                    )}
-                    <span className="hidden sm:inline">Ajouter un hébergement</span>
-                  </Button>
-                }
-              />
-            )}
+        {/* Hébergement Table */}
+        {isLoadingDwellings ? (
+          <div className="flex flex-col items-center justify-center py-16">
+            <Loader2 className="w-12 h-12 animate-spin text-[#f08400] mb-4" />
+            <p className="text-gray-500 text-sm">Chargement des hébergements...</p>
+          </div>
+        ) : (
+          <DwellingTable
+            data={dwellings}
+            onEdit={handleEditDwelling}
+            onDelete={handleDeleteDwelling}
+            isLoading={deleteDwellingMutation.isPending}
+            onRefresh={() => refetchDwellings()}
+            isRefreshing={isRefetchingDwellings}
+            addButton={
+              <Button
+                onClick={handleCreateDwelling}
+                className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-10 sm:h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed px-2 sm:px-4"
+                disabled={isLoadingDwellings || (isOwner() && !isOwnerApproved)}
+                title={isOwner() && !isOwnerApproved ? "Votre compte doit être vérifié pour ajouter un hébergement" : undefined}
+              >
+                {isLoadingDwellings ? (
+                  <Loader2 className="w-4 h-4 sm:mr-2 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4 sm:mr-2" />
+                )}
+                <span className="hidden sm:inline">Ajouter un hébergement</span>
+              </Button>
+            }
+          />
+        )}
 
             {/* Delete Confirmation Dialog */}
-            <DeleteConfirmationDialog
-              open={isDwellingDeleteDialogOpen}
-              onOpenChange={setIsDwellingDeleteDialogOpen}
-              onConfirm={handleConfirmDwellingDelete}
-              title="Supprimer l'hébergement"
-              description="Êtes-vous sûr de vouloir supprimer cet hébergement ? Cette action ne peut pas être annulée."
-              itemName={dwellingToDelete?.description || `Hébergement #${dwellingToDelete?.id}`}
-              isLoading={deleteDwellingMutation.isPending}
-            />
+      <DeleteConfirmationDialog
+        open={isDwellingDeleteDialogOpen}
+        onOpenChange={setIsDwellingDeleteDialogOpen}
+        onConfirm={handleConfirmDwellingDelete}
+        title="Supprimer l'hébergement"
+        description="Êtes-vous sûr de vouloir supprimer cet hébergement ? Cette action ne peut pas être annulée."
+        itemName={dwellingToDelete?.description || `Hébergement #${dwellingToDelete?.id}`}
+        isLoading={deleteDwellingMutation.isPending}
+      />
           </TabsContent>
         </Tabs>
       </div>

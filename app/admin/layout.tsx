@@ -469,8 +469,12 @@ export default function AdminLayout({
                 <div className="h-3 sm:h-4 lg:h-6 xl:h-8 w-px bg-gray-300"></div>
                 
                 {/* Solde de recharge */}
-                <div className="flex items-center gap-0.5 sm:gap-1 lg:gap-2 xl:gap-3">
-                  <div className="p-0.5 sm:p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded sm:rounded-lg">
+                <button
+                  onClick={() => setIsRechargeModalOpen(true)}
+                  className="flex items-center gap-0.5 sm:gap-1 lg:gap-2 xl:gap-3 hover:opacity-80 transition-opacity cursor-pointer"
+                  title="Recharger le solde"
+                >
+                  <div className="p-0.5 sm:p-1 lg:p-1.5 xl:p-2 bg-[#f08400]/10 rounded sm:rounded-lg hover:bg-[#f08400]/20 transition-colors">
                     <Plus className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 text-[#f08400]" />
                   </div>
                   <div className="flex flex-col">
@@ -483,21 +487,9 @@ export default function AdminLayout({
                       }).format(Number(user.wallet?.recharge_balance) || 0)}
                     </span>
                   </div>
-                </div>
+                </button>
               </div>
             )}
-
-            {/* Recharger le solde */}
-            <button 
-              onClick={() => setIsRechargeModalOpen(true)}
-              className="flex items-center gap-0.5 sm:gap-1 xl:gap-3 2xl:gap-4 px-1 sm:px-1.5 xl:px-3 2xl:px-4 h-7 sm:h-auto sm:py-1 xl:py-1.5 2xl:py-2 bg-gradient-to-r from-[#f08400] to-[#d87200] hover:from-[#d87200] hover:to-[#c06000] rounded-md sm:rounded-lg shadow-sm hover:shadow-md transition-all duration-200 flex-shrink-0 group self-stretch">
-              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 lg:w-3.5 lg:h-3.5 xl:w-4 xl:h-4 bg-white rounded-full flex items-center justify-center group-hover:scale-110 transition-transform flex-shrink-0">
-                <Plus className="w-1.5 h-1.5 sm:w-2 sm:h-2 lg:w-2.5 lg:h-2.5 xl:w-3 xl:h-3 text-[#f08400] font-bold" strokeWidth={3} />
-              </div>
-              <span className="text-white font-bold text-[9px] sm:text-[10px] lg:text-xs xl:text-sm leading-tight whitespace-nowrap">
-                0 F
-              </span>
-            </button>
 
             {/* Notifications */}
             <button className="relative p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0">

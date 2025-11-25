@@ -25,11 +25,15 @@ export function useRechargeWallet() {
     },
     onSuccess: (result) => {
       console.log(result);
-      // Rediriger vers l'URL de paiement
-      if (result.data.payment_url) {
-        window.location.href = result.data.payment_url;
-      }
+      // Afficher le message de succès
       toast.success(result.message || 'Redirection vers le paiement...');
+      
+      // Rediriger vers l'URL de paiement après un délai pour laisser le temps au toast de s'afficher
+      if (result.data.payment_url) {
+        setTimeout(() => {
+          window.location.href = result.data.payment_url;
+        }, 500); // Délai de 500 millisecondes
+      }
     },
     onError: (error: unknown) => {
       const axiosError = error as {

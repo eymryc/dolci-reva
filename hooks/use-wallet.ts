@@ -2,6 +2,7 @@ import { useQuery, useMutation } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { toast } from 'sonner';
 import { ApiResponse, ValidationErrorResponse, PaginatedApiResponse } from '@/types/api-responses';
+import { logger } from '@/lib/logger';
 
 export interface RechargeWalletData {
   amount: number;
@@ -36,29 +37,74 @@ export interface Transaction {
 
 export type PaginatedTransactionsResponse = PaginatedApiResponse<Transaction>;
 
-// GET - Fetch wallet transactions with pagination
-export function useWalletTransactions(page: number = 1) {
+/**
+ * Catégories de transactions disponibles
+ */
+export enum TransactionCategory {
+  RECHARGE = 'RECHARGE',
+  BOOKING = 'BOOKING',
+  COMMISSION = 'COMMISSION',
+  WITHDRAWAL = 'WITHDRAWAL',
+}
+
+/**
+ * Hook pour récupérer les transactions du portefeuille avec pagination
+ * 
+ * @param page - Numéro de page pour la pagination (défaut: 1)
+ * @param transaction_category - Catégorie de transaction à filtrer (défaut: BOOKING)
+ * @returns {Object} Objet contenant les données, l'état de chargement, et les fonctions de rafraîchissement
+ * 
+ * @example
+ * ```tsx
+ * // Récupérer toutes les transactions BOOKING
+ * const { data, isLoading } = useWalletTransactions(1, TransactionCategory.BOOKING);
+ * 
+ * // Récupérer les transactions RECHARGE
+ * const { data: recharges } = useWalletTransactions(1, TransactionCategory.RECHARGE);
+ * ```
+ */
+export function useWalletTransactions(page: number = 1, transaction_category: TransactionCategory = TransactionCategory.BOOKING) {
   return useQuery({
-    queryKey: ['wallet_transactions', page],
+    queryKey: ['wallet_transactions', page, transaction_category],
     queryFn: async () => {
-      const response = await api.get('/wallet_transactions', { params: { page } });
+      const params: Record<string, string | number> = { 
+        page,
+        transaction_category 
+      };
+      const response = await api.get('/wallet_transactions', { params });
       return response.data as PaginatedTransactionsResponse;
     },
   });
 }
 
+/**
+ * Hook pour initialiser une recharge de portefeuille
+ * 
+ * Redirige automatiquement vers l'URL de paiement après succès.
+ * 
+ * @returns {Object} Mutation object avec les fonctions mutate, isPending, etc.
+ * 
+ * @example
+ * ```tsx
+ * const rechargeMutation = useRechargeWallet();
+ * 
+ * const handleRecharge = () => {
+ *   rechargeMutation.mutate({ amount: 5000 });
+ * };
+ * ```
+ */
 export function useRechargeWallet() {
   return useMutation({
     mutationFn: async (data: RechargeWalletData) => {
       const response = await api.post<ApiResponse<RechargeWalletResponse>>('/wallets/recharge', data);
-      console.log(response);
+      logger.debug('Wallet recharge response:', response);
       return {
         data: response.data.data as RechargeWalletResponse,
         message: response.data.message,
       };
     },
     onSuccess: (result) => {
-      console.log(result);
+      logger.info('Wallet recharge successful:', result);
       // Afficher le message de succès
       toast.success(result.message || 'Redirection vers le paiement...');
       

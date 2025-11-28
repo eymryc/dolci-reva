@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { logger } from "@/lib/logger";
 
 export interface AddressSuggestion {
   geometry: {
@@ -48,7 +49,7 @@ export function useAddressAutocomplete(query: string, debounceMs: number = 200) 
         // Limiter géographiquement à la Côte d'Ivoire (bbox: minLon,minLat,maxLon,maxLat)
         url.searchParams.set("bbox", "-8.6,4.4,-2.5,10.7");
         
-        console.log("Fetching Photon:", url.toString());
+        logger.debug("Fetching Photon:", url.toString());
         
         const response = await fetch(url.toString(), {
           headers: {
@@ -62,11 +63,11 @@ export function useAddressAutocomplete(query: string, debounceMs: number = 200) 
         }
 
         const data = await response.json();
-        console.log("Photon raw response:", data);
+        logger.debug("Photon raw response:", data);
         
         // Photon retourne les données dans un format GeoJSON avec features
         const features = data?.features || [];
-        console.log("Photon features count:", features.length);
+        logger.debug("Photon features count:", features.length);
         
         // Filtrer les résultats pour la Côte d'Ivoire (code pays CI)
         const filteredData = features.filter((item: AddressSuggestion) => {
@@ -75,10 +76,10 @@ export function useAddressAutocomplete(query: string, debounceMs: number = 200) 
           return countryCode === "ci" || !countryCode;
         });
         
-        console.log("Photon filtered results:", filteredData.length, "suggestions", filteredData);
+        logger.debug("Photon filtered results:", filteredData.length, "suggestions", filteredData);
         setSuggestions(filteredData);
       } catch (err) {
-        console.error("Erreur autocomplétion:", err);
+        logger.error("Erreur autocomplétion:", err);
         setError(err instanceof Error ? err.message : "Impossible de récupérer les suggestions");
         setSuggestions([]);
       } finally {

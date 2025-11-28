@@ -1,6 +1,6 @@
 "use client"
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import api from '@/lib/axios';
 
 export interface BusinessType {
@@ -143,8 +143,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, [refreshUser]);
 
+  // Mémoriser la valeur du contexte pour éviter les re-renders inutiles
+  const contextValue = useMemo(
+    () => ({ user, loading, refreshUser, logout }),
+    [user, loading, refreshUser]
+  );
+
   return (
-    <AuthContext.Provider value={{ user, loading, refreshUser, logout }}>
+    <AuthContext.Provider value={contextValue}>
       {children}
     </AuthContext.Provider>
   );

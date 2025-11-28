@@ -1,15 +1,10 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import type { Amenity } from "@/types/common";
 
-// Types
-export interface Amenity {
-  id: number;
-  name: string;
-  description?: string;
-  created_at?: string;
-  updated_at?: string;
-}
+// Réexporter le type pour la compatibilité
+export type { Amenity };
 
 export interface AmenityFormData {
   name: string;

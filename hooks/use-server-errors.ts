@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { UseFormSetError, FieldValues, Path } from "react-hook-form";
+import { logger } from "@/lib/logger";
 
 interface ServerErrorResponse {
   response?: {
@@ -32,8 +33,8 @@ export function useServerErrors<T extends FieldValues>({
       if (error && typeof error === "object" && "response" in error) {
         const axiosError = error as ServerErrorResponse;
 
-        // Afficher les erreurs dans la console pour le débogage
-        console.log("Erreurs du serveur:", axiosError.response?.data?.data);
+        // Logger les erreurs pour le débogage
+        logger.debug("Erreurs du serveur:", axiosError.response?.data?.data);
 
         // Si des erreurs détaillées existent dans data.data
         if (axiosError.response?.data?.data) {

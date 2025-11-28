@@ -68,7 +68,7 @@ const dwellingSchema = z.object({
   owner_id: z.number().optional(),
 });
 
-type DwellingFormValues = z.infer<typeof dwellingSchema>;
+export type DwellingFormValues = z.infer<typeof dwellingSchema>;
 
 interface DwellingFormProps {
   onSubmit: (data: DwellingFormData, images?: { mainImage?: File | null; galleryImages?: File[] }) => void;
@@ -78,7 +78,7 @@ interface DwellingFormProps {
     gallery_images?: Array<{ url?: string } | string>;
   };
   isLoading?: boolean;
-  onServerError?: (error: unknown) => { errorMessage: string; hasDetailedErrors: boolean };
+  onServerError?: (handleServerError: (error: unknown) => { errorMessage: string; hasDetailedErrors: boolean }) => void;
 }
 
 export function DwellingForm({
@@ -185,18 +185,8 @@ export function DwellingForm({
   // Exposer handleServerError au parent via callback
   React.useEffect(() => {
     if (onServerError) {
-      // Créer un objet mutable pour stocker la fonction
-      const errorHandler = {
-        handle: handleServerError,
-      };
-      // Stocker dans window pour que le parent puisse y accéder
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      (window as any).__dwellingFormHandleServerError = errorHandler.handle;
+      onServerError(handleServerError);
     }
-    return () => {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      delete (window as any).__dwellingFormHandleServerError;
-    };
   }, [handleServerError, onServerError]);
 
   // États pour les images

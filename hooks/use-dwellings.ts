@@ -3,17 +3,14 @@ import { AxiosError } from "axios";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 import { usePermissions } from "./use-permissions";
+import type { Amenity } from "@/types/common";
+import type { Owner as BaseOwner } from "@/types/common";
 
-// Types (réutilisés depuis use-residences)
-export interface Amenity {
-  id: number;
-  name: string;
-}
+// Réexporter le type Amenity pour la compatibilité
+export type { Amenity };
 
-export interface Owner {
-  id: number;
-  first_name: string;
-  last_name: string;
+// Owner étendu avec des propriétés supplémentaires pour les dwellings
+export interface Owner extends BaseOwner {
   phone: string;
   email: string;
   type: string;

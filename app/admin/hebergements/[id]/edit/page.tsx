@@ -15,6 +15,11 @@ export default function EditDwellingPage() {
   
   const { data: dwelling, isLoading, error } = useDwelling(id);
   const updateDwellingMutation = useUpdateDwelling();
+  
+  // Référence pour stocker handleServerError du formulaire
+  const handleServerErrorRef = React.useRef<
+    ((error: unknown) => { errorMessage: string; hasDetailedErrors: boolean }) | null
+  >(null);
 
   const handleSubmit = (
     data: DwellingFormData,
@@ -29,10 +34,8 @@ export default function EditDwellingPage() {
         },
         onError: (error: unknown) => {
           // Utiliser handleServerError du formulaire si disponible
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          const handleServerError = (window as any).__dwellingFormHandleServerError;
-          if (handleServerError) {
-            const { errorMessage, hasDetailedErrors } = handleServerError(error);
+          if (handleServerErrorRef.current) {
+            const { errorMessage, hasDetailedErrors } = handleServerErrorRef.current(error);
             // Afficher le toast seulement s'il n'y a pas d'erreurs détaillées
             if (!hasDetailedErrors) {
               toast.error(errorMessage);
@@ -50,6 +53,13 @@ export default function EditDwellingPage() {
       }
     );
   };
+  
+  const handleServerErrorCallback = React.useCallback(
+    (handleServerError: (error: unknown) => { errorMessage: string; hasDetailedErrors: boolean }) => {
+      handleServerErrorRef.current = handleServerError;
+    },
+    []
+  );
 
   const handleCancel = () => {
     router.push("/admin/hebergements");
@@ -140,7 +150,7 @@ export default function EditDwellingPage() {
         <DwellingForm
           onSubmit={handleSubmit}
           onCancel={handleCancel}
-          onServerError={() => ({ errorMessage: "", hasDetailedErrors: false })}
+          onServerError={handleServerErrorCallback}
           defaultValues={{
             phone: dwelling.phone || "",
             whatsapp: dwelling.whatsapp || "",

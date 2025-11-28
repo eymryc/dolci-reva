@@ -3,25 +3,11 @@ import { AxiosError } from "axios";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 import { usePermissions } from "./use-permissions";
+import { logger } from "@/lib/logger";
+import type { Amenity, Owner } from "@/types/common";
 
-// Types
-export interface Amenity {
-  id: number;
-  name: string;
-}
-
-export interface Owner {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  type: string;
-  email_verified_at?: string | null;
-  deleted_at?: string | null;
-  created_at: string;
-  updated_at: string;
-}
+// Réexporter les types pour la compatibilité
+export type { Amenity, Owner };
 
 export interface GalleryImage {
   id: number;
@@ -100,7 +86,20 @@ export interface ResidenceFormData {
   amenities?: number[];
 }
 
-// GET - Fetch all residences (admin)
+/**
+ * Hook pour récupérer toutes les résidences (admin)
+ * 
+ * Les résidences sont filtrées automatiquement selon les permissions :
+ * - Les admins voient toutes les résidences
+ * - Les propriétaires voient uniquement leurs propres résidences
+ * 
+ * @returns {Object} Objet contenant les données, l'état de chargement, et les fonctions de rafraîchissement
+ * 
+ * @example
+ * ```tsx
+ * const { data: residences, isLoading, refetch } = useResidences();
+ * ```
+ */
 export function useResidences() {
   const { canViewAll, getUserId } = usePermissions();
   const userId = getUserId();
@@ -125,15 +124,39 @@ export function useResidences() {
   });
 }
 
-// GET - Fetch public residences with filters
+/**
+ * Filtres pour la recherche publique de résidences
+ */
 export interface PublicResidencesFilters {
+  /** Terme de recherche textuel */
   search?: string;
+  /** Ville de la résidence */
   city?: string;
+  /** Type de résidence (STUDIO, APPARTEMENT, etc.) */
   type?: string;
+  /** Standing de la résidence (STANDARD, PREMIUM, etc.) */
   standing?: string;
+  /** Ordre de tri par prix ('asc' ou 'desc') */
   order_price?: 'asc' | 'desc';
 }
 
+/**
+ * Hook pour récupérer les résidences publiques avec filtres
+ * 
+ * Utilisé pour la recherche publique (front-office) sans authentification requise.
+ * 
+ * @param filters - Filtres optionnels pour la recherche
+ * @returns {Object} Objet contenant les données, l'état de chargement, et l'erreur éventuelle
+ * 
+ * @example
+ * ```tsx
+ * const { data: residences, isLoading } = usePublicResidences({
+ *   city: 'Abidjan',
+ *   type: 'APPARTEMENT',
+ *   order_price: 'asc'
+ * });
+ * ```
+ */
 export function usePublicResidences(filters?: PublicResidencesFilters) {
   return useQuery({
     queryKey: ["public", "residences", filters],
@@ -156,7 +179,17 @@ export function usePublicResidences(filters?: PublicResidencesFilters) {
   });
 }
 
-// GET - Fetch single public residence
+/**
+ * Hook pour récupérer une résidence publique par son ID
+ * 
+ * @param id - Identifiant de la résidence
+ * @returns {Object} Objet contenant les données de la résidence, l'état de chargement, et l'erreur éventuelle
+ * 
+ * @example
+ * ```tsx
+ * const { data: residence, isLoading } = usePublicResidence(123);
+ * ```
+ */
 export function usePublicResidence(id: number) {
   return useQuery({
     queryKey: ["public", "residences", id],
@@ -168,7 +201,17 @@ export function usePublicResidence(id: number) {
 }
 
 
-// GET - Fetch single residence
+/**
+ * Hook pour récupérer une résidence par son ID
+ * 
+ * @param id - Identifiant de la résidence
+ * @returns {Object} Objet contenant les données de la résidence, l'état de chargement, et l'erreur éventuelle
+ * 
+ * @example
+ * ```tsx
+ * const { data: residence, isLoading } = useResidence(123);
+ * ```
+ */
 export function useResidence(id: number) {
   return useQuery({
     queryKey: ["residences", id],
@@ -180,7 +223,25 @@ export function useResidence(id: number) {
   });
 }
 
-// POST - Create residence
+/**
+ * Hook pour créer une nouvelle résidence
+ * 
+ * Invalide automatiquement le cache des résidences après succès.
+ * 
+ * @returns {Object} Mutation object avec les fonctions mutate, isPending, etc.
+ * 
+ * @example
+ * ```tsx
+ * const createMutation = useCreateResidence();
+ * 
+ * const handleCreate = () => {
+ *   createMutation.mutate({
+ *     data: { name: 'Ma résidence', ... },
+ *     images: { mainImage: file, galleryImages: [file1, file2] }
+ *   });
+ * };
+ * ```
+ */
 export function useCreateResidence() {
   const queryClient = useQueryClient();
 
@@ -244,7 +305,26 @@ export function useCreateResidence() {
   });
 }
 
-// PUT - Update residence
+/**
+ * Hook pour mettre à jour une résidence existante
+ * 
+ * Invalide automatiquement le cache des résidences après succès.
+ * 
+ * @returns {Object} Mutation object avec les fonctions mutate, isPending, etc.
+ * 
+ * @example
+ * ```tsx
+ * const updateMutation = useUpdateResidence();
+ * 
+ * const handleUpdate = () => {
+ *   updateMutation.mutate({
+ *     id: 123,
+ *     data: { name: 'Nouveau nom', ... },
+ *     images: { mainImage: file }
+ *   });
+ * };
+ * ```
+ */
 export function useUpdateResidence() {
   const queryClient = useQueryClient();
 
@@ -260,7 +340,7 @@ export function useUpdateResidence() {
     }) => {
       const formData = new FormData();
       
-      console.log(data);
+      logger.debug('Residence form data:', data);
       // Add form data fields
       Object.entries(data).forEach(([key, value]) => {
         if (key === "amenities") {
@@ -314,7 +394,22 @@ export function useUpdateResidence() {
   });
 }
 
-// DELETE - Delete residence
+/**
+ * Hook pour supprimer une résidence
+ * 
+ * Invalide automatiquement le cache des résidences après succès.
+ * 
+ * @returns {Object} Mutation object avec les fonctions mutate, isPending, etc.
+ * 
+ * @example
+ * ```tsx
+ * const deleteMutation = useDeleteResidence();
+ * 
+ * const handleDelete = () => {
+ *   deleteMutation.mutate(123);
+ * };
+ * ```
+ */
 export function useDeleteResidence() {
   const queryClient = useQueryClient();
 
@@ -337,19 +432,45 @@ export function useDeleteResidence() {
   });
 }
 
-// POST - Book residence
+/**
+ * Données pour réserver une résidence
+ */
 export interface ResidenceBookingData {
   start_date: string; // Format: YYYY-MM-DD
   end_date: string; // Format: YYYY-MM-DD
   guests: number;
 }
 
+/**
+ * Réponse de réservation d'une résidence
+ */
 export interface ResidenceBookingResponse {
   data?: unknown;
   payment_url?: string;
   message?: string;
 }
 
+/**
+ * Hook pour réserver une résidence
+ * 
+ * @returns {Object} Mutation object avec les fonctions mutate, isPending, etc.
+ * 
+ * @example
+ * ```tsx
+ * const bookMutation = useBookResidence();
+ * 
+ * const handleBook = () => {
+ *   bookMutation.mutate({
+ *     residenceId: 123,
+ *     data: {
+ *       start_date: '2025-12-01',
+ *       end_date: '2025-12-05',
+ *       guests: 2
+ *     }
+ *   });
+ * };
+ * ```
+ */
 export function useBookResidence() {
   return useMutation({
     mutationFn: async ({

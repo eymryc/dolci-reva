@@ -455,20 +455,16 @@ export function DwellingTable({
               ))}
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {table.getRowModel().rows.length === 0 ? (
+              {isLoading ? (
                 <tr>
                   <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-500">
-                    {isLoading ? (
-                      <div className="flex flex-col items-center gap-2">
-                        <RefreshCw className="w-6 h-6 animate-spin text-[#f08400]" />
-                        <span>Chargement...</span>
-                      </div>
-                    ) : (
-                      "Aucun hébergement trouvé"
-                    )}
+                    <div className="flex flex-col items-center gap-2">
+                      <RefreshCw className="w-6 h-6 animate-spin text-[#f08400]" />
+                      <span>Chargement...</span>
+                    </div>
                   </td>
                 </tr>
-              ) : (
+              ) : table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
@@ -488,6 +484,12 @@ export function DwellingTable({
                     })}
                   </tr>
                 ))
+              ) : (
+                <tr>
+                  <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-500">
+                    Aucune donnée
+                  </td>
+                </tr>
               )}
             </tbody>
           </table>

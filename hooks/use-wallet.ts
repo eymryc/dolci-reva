@@ -1,7 +1,7 @@
-import { useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { toast } from 'sonner';
-import { ApiResponse, ValidationErrorResponse } from '@/types/api-responses';
+import { ApiResponse, ValidationErrorResponse, PaginatedApiResponse } from '@/types/api-responses';
 
 export interface RechargeWalletData {
   amount: number;
@@ -11,6 +11,40 @@ export interface RechargeWalletResponse {
   payment_url: string;
   reference: string;
   amount: number;
+}
+
+export interface TransactionUser {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
+export interface Transaction {
+  id: number;
+  wallet_id: string;
+  type: string;
+  transaction_type?: string;
+  transaction_category: string;
+  amount: string;
+  reason: string;
+  performed_by: string;
+  performed_by_user: TransactionUser;
+  created_at: string;
+  updated_at: string;
+}
+
+export type PaginatedTransactionsResponse = PaginatedApiResponse<Transaction>;
+
+// GET - Fetch wallet transactions with pagination
+export function useWalletTransactions(page: number = 1) {
+  return useQuery({
+    queryKey: ['wallet_transactions', page],
+    queryFn: async () => {
+      const response = await api.get('/wallet_transactions', { params: { page } });
+      return response.data as PaginatedTransactionsResponse;
+    },
+  });
 }
 
 export function useRechargeWallet() {

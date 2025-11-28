@@ -377,7 +377,7 @@ export function ResidenceTable({
               ) : (
                 <tr>
                   <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
-                    Aucune résidence trouvée.
+                    Aucune donnée
                   </td>
                 </tr>
               )}

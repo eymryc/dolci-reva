@@ -242,7 +242,7 @@ export function AmenityTable({
               ) : (
                 <tr>
                   <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
-                    Aucune commodité trouvée.
+                    Aucune donnée
                   </td>
                 </tr>
               )}

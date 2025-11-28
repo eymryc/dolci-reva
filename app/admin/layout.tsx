@@ -21,6 +21,8 @@ import {
   Lock,
   QrCode,
   Plus,
+  Receipt,
+  ArrowUpDown,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
@@ -308,6 +310,46 @@ export default function AdminLayout({
                   )}
                 </Link>
               )}
+              
+              {/* Transactions */}
+              <Link
+                href="/admin/transactions"
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsSidebarOpen(false);
+                  }
+                }}
+                className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${pathname === "/admin/transactions" || pathname.startsWith("/admin/transactions/")
+                    ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
+                    : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
+                }`}
+              >
+                <Receipt className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${pathname === "/admin/transactions" || pathname.startsWith("/admin/transactions/") ? "scale-110" : "group-hover:scale-110"}`} />
+                <span className={`text-xs sm:text-sm font-medium transition-all ${pathname === "/admin/transactions" || pathname.startsWith("/admin/transactions/") ? 'text-white' : 'text-gray-700'}`}>Transactions</span>
+                {(pathname === "/admin/transactions" || pathname.startsWith("/admin/transactions/")) && (
+                  <div className="absolute right-1 sm:right-2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-pulse"></div>
+                )}
+              </Link>
+
+              {/* Mes opérations */}
+              <Link
+                href="/admin/operations"
+                onClick={() => {
+                  if (window.innerWidth < 1024) {
+                    setIsSidebarOpen(false);
+                  }
+                }}
+                className={`group relative flex items-center gap-2 sm:gap-3 px-2 sm:px-4 py-2 sm:py-3 rounded-lg sm:rounded-xl transition-all duration-200 ${pathname === "/admin/operations" || pathname.startsWith("/admin/operations/")
+                    ? "bg-[#f08400] text-white shadow-lg shadow-[#f08400]/25 scale-[1.02]"
+                    : "text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow-md"
+                }`}
+              >
+                <ArrowUpDown className={`w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 ${pathname === "/admin/operations" || pathname.startsWith("/admin/operations/") ? "scale-110" : "group-hover:scale-110"}`} />
+                <span className={`text-xs sm:text-sm font-medium transition-all ${pathname === "/admin/operations" || pathname.startsWith("/admin/operations/") ? 'text-white' : 'text-gray-700'}`}>Mes opérations</span>
+                {(pathname === "/admin/operations" || pathname.startsWith("/admin/operations/")) && (
+                  <div className="absolute right-1 sm:right-2 w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-white animate-pulse"></div>
+                )}
+              </Link>
             </div>
           )}
         </nav>

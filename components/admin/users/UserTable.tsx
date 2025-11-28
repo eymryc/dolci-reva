@@ -646,7 +646,7 @@ export function UserTable({
               ) : (
                 <tr>
                   <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
-                    Aucun utilisateur trouvé.
+                    Aucune donnée
                   </td>
                 </tr>
               )}

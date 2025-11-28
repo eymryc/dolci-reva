@@ -394,7 +394,7 @@ export function VisitTable({
             ) : (
               <tr>
                 <td colSpan={columns.length} className="h-24 text-center text-gray-500 text-sm">
-                  Aucune visite trouvée.
+                  Aucune donnée
                 </td>
               </tr>
             )}

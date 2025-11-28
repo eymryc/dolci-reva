@@ -256,7 +256,7 @@ export function CommissionTable({
               ) : (
                 <tr>
                   <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
-                    Aucune commission trouvée.
+                    Aucune donnée
                   </td>
                 </tr>
               )}

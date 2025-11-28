@@ -479,7 +479,7 @@ export function BookingTable({
               ) : (
                 <tr>
                   <td colSpan={columns.length} className="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
-                    Aucune réservation trouvée.
+                    Aucune donnée
                   </td>
                 </tr>
               )}

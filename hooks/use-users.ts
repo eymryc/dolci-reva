@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import { PaginatedApiResponse } from "@/types/api-responses";
 import { usePermissions } from "./use-permissions";
 
 // Types
@@ -73,29 +74,7 @@ export interface User {
   deleted_at?: string | null;
 }
 
-export interface PaginatedUsersResponse {
-  data: User[];
-  links: {
-    first: string | null;
-    last: string | null;
-    prev: string | null;
-    next: string | null;
-  };
-  meta: {
-    current_page: number;
-    from: number;
-    last_page: number;
-    links: Array<{
-      url: string | null;
-      label: string;
-      active: boolean;
-    }>;
-    path: string;
-    per_page: number;
-    to: number;
-    total: number;
-  };
-}
+export type PaginatedUsersResponse = PaginatedApiResponse<User>;
 
 export interface UserFormData {
   first_name: string;

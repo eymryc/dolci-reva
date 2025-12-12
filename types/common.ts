@@ -14,7 +14,7 @@ export interface Amenity {
 }
 
 /**
- * Type pour un propriétaire
+ * Type pour un propriétaires
  */
 export interface Owner {
   id: number;

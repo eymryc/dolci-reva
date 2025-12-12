@@ -11,8 +11,9 @@ import React, { useMemo } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Amenity } from "@/hooks/use-amenities";
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { DataTable } from "@/components/admin/shared/DataTable";
+import { ActionButtons } from "@/components/admin/shared/ActionButtons";
 
 interface AmenityTableProps {
   data: Amenity[];
@@ -77,26 +78,11 @@ export function AmenityTable({
         cell: ({ row }) => {
           const amenity = row.original;
           return (
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onEdit(amenity)}
-                className="hover:bg-blue-50 hover:text-blue-600"
-                aria-label={`Modifier ${amenity.name}`}
-              >
-                <Edit2 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDelete(amenity)}
-                className="hover:bg-red-50 hover:text-red-600"
-                aria-label={`Supprimer ${amenity.name}`}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
+            <ActionButtons
+              onEdit={() => onEdit(amenity)}
+              onDelete={() => onDelete(amenity)}
+              showDirectButtons={true}
+            />
           );
         },
       },

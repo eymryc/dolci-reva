@@ -57,10 +57,11 @@ export function useCreateOpinion() {
       });
       toast.success("Votre avis a été publié avec succès !");
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
+      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
       toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
+        axiosError.response?.data?.message ||
+          axiosError.response?.data?.error ||
           "Échec de la publication de l'avis"
       );
     },

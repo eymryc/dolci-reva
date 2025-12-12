@@ -23,6 +23,10 @@ import {
   Plus,
   Receipt,
   ArrowUpDown,
+  ChevronRight,
+  Building2,
+  UtensilsCrossed,
+  Coffee,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
@@ -37,6 +41,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { QRCodeScannerModal } from "@/components/admin/QRCodeScannerModal";
 import { RechargeWalletModal } from "@/components/admin/RechargeWalletModal";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 interface NavItem {
   name: string;
@@ -50,6 +62,9 @@ const allNavItems: NavItem[] = [
   { name: "Profil", icon: User, href: "/admin/profile", permission: () => true }, // Accessible à tous les utilisateurs connectés
   { name: "Résidences", icon: Home, href: "/admin/residences", permission: () => true }, // Accessible à tous les utilisateurs connectés
   { name: "Hebergements", icon: Home, href: "/admin/hebergements", permission: () => true }, // Accessible à tous les utilisateurs connectés
+  { name: "Hôtels", icon: Building2, href: "/admin/hotels", permission: () => true }, // Accessible à tous les utilisateurs connectés
+  { name: "Restaurants", icon: UtensilsCrossed, href: "/admin/restaurants", permission: () => true }, // Accessible à tous les utilisateurs connectés
+  { name: "nightlife", icon: Coffee, href: "/admin/lounges", permission: () => true }, // Accessible à tous les utilisateurs connectés
 ];
 
 // Fonction pour obtenir les initiales du nom
@@ -74,6 +89,156 @@ const getFullName = (first_name: string | undefined, last_name: string | undefin
   if (!first_name && !last_name) return "Utilisateur";
   const parts = [first_name, last_name].filter(Boolean);
   return parts.join(" ") || "Utilisateur";
+};
+
+// Fonction pour obtenir le titre de la page et le fil d'Ariane
+const getPageInfo = (pathname: string) => {
+  const routes: Record<string, { title: string; breadcrumbs: Array<{ label: string; href?: string }> }> = {
+    "/admin/dashboard": {
+      title: "Dashboard",
+      breadcrumbs: [{ label: "Dashboard" }],
+    },
+    "/admin/profile": {
+      title: "Profil",
+      breadcrumbs: [{ label: "Profil" }],
+    },
+    "/admin/residences": {
+      title: "Résidences",
+      breadcrumbs: [{ label: "Résidences" }],
+    },
+    "/admin/residences/new": {
+      title: "Nouvelle résidence",
+      breadcrumbs: [{ label: "Résidences", href: "/admin/residences" }, { label: "Nouvelle résidence" }],
+    },
+    "/admin/hebergements": {
+      title: "Hébergements",
+      breadcrumbs: [{ label: "Hébergements" }],
+    },
+    "/admin/hebergements/new": {
+      title: "Nouvel hébergement",
+      breadcrumbs: [{ label: "Hébergements", href: "/admin/hebergements" }, { label: "Nouvel hébergement" }],
+    },
+    "/admin/hotels": {
+      title: "Hôtels",
+      breadcrumbs: [{ label: "Hôtels" }],
+    },
+    "/admin/hotels/new": {
+      title: "Nouvel hôtel",
+      breadcrumbs: [{ label: "Hôtels", href: "/admin/hotels" }, { label: "Nouvel hôtel" }],
+    },
+    "/admin/restaurants": {
+      title: "Restaurants",
+      breadcrumbs: [{ label: "Restaurants" }],
+    },
+    "/admin/restaurants/new": {
+      title: "Nouveau restaurant",
+      breadcrumbs: [{ label: "Restaurants", href: "/admin/restaurants" }, { label: "Nouveau restaurant" }],
+    },
+    "/admin/lounges": {
+      title: "nightlife",
+      breadcrumbs: [{ label: "nightlife" }],
+    },
+    "/admin/lounges/new": {
+      title: "Mon espace",
+      breadcrumbs: [{ label: "nightlife", href: "/admin/lounges" }, { label: "Mon espace" }],
+    },
+    "/admin/settings": {
+      title: "Paramètres",
+      breadcrumbs: [{ label: "Paramètres" }],
+    },
+    "/admin/users": {
+      title: "Utilisateurs",
+      breadcrumbs: [{ label: "Utilisateurs" }],
+    },
+    "/admin/transactions": {
+      title: "Transactions",
+      breadcrumbs: [{ label: "Transactions" }],
+    },
+    "/admin/operations": {
+      title: "Mes opérations",
+      breadcrumbs: [{ label: "Mes opérations" }],
+    },
+  };
+
+  // Vérifier les routes dynamiques
+  if (pathname.startsWith("/admin/residences/") && pathname.includes("/edit")) {
+    return {
+      title: "Modifier la résidence",
+      breadcrumbs: [
+        { label: "Résidences", href: "/admin/residences" },
+        { label: "Modifier" },
+      ],
+    };
+  }
+
+  if (pathname.startsWith("/admin/hebergements/") && pathname.includes("/edit")) {
+    return {
+      title: "Modifier l'hébergement",
+      breadcrumbs: [
+        { label: "Hébergements", href: "/admin/hebergements" },
+        { label: "Modifier" },
+      ],
+    };
+  }
+
+  if (pathname.startsWith("/admin/hebergements/visits/")) {
+    return {
+      title: "Détails de la visite",
+      breadcrumbs: [
+        { label: "Hébergements", href: "/admin/hebergements" },
+        { label: "Visites", href: "/admin/hebergements?tab=visits" },
+        { label: "Détails" },
+      ],
+    };
+  }
+
+  if (pathname.startsWith("/admin/hotels/") && pathname.includes("/edit") && !pathname.includes("/rooms")) {
+    return {
+      title: "Modifier l'hôtel",
+      breadcrumbs: [
+        { label: "Hôtels", href: "/admin/hotels" },
+        { label: "Modifier" },
+      ],
+    };
+  }
+
+  if (pathname.startsWith("/admin/restaurants/") && pathname.includes("/edit")) {
+    return {
+      title: "Modifier le restaurant",
+      breadcrumbs: [
+        { label: "Restaurants", href: "/admin/restaurants" },
+        { label: "Modifier" },
+      ],
+    };
+  }
+
+  if (pathname.startsWith("/admin/hotels/rooms/") && pathname.includes("/edit")) {
+    return {
+      title: "Modifier la chambre",
+      breadcrumbs: [
+        { label: "Hôtels", href: "/admin/hotels" },
+        { label: "Chambres" },
+        { label: "Modifier" },
+      ],
+    };
+  }
+
+  if (pathname.startsWith("/admin/hotels/rooms/new")) {
+    return {
+      title: "Nouvelle chambre",
+      breadcrumbs: [
+        { label: "Hôtels", href: "/admin/hotels" },
+        { label: "Chambres" },
+        { label: "Nouvelle chambre" },
+      ],
+    };
+  }
+
+  // Route par défaut
+  return routes[pathname] || {
+    title: "Admin",
+    breadcrumbs: [{ label: "Admin" }],
+  };
 };
 
 export default function AdminLayout({
@@ -457,13 +622,55 @@ export default function AdminLayout({
         
         {/* Header */}
         <header className="h-auto min-h-[60px] sm:min-h-[70px] lg:h-20 bg-white/80 backdrop-blur-sm border-b border-gray-200/50 px-1.5 sm:px-2 lg:px-6 py-1 sm:py-1.5 lg:py-0 flex flex-row items-center justify-between gap-1 sm:gap-1.5 lg:gap-3 shadow-sm overflow-x-auto">
-          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 flex-shrink-0">
+          <div className="flex items-center gap-1 sm:gap-2 lg:gap-4 flex-1 min-w-0">
             <button 
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="lg:hidden p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
             >
               <Menu className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" />
             </button>
+            
+            {/* Page Title and Breadcrumb */}
+            <div className="hidden lg:flex flex-col gap-2 min-w-0 flex-1 pl-2">
+              <div className="flex items-center gap-3">
+                <div className="h-8 w-1 bg-gradient-to-b from-[#f08400] to-[#d87200] rounded-full"></div>
+                <h1 className="text-xl xl:text-2xl 2xl:text-3xl font-bold text-gray-900 truncate tracking-tight">
+                  {getPageInfo(pathname).title}
+                </h1>
+              </div>
+              <Breadcrumb>
+                <BreadcrumbList className="gap-2 items-center">
+                  {getPageInfo(pathname).breadcrumbs.map((crumb, idx) => {
+                    const isLast = idx === getPageInfo(pathname).breadcrumbs.length - 1;
+                    return (
+                      <React.Fragment key={crumb.label + idx}>
+                        <BreadcrumbItem>
+                          {isLast || !crumb.href ? (
+                            <BreadcrumbPage className="text-xs xl:text-sm font-semibold text-gray-700 px-2 py-0.5 rounded-md bg-gray-50">
+                              {crumb.label}
+                            </BreadcrumbPage>
+                          ) : (
+                            <BreadcrumbLink asChild>
+                              <Link
+                                href={crumb.href}
+                                className="text-xs xl:text-sm text-gray-500 hover:text-[#f08400] transition-all duration-200 hover:font-medium px-2 py-0.5 rounded-md hover:bg-[#f08400]/5"
+                              >
+                                {crumb.label}
+                              </Link>
+                            </BreadcrumbLink>
+                          )}
+                        </BreadcrumbItem>
+                        {!isLast && (
+                          <BreadcrumbSeparator>
+                            <ChevronRight className="w-3.5 h-3.5 text-gray-400" />
+                          </BreadcrumbSeparator>
+                        )}
+                      </React.Fragment>
+                    );
+                  })}
+                </BreadcrumbList>
+              </Breadcrumb>
+            </div>
           </div>
           
           <div className="flex items-stretch gap-0.5 sm:gap-1 lg:gap-3 flex-shrink-0">
@@ -548,7 +755,7 @@ export default function AdminLayout({
             {/* QR Code Scanner */}
             <button
               onClick={() => setIsQRScannerOpen(true)}
-              className="p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 relative group"
+              className="lg:hidden p-1.5 sm:p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0 relative group"
               title="Scanner QR code"
             >
               <QrCode className="w-4 h-4 sm:w-4 sm:h-4 lg:w-5 lg:h-5 text-gray-600 group-hover:text-[#f08400]" />

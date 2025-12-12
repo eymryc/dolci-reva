@@ -18,6 +18,7 @@ import { useAuth } from "@/context/AuthContext";
 import { ServerErrorPanel } from "@/components/ui/ServerErrorPanel";
 import { useServerErrors } from "@/hooks/use-server-errors";
 import { createFieldLabels } from "@/lib/server-error-utils";
+import { LoginResponse, extractApiMessage } from "@/types/api-response.types";
 
 // Schéma de validation
 const loginSchema = z.object({
@@ -80,16 +81,18 @@ export default function SignInPage() {
       clearServerErrors();
       clearErrors();
 
-      const response = await api.post("auth/login", {
+      const response = await api.post<LoginResponse>("auth/login", {
         email: data.email,
         password: data.password,
       });
 
-      const successMessage = response?.data?.message;
-      const userData = response.data;
+      const loginData = response.data;
+      const successMessage = extractApiMessage(loginData);
 
       // Sauvegarder le token
-      localStorage.setItem("access_token", userData.token);
+      if (loginData.token) {
+        localStorage.setItem("access_token", loginData.token);
+      }
 
       // Si "Se souvenir de moi" est coché, sauvegarder l'email
       if (data.rememberMe) {

@@ -5,15 +5,13 @@ import { useRouter } from "next/navigation";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useAuth } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
 import {
   Building2,
   Sparkles,
-  Plus,
-  Loader2,
-  Settings,
   DollarSign,
+  Loader2,
 } from "lucide-react";
+import { AddButton } from "@/components/admin/shared/AddButton";
 import {
   useBusinessTypes,
   useCreateBusinessType,
@@ -268,24 +266,6 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#f08400] rounded-xl shadow-lg">
-              <Settings className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold text-[#101828]">
-              Paramètres
-            </h1>
-          </div>
-          <p className="text-gray-500 text-sm ml-14">
-            Gérez les types de business et les commodités
-          </p>
-        </div>
-      </div>
-
-
       {/* Tabs */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
         <Tabs defaultValue="business-type" className="w-full">
@@ -334,18 +314,12 @@ export default function SettingsPage() {
                 onRefresh={() => refetchBusinessTypes()}
                 isRefreshing={isRefetchingBusinessTypes}
                 addButton={
-                  <Button
+                  <AddButton
                     onClick={handleCreateBusinessType}
-                    className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                    label="Ajouter un type de business"
+                    isLoading={isLoadingBusinessTypes}
                     disabled={isLoadingBusinessTypes}
-                  >
-                    {isLoadingBusinessTypes ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Plus className="w-4 h-4 mr-2" />
-                    )}
-                    Ajouter un type de business
-                  </Button>
+                  />
                 }
               />
             )}
@@ -388,18 +362,12 @@ export default function SettingsPage() {
                 onRefresh={() => refetchAmenities()}
                 isRefreshing={isRefetchingAmenities}
                 addButton={
-                  <Button
+                  <AddButton
                     onClick={handleCreateAmenity}
-                    className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                    label="Ajouter une commodité"
+                    isLoading={isLoadingAmenities}
                     disabled={isLoadingAmenities}
-                  >
-                    {isLoadingAmenities ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Plus className="w-4 h-4 mr-2" />
-                    )}
-                    Ajouter une commodité
-                  </Button>
+                  />
                 }
               />
             )}
@@ -442,18 +410,12 @@ export default function SettingsPage() {
                 onRefresh={() => refetchCommissions()}
                 isRefreshing={isRefetchingCommissions}
                 addButton={
-                  <Button
+                  <AddButton
                     onClick={handleCreateCommission}
-                    className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5"
+                    label="Ajouter une commission"
+                    isLoading={isLoadingCommissions}
                     disabled={isLoadingCommissions}
-                  >
-                    {isLoadingCommissions ? (
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    ) : (
-                      <Plus className="w-4 h-4 mr-2" />
-                    )}
-                    Ajouter une commission
-                  </Button>
+                  />
                 }
               />
             )}

@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import { ApiResponse, extractApiData } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 // Types
 export interface Commission {
@@ -22,7 +24,8 @@ export function useCommissions() {
     queryKey: ["commissions"],
     queryFn: async () => {
       const response = await api.get("/commissions");
-      return response.data.data as Commission[];
+      const data = extractApiData<Commission[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -33,7 +36,9 @@ export function useCommission(id: number) {
     queryKey: ["commissions", id],
     queryFn: async () => {
       const response = await api.get(`/commissions/${id}`);
-      return response.data.data as Commission;
+      const data = extractApiData<Commission>(response.data);
+      if (!data) throw new Error('Commission not found');
+      return data;
     },
     enabled: !!id,
   });
@@ -45,19 +50,17 @@ export function useCreateCommission() {
 
   return useMutation({
     mutationFn: async (data: CommissionFormData) => {
-      const response = await api.post("/commissions", data);
-      return response.data.data as Commission;
+      const response = await api.post<ApiResponse<Commission>>("/commissions", data);
+      const commissionData = extractApiData<Commission>(response.data);
+      if (!commissionData) throw new Error('Failed to create commission');
+      return commissionData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["commissions"] });
       toast.success("Commission créée avec succès !");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la création de la commission"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la création de la commission" });
     },
   });
 }
@@ -74,8 +77,10 @@ export function useUpdateCommission() {
       id: number;
       data: CommissionFormData;
     }) => {
-      const response = await api.put(`/commissions/${id}`, data);
-      return response.data.data as Commission;
+      const response = await api.put<ApiResponse<Commission>>(`/commissions/${id}`, data);
+      const commissionData = extractApiData<Commission>(response.data);
+      if (!commissionData) throw new Error('Failed to update commission');
+      return commissionData;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["commissions"] });
@@ -84,12 +89,8 @@ export function useUpdateCommission() {
       });
       toast.success("Commission mise à jour avec succès !");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la mise à jour de la commission"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la mise à jour de la commission" });
     },
   });
 }
@@ -107,12 +108,8 @@ export function useDeleteCommission() {
       queryClient.invalidateQueries({ queryKey: ["commissions"] });
       toast.success("Commission supprimée avec succès !");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la suppression de la commission"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la suppression de la commission" });
     },
   });
 }

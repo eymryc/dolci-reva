@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import { ApiResponse, extractApiData } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 // Types
 export type VerificationStatus = 
@@ -116,7 +118,8 @@ export function usePendingVerifications() {
     queryKey: ["owner-verifications", "pending"],
     queryFn: async () => {
       const response = await api.get("/owner-verification/pending");
-      return response.data.data as OwnerVerification[];
+      const data = extractApiData<OwnerVerification[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -127,7 +130,8 @@ export function useOwnerVerifications() {
     queryKey: ["owner-verifications"],
     queryFn: async () => {
       const response = await api.get("/owner-verification");
-      return response.data.data as OwnerVerification[];
+      const data = extractApiData<OwnerVerification[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -138,7 +142,9 @@ export function useOwnerVerification(id: number) {
     queryKey: ["owner-verifications", id],
     queryFn: async () => {
       const response = await api.get(`/owner-verification/${id}`);
-      return response.data.data as OwnerVerificationStatus;
+      const data = extractApiData<OwnerVerificationStatus>(response.data);
+      if (!data) throw new Error('Owner verification not found');
+      return data;
     },
     enabled: !!id,
   });
@@ -150,7 +156,9 @@ export function useVerificationStatus(enabled: boolean = true) {
     queryKey: ["owner-verification", "status"],
     queryFn: async () => {
       const response = await api.get("/owner-verification/status");
-      return response.data.data as OwnerVerificationStatus;
+      const data = extractApiData<OwnerVerificationStatus>(response.data);
+      if (!data) throw new Error('Verification status not found');
+      return data;
     },
     enabled,
   });
@@ -162,7 +170,8 @@ export function useOwnerDocuments(userId: number) {
     queryKey: ["owner-documents", userId],
     queryFn: async () => {
       const response = await api.get(`/owner-verification/documents/${userId}`);
-      return response.data.data as OwnerVerificationDocument[];
+      const data = extractApiData<OwnerVerificationDocument[]>(response.data);
+      return data || [];
     },
     enabled: !!userId,
   });
@@ -180,11 +189,13 @@ export function useReviewDocument() {
       documentId: number;
       data: ReviewDocumentData;
     }) => {
-      const response = await api.post(
+      const response = await api.post<ApiResponse<OwnerVerificationDocument>>(
         `/owner-verification/documents/${documentId}/review`,
         data
       );
-      return response.data.data as OwnerVerificationDocument;
+      const documentData = extractApiData<OwnerVerificationDocument>(response.data);
+      if (!documentData) throw new Error('Failed to review document');
+      return documentData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owner-verifications"] });
@@ -193,12 +204,7 @@ export function useReviewDocument() {
       toast.success("Document révisé avec succès!");
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-      toast.error(
-        axiosError.response?.data?.message ||
-          axiosError.response?.data?.error ||
-          "Échec de la révision du document"
-      );
+      handleError(error, { defaultMessage: "Échec de la révision du document" });
     },
   });
 }
@@ -215,11 +221,13 @@ export function useApproveOwner() {
       ownerId: number;
       data: ApproveOwnerData;
     }) => {
-      const response = await api.post(
+      const response = await api.post<ApiResponse<OwnerVerification>>(
         `/owner-verification/owners/${ownerId}/approve`,
         data
       );
-      return response.data.data as OwnerVerification;
+      const verificationData = extractApiData<OwnerVerification>(response.data);
+      if (!verificationData) throw new Error('Failed to approve owner');
+      return verificationData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owner-verifications"] });
@@ -227,12 +235,7 @@ export function useApproveOwner() {
       toast.success("Propriétaire approuvé avec succès!");
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-      toast.error(
-        axiosError.response?.data?.message ||
-          axiosError.response?.data?.error ||
-          "Échec de l'approbation du propriétaire"
-      );
+      handleError(error, { defaultMessage: "Échec de l'approbation du propriétaire" });
     },
   });
 }
@@ -249,11 +252,13 @@ export function useRejectOwner() {
       ownerId: number;
       data: RejectOwnerData;
     }) => {
-      const response = await api.post(
+      const response = await api.post<ApiResponse<OwnerVerification>>(
         `/owner-verification/owners/${ownerId}/reject`,
         data
       );
-      return response.data.data as OwnerVerification;
+      const verificationData = extractApiData<OwnerVerification>(response.data);
+      if (!verificationData) throw new Error('Failed to reject owner');
+      return verificationData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owner-verifications"] });
@@ -261,12 +266,7 @@ export function useRejectOwner() {
       toast.success("Propriétaire rejeté.");
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-      toast.error(
-        axiosError.response?.data?.message ||
-          axiosError.response?.data?.error ||
-          "Échec du rejet du propriétaire"
-      );
+      handleError(error, { defaultMessage: "Échec du rejet du propriétaire" });
     },
   });
 }
@@ -283,11 +283,13 @@ export function useSuspendOwner() {
       ownerId: number;
       data: SuspendOwnerData;
     }) => {
-      const response = await api.post(
+      const response = await api.post<ApiResponse<OwnerVerification>>(
         `/owner-verification/owners/${ownerId}/suspend`,
         data
       );
-      return response.data.data as OwnerVerification;
+      const verificationData = extractApiData<OwnerVerification>(response.data);
+      if (!verificationData) throw new Error('Failed to suspend owner');
+      return verificationData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owner-verifications"] });
@@ -295,12 +297,7 @@ export function useSuspendOwner() {
       toast.success("Propriétaire suspendu.");
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-      toast.error(
-        axiosError.response?.data?.message ||
-          axiosError.response?.data?.error ||
-          "Échec de la suspension du propriétaire"
-      );
+      handleError(error, { defaultMessage: "Échec de la suspension du propriétaire" });
     },
   });
 }
@@ -327,12 +324,14 @@ export function useSubmitDocument() {
         formData.append("identity_document_type", data.identity_document_type);
       }
 
-      const response = await api.post("/owner-verification/documents", formData, {
+      const response = await api.post<ApiResponse<OwnerVerificationDocument>>("/owner-verification/documents", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      return response.data.data as OwnerVerificationDocument;
+      const documentData = extractApiData<OwnerVerificationDocument>(response.data);
+      if (!documentData) throw new Error('Failed to submit document');
+      return documentData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["owner-verification", "status"] });
@@ -341,30 +340,11 @@ export function useSubmitDocument() {
     },
     onError: (error: unknown) => {
       // Les erreurs seront gérées par le composant qui utilise le hook
-      // On ne montre pas de toast ici car les erreurs détaillées seront affichées dans le panneau
-      const axiosError = error as { 
-        response?: { 
-          data?: { 
-            message?: string; 
-            error?: string;
-            data?: unknown;
-          } 
-        } 
-      };
-      
-      // Afficher un toast seulement s'il n'y a pas d'erreurs détaillées
-      const hasDetailedErrors = axiosError.response?.data?.data && 
-        typeof axiosError.response.data.data === "object" && 
-        !Array.isArray(axiosError.response.data.data) &&
-        Object.keys(axiosError.response.data.data).length > 0;
-      
-      if (!hasDetailedErrors) {
-        toast.error(
-          axiosError.response?.data?.message ||
-            axiosError.response?.data?.error ||
-            "Erreur lors de la soumission du document"
-        );
-      }
+      // On utilise handleError mais sans toast pour permettre au composant de gérer les erreurs détaillées
+      handleError(error, { 
+        defaultMessage: "Erreur lors de la soumission du document",
+        showToast: false 
+      });
     },
   });
 }

@@ -10,10 +10,11 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { SubmitButton } from "@/components/ui/submit-button"
 import api from "@/lib/axios";
-// import { toast } from "sonner"
 import { toast } from 'sonner'
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { LoginResponse, extractApiMessage } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 // Schéma de validation zod
 const loginSchema = z.object({
@@ -39,32 +40,24 @@ export function LoginForm({
    })
 
    const onSubmit = async (data: LoginFormValues) => {
-      // Ici, tu peux gérer la connexion (API, etc.)
       try {
-         const response = await api.post("auth/login", data);
-         const successMessage = response?.data?.message;
-         const userData = response.data.data;
+         const response = await api.post<LoginResponse>("auth/login", data);
+         const loginData = response.data;
+         const message = extractApiMessage(loginData);
 
-         // SAVE TOKEN AND REDIRECT TO DO
-         localStorage.setItem("access_token", userData.token);
+         // SAVE TOKEN AND REDIRECT
+         if (loginData.token) {
+            localStorage.setItem("access_token", loginData.token);
+         }
 
          // SUCCESS MESSAGE
-         toast.success(successMessage)
+         toast.success(message || "Connexion réussie");
 
          // REDIRECT TO DASHBOARD
          router.push("/admin/dashboard");
 
       } catch (error) {
-         // Type guard pour vérifier si c'est une erreur axios
-         let errorMessage = 'Une erreur est survenue';
-         
-         if (error && typeof error === 'object' && 'response' in error) {
-            const axiosError = error as { response?: { data?: { message?: string } } };
-            errorMessage = axiosError.response?.data?.message || 'Une erreur est survenue';
-         }
-
-         // ERROR MESSAGE
-         toast.error(errorMessage)
+         handleError(error, { defaultMessage: 'Erreur lors de la connexion' });
       }
    }
 

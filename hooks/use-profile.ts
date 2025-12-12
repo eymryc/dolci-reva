@@ -1,7 +1,9 @@
 import { useMutation } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { toast } from "sonner";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, type User } from "@/context/AuthContext";
+import { ApiResponse, extractApiData, extractApiMessage } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 export interface ProfileUpdateData {
   first_name?: string;
@@ -21,18 +23,17 @@ export function useUpdateProfile() {
 
   return useMutation({
     mutationFn: async (data: ProfileUpdateData) => {
-      const response = await api.put("/profile", data);
-      return response.data;
+      const response = await api.put<ApiResponse<User>>("/profile", data);
+      const userData = extractApiData<User>(response.data);
+      if (!userData) throw new Error('Failed to update profile');
+      return userData;
     },
-    onSuccess: async () => {
+    onSuccess: async (data) => {
       await refreshUser();
       toast.success("Profil mis à jour avec succès !");
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string } } };
-      toast.error(
-        axiosError.response?.data?.message || "Erreur lors de la mise à jour du profil"
-      );
+      handleError(error, { defaultMessage: "Erreur lors de la mise à jour du profil" });
     },
   });
 }

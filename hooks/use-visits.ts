@@ -1,8 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { toast } from 'sonner';
-import { StandardApiResponse, ValidationErrorResponse, PaginatedApiResponse } from '@/types/api-responses';
+import { StandardApiResponse, PaginatedApiResponse, ApiResponse, extractApiData, extractApiMessage } from '@/types/api-response.types';
 import { usePermissions } from './use-permissions';
+import { handleError } from '@/lib/error-handler';
 
 // Types
 export interface VisitDwellingImage {
@@ -63,9 +64,8 @@ export interface VisitFormData {
   scheduled_at: string; // Format: YYYY-MM-DD HH:mm:ss ou ISO 8601
 }
 
-export type VisitResponse = StandardApiResponse;
-
-export type PaginatedVisitsResponse = PaginatedApiResponse<Visit>;
+// VisitResponse est maintenant StandardApiResponse
+// PaginatedVisitsResponse est maintenant PaginatedApiResponse<Visit>
 
 // GET - Fetch all visits with pagination
 export function useVisits(page: number = 1) {
@@ -89,7 +89,7 @@ export function useVisits(page: number = 1) {
       }
 
       const response = await api.get('/visits', { params });
-      return response.data as PaginatedVisitsResponse;
+      return response.data as PaginatedApiResponse<Visit>;
     },
   });
 }
@@ -100,7 +100,9 @@ export function useVisit(id: number) {
     queryKey: ['visits', id],
     queryFn: async () => {
       const response = await api.get(`/visits/${id}`);
-      return response.data.data as Visit;
+      const data = extractApiData<Visit>(response.data);
+      if (!data) throw new Error('Visit not found');
+      return data;
     },
     enabled: !!id,
   });
@@ -112,42 +114,16 @@ export function useCreateVisit() {
 
   return useMutation({
     mutationFn: async (data: VisitFormData) => {
-      const response = await api.post('/visits', data);
-      return response.data as VisitResponse;
+      const response = await api.post<StandardApiResponse>('/visits', data);
+      return response.data;
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['visits'] });
-      toast.success(data.message || 'Demande de visite envoyée avec succès !');
+      const message = extractApiMessage(data) || 'Demande de visite envoyée avec succès !';
+      toast.success(message);
     },
     onError: (error: unknown) => {
-      const axiosError = error as { 
-        response?: { 
-          status?: number;
-          data?: ValidationErrorResponse | { message?: string; error?: string } 
-        } 
-      };
-      
-      // Gérer les erreurs de validation (422)
-      if (axiosError.response?.status === 422) {
-        const validationError = axiosError.response.data as ValidationErrorResponse;
-        if (validationError?.data) {
-          // Afficher toutes les erreurs de validation
-          const errorMessages = Object.values(validationError.data)
-            .flat()
-            .join(', ');
-          toast.error(errorMessages || validationError.message || 'Erreurs de validation');
-        } else {
-          toast.error(validationError?.message || 'Erreurs de validation');
-        }
-      } else {
-        // Autres erreurs
-        const errorData = axiosError.response?.data as { message?: string; error?: string };
-        toast.error(
-          errorData?.message ||
-          errorData?.error ||
-          'Erreur lors de l\'envoi de la demande de visite'
-        );
-      }
+      handleError(error, { defaultMessage: 'Erreur lors de l\'envoi de la demande de visite' });
     },
   });
 }
@@ -158,43 +134,17 @@ export function useConfirmVisit() {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      const response = await api.post(`/visits/${id}/confirm`);
-      return response.data as StandardApiResponse;
+      const response = await api.post<StandardApiResponse>(`/visits/${id}/confirm`);
+      return response.data;
     },
     onSuccess: (data, visitId) => {
       queryClient.invalidateQueries({ queryKey: ['visits'] });
       queryClient.invalidateQueries({ queryKey: ['visits', visitId] });
-      toast.success(data.message || 'Visite confirmée avec succès !');
+      const message = extractApiMessage(data) || 'Visite confirmée avec succès !';
+      toast.success(message);
     },
     onError: (error: unknown) => {
-      const axiosError = error as { 
-        response?: { 
-          status?: number;
-          data?: StandardApiResponse | ValidationErrorResponse | { message?: string; error?: string } 
-        } 
-      };
-      
-      // Gérer les erreurs de validation (422)
-      if (axiosError.response?.status === 422) {
-        const validationError = axiosError.response.data as ValidationErrorResponse;
-        if (validationError?.data) {
-          const errorMessages = Object.values(validationError.data)
-            .flat()
-            .join(', ');
-          toast.error(errorMessages || validationError.message || 'Erreurs de validation');
-        } else {
-          toast.error(validationError?.message || 'Erreurs de validation');
-        }
-      } else {
-        // Autres erreurs
-        const errorData = axiosError.response?.data as StandardApiResponse | { message?: string; error?: string };
-        toast.error(
-          (errorData as StandardApiResponse)?.message ||
-          (errorData as { message?: string; error?: string })?.message ||
-          (errorData as { message?: string; error?: string })?.error ||
-          'Erreur lors de la confirmation de la visite'
-        );
-      }
+      handleError(error, { defaultMessage: 'Erreur lors de la confirmation de la visite' });
     },
   });
 }

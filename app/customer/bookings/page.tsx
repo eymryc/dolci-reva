@@ -1,11 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import { 
-  Calendar, 
   Loader2,
-  ArrowLeft,
   Plus
 } from "lucide-react";
 import { useBookings } from "@/hooks/use-bookings";
@@ -117,44 +114,12 @@ export default function CustomerBookingsPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-      {/* Header */}
-      <div className="mb-8">
-        <Link href="/customer/dashboard">
-          <Button variant="ghost" className="mb-4 hover:bg-theme-primary/10">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Retour au tableau de bord
-          </Button>
-        </Link>
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-theme-primary/10 rounded-xl">
-                <Calendar className="w-6 h-6 text-theme-primary" />
-              </div>
-              <h1 className="text-4xl font-bold text-gray-900">
-                Mes réservations
-              </h1>
-            </div>
-            <p className="text-gray-500 text-sm ml-14">
-              Gérez toutes vos réservations en un seul endroit
-            </p>
-          </div>
-          <Button
-            onClick={handleCreateBooking}
-            className="bg-theme-primary hover:bg-theme-primary/90 text-white shadow-lg h-12"
-          >
-            <Plus className="w-4 h-4 mr-2" />
-            Nouvelle réservation
-          </Button>
-        </div>
-      </div>
-
+    <div className="space-y-8">
       {/* Bookings Table */}
-      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50">
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
         {isLoadingBookings ? (
           <div className="flex flex-col items-center justify-center py-16">
-            <Loader2 className="w-12 h-12 animate-spin text-theme-primary mb-4" />
+            <Loader2 className="w-12 h-12 animate-spin text-[#f08400] mb-4" />
             <p className="text-gray-500 text-sm">Chargement des réservations...</p>
           </div>
         ) : (
@@ -168,6 +133,15 @@ export default function CustomerBookingsPage() {
             canCancel={true}
             canDelete={false}
             viewMode="customer"
+            addButton={
+              <Button
+                onClick={handleCreateBooking}
+                className="bg-theme-primary hover:bg-theme-primary/90 text-white"
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Nouvelle réservation
+              </Button>
+            }
           />
         )}
       </div>

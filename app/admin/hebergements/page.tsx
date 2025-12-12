@@ -7,10 +7,10 @@ import { Button } from "@/components/ui/button";
 import {
   Calendar,
   Home,
-  Plus,
   Loader2,
   AlertCircle,
 } from "lucide-react";
+import { AddButton } from "@/components/admin/shared/AddButton";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useAuth } from "@/context/AuthContext";
 import {
@@ -27,7 +27,7 @@ import { DeleteConfirmationDialog } from "@/components/admin/shared/DeleteConfir
 
 export default function HebergementsPage() {
   const router = useRouter();
-  const { isAnyAdmin, isOwner } = usePermissions();
+  const { isOwner } = usePermissions();
   const { user } = useAuth();
   
   // Vérifier le statut de vérification pour les propriétaires
@@ -88,27 +88,6 @@ export default function HebergementsPage() {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#f08400] rounded-xl shadow-lg">
-              <Home className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold text-[#101828]">
-              Hébergement
-            </h1>
-          </div>
-          <p className="text-gray-500 text-sm ml-14">
-            {isAnyAdmin() 
-              ? "Gérez les hébergements" 
-              : isOwner() 
-                ? "Gérez vos hébergements"
-                : "Gérez vos hébergements"}
-          </p>
-        </div>
-      </div>
-
       {/* Tabs */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
         <Tabs defaultValue="visits" className="w-full">
@@ -192,19 +171,13 @@ export default function HebergementsPage() {
             onRefresh={() => refetchDwellings()}
             isRefreshing={isRefetchingDwellings}
             addButton={
-              <Button
+              <AddButton
                 onClick={handleCreateDwelling}
-                className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-10 sm:h-12 hover:shadow-xl transition-all duration-200 hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed px-2 sm:px-4"
+                label="Ajouter un hébergement"
+                isLoading={isLoadingDwellings}
                 disabled={isLoadingDwellings || (isOwner() && !isOwnerApproved)}
                 title={isOwner() && !isOwnerApproved ? "Votre compte doit être vérifié pour ajouter un hébergement" : undefined}
-              >
-                {isLoadingDwellings ? (
-                  <Loader2 className="w-4 h-4 sm:mr-2 animate-spin" />
-                ) : (
-                  <Plus className="w-4 h-4 sm:mr-2" />
-                )}
-                <span className="hidden sm:inline">Ajouter un hébergement</span>
-              </Button>
+              />
             }
           />
         )}

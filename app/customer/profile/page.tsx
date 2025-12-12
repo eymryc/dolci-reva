@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { 
-  User, 
+  User as UserIcon, 
   Mail, 
   Phone, 
   ArrowLeft,
@@ -19,7 +19,7 @@ import {
   AlertCircle,
   Award,
 } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { useAuth, type User } from "@/context/AuthContext";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useVerificationStatus } from "@/hooks/use-owner-verifications";
 import { Button } from "@/components/ui/button";
@@ -33,6 +33,8 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { toast } from "sonner";
 import api from "@/lib/axios";
+import { ApiResponse, extractApiMessage } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 export default function CustomerProfilePage() {
   const { user, refreshUser } = useAuth();
@@ -88,13 +90,13 @@ export default function CustomerProfilePage() {
     setIsLoading(true);
     
     try {
-      await api.put("/profile", formData);
+      const response = await api.put<ApiResponse<User>>("/profile", formData);
       await refreshUser();
       setIsEditing(false);
-      toast.success("Profil mis à jour avec succès !");
+      const message = extractApiMessage(response.data);
+      toast.success(message || "Profil mis à jour avec succès !");
     } catch (error: unknown) {
-      const axiosError = error as { response?: { data?: { message?: string } } };
-      toast.error(axiosError.response?.data?.message || "Erreur lors de la mise à jour du profil");
+      handleError(error, { defaultMessage: "Erreur lors de la mise à jour du profil" });
     } finally {
       setIsLoading(false);
     }
@@ -235,7 +237,7 @@ export default function CustomerProfilePage() {
         </Link>
         <div className="flex items-center gap-3 mb-2">
           <div className="p-2 bg-theme-primary/10 rounded-xl">
-            <User className="w-6 h-6 text-theme-primary" />
+            <UserIcon className="w-6 h-6 text-theme-primary" />
           </div>
           <h1 className="text-4xl font-bold text-gray-900">
             Mon profil
@@ -306,7 +308,7 @@ export default function CustomerProfilePage() {
             <Card className="lg:col-span-2 bg-gradient-to-br from-white via-white to-gray-50/50 backdrop-blur-sm border border-gray-200/50 shadow-xl hover:shadow-2xl transition-all duration-300 p-8">
               <div className="mb-6 pb-4 border-b border-gray-200">
                 <h3 className="text-xl font-bold text-gray-900 flex items-center gap-2">
-                  <User className="w-5 h-5 text-theme-primary" />
+                  <UserIcon className="w-5 h-5 text-theme-primary" />
                   Informations personnelles
                 </h3>
                 <p className="text-sm text-gray-500 mt-1">Gérez vos informations de profil</p>
@@ -315,7 +317,7 @@ export default function CustomerProfilePage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div className="space-y-2 group">
                     <Label htmlFor="first_name" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                      <User className="w-4 h-4 text-theme-primary" />
+                      <UserIcon className="w-4 h-4 text-theme-primary" />
                       Prénom
                     </Label>
                     <Input
@@ -334,7 +336,7 @@ export default function CustomerProfilePage() {
 
                   <div className="space-y-2 group">
                     <Label htmlFor="last_name" className="text-sm font-semibold text-gray-700 flex items-center gap-2">
-                      <User className="w-4 h-4 text-theme-primary" />
+                      <UserIcon className="w-4 h-4 text-theme-primary" />
                       Nom
                     </Label>
                     <Input
@@ -435,7 +437,7 @@ export default function CustomerProfilePage() {
                       onClick={() => setIsEditing(true)}
                       className="bg-gradient-to-r from-theme-primary to-theme-accent hover:from-theme-accent hover:to-theme-primary text-white h-12 px-6 shadow-lg hover:shadow-xl transition-all duration-200"
                     >
-                      <User className="w-4 h-4 mr-2" />
+                      <UserIcon className="w-4 h-4 mr-2" />
                       Modifier le profil
                     </Button>
                   )}

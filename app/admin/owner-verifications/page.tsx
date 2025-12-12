@@ -222,22 +222,6 @@ export default function OwnerVerificationsPage() {
   // Mode liste
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#f08400] rounded-xl shadow-lg">
-              <ShieldCheck className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold text-[#101828]">
-              Vérification des Propriétaires
-            </h1>
-          </div>
-          <p className="text-gray-500 text-sm ml-14">
-            Gérez les vérifications et certifications des propriétaires
-          </p>
-        </div>
-      </div>
 
       {/* Content Card */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50">

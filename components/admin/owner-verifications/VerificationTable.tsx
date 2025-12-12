@@ -25,7 +25,6 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  RefreshCw,
   CheckCircle2,
   XCircle,
   Clock,
@@ -33,6 +32,7 @@ import {
   ShieldOff,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { RefreshButton } from "@/components/admin/shared/RefreshButton";
 
 interface VerificationTableProps {
   data: OwnerVerification[];
@@ -272,26 +272,23 @@ export function VerificationTable({
     <div className="space-y-4">
       {/* Search and Refresh */}
       <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input
-            placeholder="Rechercher un propriétaire..."
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-10 bg-white h-12"
-          />
+        <div className="flex-1 max-w-sm">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Rechercher un propriétaire..."
+              value={globalFilter ?? ""}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="pl-10 h-10"
+            />
+          </div>
         </div>
         {onRefresh && (
-          <Button
-            variant="outline"
-            size="xl"
+          <RefreshButton
             onClick={onRefresh}
-            disabled={isRefreshing}
-            className="hover:bg-gray-100"
-            title="Actualiser les données"
-          >
-            <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
-          </Button>
+            isRefreshing={isRefreshing}
+            showLabel={false}
+          />
         )}
       </div>
 

@@ -1,84 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import api from '@/lib/axios';
 import { toast } from 'sonner';
-import { PaginatedApiResponse } from '@/types/api-responses';
+import api from '@/lib/axios';
 import { usePermissions } from './use-permissions';
+import { handleError } from '@/lib/error-handler';
+import { bookingService } from '@/services/booking.service';
+import type { Booking, BookingFormData } from '@/types/entities/booking.types';
 
-// Types
-export interface User {
-  id: number;
-  first_name: string;
-  last_name: string;
-  phone: string;
-  email: string;
-  type: string;
-  email_verified_at?: string | null;
-  deleted_at?: string | null;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Bookable {
-  id: number;
-  owner_id: number;
-  name: string;
-  description?: string | null;
-  address: string;
-  city: string;
-  country: string;
-  latitude?: string | null;
-  longitude?: string | null;
-  type: string;
-  max_guests: number;
-  bedrooms?: number | null;
-  bathrooms?: number | null;
-  piece_number?: number | null;
-  price: string;
-  standing: string;
-  average_rating: string;
-  total_ratings: number;
-  rating_count: number;
-  is_available: boolean;
-  is_active: boolean;
-  created_at: string;
-  updated_at: string;
-  deleted_at?: string | null;
-}
-
-export interface Booking {
-  id: number;
-  customer_id: number;
-  owner_id: number;
-  bookable_type: string;
-  bookable_id: number;
-  start_date: string;
-  end_date: string;
-  guests: number;
-  booking_reference: string;
-  total_price: string;
-  commission_amount: string;
-  owner_amount: string;
-  status: 'CONFIRME' | 'EN_ATTENTE' | 'ANNULE' | 'TERMINE';
-  payment_status: 'PAYE' | 'EN_ATTENTE' | 'REFUSE' | 'REMBOURSE';
-  notes?: string | null;
-  cancellation_reason?: string | null;
-  cancelled_at?: string | null;
-  confirmed_at?: string | null;
-  created_at: string;
-  updated_at: string;
-  customer: User;
-  owner: User;
-  bookable: Bookable;
-}
-
-export type PaginatedBookingsResponse = PaginatedApiResponse<Booking>;
-
-export interface BookingFormData {
-  name: string;
-  venue: string;
-  date: string;
-  time: string;
-}
+// Réexporter les types pour la compatibilité
+export type { Booking, BookingFormData };
 
 // GET - Fetch all bookings with pagination
 export function useBookings(page: number = 1) {
@@ -101,8 +30,7 @@ export function useBookings(page: number = 1) {
         }
       }
 
-      const response = await api.get('/bookings', { params });
-      return response.data as PaginatedBookingsResponse;
+      return bookingService.getAll(params);
     },
   });
 }
@@ -111,10 +39,7 @@ export function useBookings(page: number = 1) {
 export function useBooking(id: number) {
   return useQuery({
     queryKey: ['bookings', id],
-    queryFn: async () => {
-      const response = await api.get(`/bookings/${id}`);
-      return response.data.data as Booking;
-    },
+    queryFn: () => bookingService.getById(id),
     enabled: !!id,
   });
 }
@@ -124,17 +49,13 @@ export function useCreateBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: BookingFormData) => {
-      const response = await api.post('/bookings', data);
-      return response.data.data as Booking;
-    },
+    mutationFn: (data: BookingFormData) => bookingService.create(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       toast.success('Réservation créée avec succès !');
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-      toast.error(axiosError.response?.data?.message || axiosError.response?.data?.error || 'Erreur lors de la création de la réservation');
+      handleError(error, { defaultMessage: 'Erreur lors de la création de la réservation' });
     },
   });
 }
@@ -144,18 +65,15 @@ export function useUpdateBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, data }: { id: number; data: Partial<BookingFormData> }) => {
-      const response = await api.put(`/bookings/${id}`, data);
-      return response.data.data as Booking;
-    },
+    mutationFn: ({ id, data }: { id: number; data: Partial<BookingFormData> }) =>
+      bookingService.update(id, data),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       queryClient.invalidateQueries({ queryKey: ['bookings', variables.id] });
       toast.success('Réservation mise à jour avec succès !');
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-      toast.error(axiosError.response?.data?.message || axiosError.response?.data?.error || 'Erreur lors de la mise à jour de la réservation');
+      handleError(error, { defaultMessage: 'Erreur lors de la mise à jour de la réservation' });
     },
   });
 }
@@ -165,18 +83,15 @@ export function useCancelBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({ id, reason }: { id: number; reason?: string }) => {
-      const response = await api.put(`/bookings/${id}/cancel`, { cancellation_reason: reason });
-      return response.data.data as Booking;
-    },
+    mutationFn: ({ id, reason }: { id: number; reason?: string }) =>
+      bookingService.cancel(id, reason),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       queryClient.invalidateQueries({ queryKey: ['bookings', variables.id] });
       toast.success('Réservation annulée avec succès !');
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-      toast.error(axiosError.response?.data?.message || axiosError.response?.data?.error || 'Erreur lors de l\'annulation de la réservation');
+      handleError(error, { defaultMessage: 'Erreur lors de l\'annulation de la réservation' });
     },
   });
 }
@@ -186,17 +101,15 @@ export function useDeleteBooking() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (id: number) => {
-      await api.delete(`/bookings/${id}`);
-      return id;
+    mutationFn: (id: number) => {
+      return bookingService.delete(id).then(() => id);
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['bookings'] });
       toast.success('Réservation supprimée avec succès !');
     },
     onError: (error: unknown) => {
-      const axiosError = error as { response?: { data?: { message?: string; error?: string } } };
-      toast.error(axiosError.response?.data?.message || axiosError.response?.data?.error || 'Erreur lors de la suppression de la réservation');
+      handleError(error, { defaultMessage: 'Erreur lors de la suppression de la réservation' });
     },
   });
 }

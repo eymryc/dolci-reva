@@ -13,10 +13,7 @@ import { CustomerSignUpModal } from '@/components/auth/CustomerSignUpModal';
 import { VisitRequestModal } from '@/components/VisitRequestModal';
 import { Calendar, Home, MapPin, Droplet, Sofa, Building2, Eye } from 'lucide-react';
 import { 
-  Heart, 
-  Share2, 
   Shield,
-  ArrowLeft,
   ChevronLeft,
   ChevronRight,
   Loader2
@@ -163,7 +160,6 @@ export default function HebergementDetailPage() {
   const { data: dwelling, isLoading, error } = usePublicDwelling(id);
   const { user } = useAuth();
   
-  const [isFavorite, setIsFavorite] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
   const [showVisitModal, setShowVisitModal] = useState(false);
   
@@ -245,43 +241,7 @@ export default function HebergementDetailPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Header avec navigation amélioré */}
-      <div className="bg-white/80 backdrop-blur-md shadow-md border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link 
-              href="/se-loger" 
-              className="flex items-center gap-2 text-gray-700 hover:text-theme-primary transition-all duration-300 group font-medium"
-            >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-              <span>Retour aux hébergements</span>
-            </Link>
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center gap-2 hover:bg-theme-primary/5 hover:border-theme-primary/30 transition-all"
-              >
-                <Share2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Partager</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={`flex items-center gap-2 transition-all duration-300 ${
-                  isFavorite 
-                    ? 'text-red-500 border-red-500 bg-red-50 hover:bg-red-100' 
-                    : 'hover:bg-gray-50'
-                }`}
-                onClick={() => setIsFavorite(!isFavorite)}
-              >
-                <Heart className={`w-4 h-4 transition-all ${isFavorite ? 'fill-current scale-110' : ''}`} />
-                <span className="hidden sm:inline">{isFavorite ? 'Favori' : 'Ajouter aux favoris'}</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+ 
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         {/* Galerie d'images */}

@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import {
   User,
   Mail,
@@ -15,11 +14,7 @@ import {
   CheckCircle2,
   XCircle,
   FileText,
-  Building2,
-  Award,
   Calendar,
-  Ban,
-  ArrowLeft,
   ShieldCheck,
   Upload,
   Clock,
@@ -42,7 +37,6 @@ import { useUpdateProfile } from "@/hooks/use-profile";
 
 export default function AdminProfilePage() {
   const { user } = useAuth();
-  const router = useRouter();
   const { isAnyAdmin } = usePermissions();
   const [isEditing, setIsEditing] = useState(false);
   // Charger les business types
@@ -292,15 +286,6 @@ export default function AdminProfilePage() {
             {/* Actions */}
             <div className="flex items-center gap-2 w-full sm:w-auto">
               <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push("/admin/dashboard")}
-                className="hover:bg-gray-50 hover:border-gray-300 transition-all duration-200 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
-              >
-                <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
-                <span className="hidden sm:inline">Retour</span>
-              </Button>
-              <Button
                 size="sm"
                 onClick={() => setIsEditing(!isEditing)}
                 className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg hover:shadow-xl transition-all duration-200 text-xs sm:text-sm h-8 sm:h-9 px-2 sm:px-3"
@@ -311,54 +296,6 @@ export default function AdminProfilePage() {
             </div>
           </div>
 
-          {/* Statistiques dans le Header */}
-          {(user.reputation_score !== undefined || user.total_bookings !== undefined || user.cancellation_rate !== undefined) && (
-            <div className="mt-4 sm:mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
-              {user.reputation_score !== undefined && (
-                <div className="p-3 sm:p-4 bg-gradient-to-br from-blue-50 via-blue-50/50 to-white rounded-lg border border-blue-200/50 hover:border-blue-300 transition-all duration-200">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
-                      <Award className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] sm:text-xs font-medium text-gray-600 mb-0.5">Score de réputation</p>
-                      <p className="text-lg sm:text-xl font-bold text-gray-900 truncate">
-                        {user.reputation_score ? parseFloat(user.reputation_score).toFixed(2) : "0.00"}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {user.total_bookings !== undefined && (
-                <div className="p-3 sm:p-4 bg-gradient-to-br from-green-50 via-green-50/50 to-white rounded-lg border border-green-200/50 hover:border-green-300 transition-all duration-200">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className="p-1.5 sm:p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md">
-                      <Calendar className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] sm:text-xs font-medium text-gray-600 mb-0.5">Total réservations</p>
-                      <p className="text-lg sm:text-xl font-bold text-gray-900">{user.total_bookings || 0}</p>
-                    </div>
-                  </div>
-                </div>
-              )}
-              {user.cancellation_rate !== undefined && (
-                <div className={`p-3 sm:p-4 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-50 via-red-50/50" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-50 via-yellow-50/50" : "from-green-50 via-green-50/50"} to-white rounded-lg border ${parseFloat(user.cancellation_rate || "0") > 10 ? "border-red-200/50 hover:border-red-300" : parseFloat(user.cancellation_rate || "0") > 5 ? "border-yellow-200/50 hover:border-yellow-300" : "border-green-200/50 hover:border-green-300"} transition-all duration-200`}>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <div className={`p-1.5 sm:p-2 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-500 to-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-500 to-yellow-600" : "from-green-500 to-green-600"} rounded-lg shadow-md`}>
-                      <Ban className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-[10px] sm:text-xs font-medium text-gray-600 mb-0.5">Taux d&apos;annulation</p>
-                      <p className={`text-lg sm:text-xl font-bold ${parseFloat(user.cancellation_rate || "0") > 10 ? "text-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "text-yellow-600" : "text-green-600"}`}>
-                        {user.cancellation_rate ? parseFloat(user.cancellation_rate).toFixed(2) : "0.00"}%
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </Card>
 
@@ -379,12 +316,6 @@ export default function AdminProfilePage() {
               <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
               <span className="hidden sm:inline">Permissions</span>
               <span className="sm:hidden">Perm.</span>
-            </TabsTrigger>
-          )}
-          {user.businessTypes && user.businessTypes.length > 0 && (
-            <TabsTrigger value="business" className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-4 py-2 sm:py-3 w-full lg:w-full justify-start data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-lg sm:rounded-xl transition-all duration-200 text-xs sm:text-sm whitespace-nowrap">
-              <Building2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-              Business
             </TabsTrigger>
           )}
           {user.type === "OWNER" && (
@@ -801,39 +732,6 @@ export default function AdminProfilePage() {
           </TabsContent>
         )}
 
-        {/* Business Types */}
-        {user.businessTypes && user.businessTypes.length > 0 && (
-          <TabsContent value="business" className="space-y-4 sm:space-y-6 mt-0">
-            <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
-              {/* Header compact */}
-              <div className="bg-gradient-to-r from-indigo-50 via-indigo-50/50 to-transparent p-3 sm:p-4 lg:p-5 border-b border-gray-200/50">
-                <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
-                  <div className="p-1.5 sm:p-2 lg:p-2.5 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg sm:rounded-xl shadow-md">
-                    <Building2 className="w-4 h-4 sm:w-4.5 sm:h-4.5 lg:w-5 lg:h-5 text-white" />
-                  </div>
-                  <div>
-                    <h2 className="text-base sm:text-lg font-bold text-gray-900">Types de business</h2>
-                    <p className="text-[10px] sm:text-xs text-gray-500 mt-0.5">{user.businessTypes.length} type(s) de business</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Contenu */}
-              <div className="p-3 sm:p-4 lg:p-6">
-                <div className="flex flex-wrap gap-1.5 sm:gap-2">
-                  {user.businessTypes.map((bt) => (
-                    <Badge
-                      key={bt.id}
-                      className="bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-700 border border-indigo-200 px-2 sm:px-3 py-1 sm:py-1.5 text-[10px] sm:text-xs font-semibold hover:shadow-md transition-all duration-200"
-                    >
-                      {bt.name}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </Card>
-          </TabsContent>
-        )}
 
         {/* Verification */}
         {user.type === "OWNER" && (
@@ -848,7 +746,7 @@ export default function AdminProfilePage() {
             ) : (
               <>
                 {/* Statut de vérification */}
-                <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
+                <Card className="bg-white/90 backdrop-blur-md rounded-xl sm:rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden py-0">
                   <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-3 sm:p-4 lg:p-5 border-b border-gray-200/50">
                     <div className="flex items-center gap-2 sm:gap-3 lg:gap-4">
                       <div className="p-1.5 sm:p-2 lg:p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg sm:rounded-xl shadow-md">

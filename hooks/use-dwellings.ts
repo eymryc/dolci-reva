@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { usePermissions } from "./use-permissions";
 import type { Amenity } from "@/types/common";
 import type { Owner as BaseOwner } from "@/types/common";
+import { ApiResponse, extractApiData } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 // Réexporter le type Amenity pour la compatibilité
 export type { Amenity };
@@ -142,10 +144,8 @@ export function useDwellings() {
 
       const response = await api.get("/dwellings", { params });
       // Handle Laravel paginated response
-      if (response.data.data && Array.isArray(response.data.data)) {
-        return response.data.data as Dwelling[];
-      }
-      return [] as Dwelling[];
+      const data = extractApiData<Dwelling[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -173,10 +173,8 @@ export function usePublicDwellings(filters?: PublicDwellingsFilters) {
       
       const response = await api.get("/public/dwellings", { params });
       // Handle Laravel response
-      if (response.data.data && Array.isArray(response.data.data)) {
-        return response.data.data as Dwelling[];
-      }
-      return [] as Dwelling[];
+      const data = extractApiData<Dwelling[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -187,7 +185,9 @@ export function usePublicDwelling(id: number) {
     queryKey: ["public", "dwellings", id],
     queryFn: async () => {
       const response = await api.get(`/public/dwellings/${id}`);
-      return response.data.data as Dwelling;
+      const data = extractApiData<Dwelling>(response.data);
+      if (!data) throw new Error('Dwelling not found');
+      return data;
     },
     enabled: !!id,
   });
@@ -199,7 +199,9 @@ export function useDwelling(id: number) {
     queryKey: ["dwellings", id],
     queryFn: async () => {
       const response = await api.get(`/dwellings/${id}`);
-      return response.data.data as Dwelling;
+      const data = extractApiData<Dwelling>(response.data);
+      if (!data) throw new Error('Dwelling not found');
+      return data;
     },
     enabled: !!id,
   });
@@ -248,23 +250,21 @@ export function useCreateDwelling() {
         });
       }
 
-      const response = await api.post("/dwellings", formData, {
+      const response = await api.post<ApiResponse<Dwelling>>("/dwellings", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      return response.data.data as Dwelling;
+      const dwellingData = extractApiData<Dwelling>(response.data);
+      if (!dwellingData) throw new Error('Failed to create dwelling');
+      return dwellingData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dwellings"] });
       toast.success("Hébergement créé avec succès !");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la création de l'hébergement"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la création de l'hébergement" });
     },
   });
 }
@@ -314,12 +314,14 @@ export function useUpdateDwelling() {
         });
       }
 
-      const response = await api.put(`/dwellings/${id}`, formData, {
+      const response = await api.put<ApiResponse<Dwelling>>(`/dwellings/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      return response.data.data as Dwelling;
+      const dwellingData = extractApiData<Dwelling>(response.data);
+      if (!dwellingData) throw new Error('Failed to update dwelling');
+      return dwellingData;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["dwellings"] });
@@ -328,12 +330,8 @@ export function useUpdateDwelling() {
       });
       toast.success("Hébergement modifié avec succès !");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la modification de l'hébergement"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la modification de l'hébergement" });
     },
   });
 }
@@ -351,12 +349,8 @@ export function useDeleteDwelling() {
       queryClient.invalidateQueries({ queryKey: ["dwellings"] });
       toast.success("Hébergement supprimé avec succès !");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la suppression de l'hébergement"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la suppression de l'hébergement" });
     },
   });
 }
@@ -367,19 +361,17 @@ export function useToggleDwellingAvailability() {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      const response = await api.put(`/dwellings/${id}/availability`);
-      return response.data.data as Dwelling;
+      const response = await api.put<ApiResponse<Dwelling>>(`/dwellings/${id}/availability`);
+      const dwellingData = extractApiData<Dwelling>(response.data);
+      if (!dwellingData) throw new Error('Failed to toggle dwelling availability');
+      return dwellingData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["dwellings"] });
       toast.success("Hébergement marqué comme indisponible avec succès !");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la mise à jour de la disponibilité"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la mise à jour de la disponibilité" });
     },
   });
 }
@@ -412,12 +404,8 @@ export function useBookDwelling() {
     onSuccess: (data) => {
       toast.success(data.message || "Réservation effectuée avec succès !");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Erreur lors de la réservation"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Erreur lors de la réservation" });
     },
   });
 }

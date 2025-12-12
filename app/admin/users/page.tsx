@@ -4,11 +4,10 @@ import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
-  UserPlus,
-  Loader2,
-  UsersIcon,
   ShieldOff,
+  Loader2,
 } from "lucide-react";
+import { AddButton } from "@/components/admin/shared/AddButton";
 import {
   useUsers,
   useCreateUser,
@@ -131,22 +130,6 @@ export default function UsersPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="p-2 bg-[#f08400] rounded-xl shadow-lg">
-              <UsersIcon className="w-6 h-6 text-white" />
-            </div>
-            <h1 className="text-4xl font-bold text-[#101828]">
-              Utilisateurs
-            </h1>
-          </div>
-          <p className="text-gray-500 text-sm ml-14">
-            Gérez les utilisateurs de votre application
-          </p>
-        </div>
-      </div>
 
       {/* Content Card */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50">
@@ -164,18 +147,12 @@ export default function UsersPage() {
             onRefresh={() => refetchUsers()}
             isRefreshing={isRefetchingUsers}
             addButton={
-              <Button
+              <AddButton
                 onClick={handleCreate}
-                className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg h-12"
+                label="Ajouter un utilisateur"
+                isLoading={isLoadingUsers}
                 disabled={isLoadingUsers}
-              >
-                {isLoadingUsers ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <UserPlus className="w-4 h-4 mr-2" />
-                )}
-                Ajouter un utilisateur
-              </Button>
+              />
             }
           />
         )}

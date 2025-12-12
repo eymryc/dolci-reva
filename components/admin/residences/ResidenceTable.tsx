@@ -23,14 +23,13 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Edit2,
-  Trash2,
   Search,
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  RefreshCw,
 } from "lucide-react";
+import { ActionButtons } from "@/components/admin/shared/ActionButtons";
+import { RefreshButton } from "@/components/admin/shared/RefreshButton";
 
 interface ResidenceTableProps {
   data: Residence[];
@@ -200,38 +199,6 @@ export function ResidenceTable({
         },
       },
       {
-        accessorKey: "average_rating",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="h-8 px-2 hover:bg-transparent"
-            >
-              Note
-              {column.getIsSorted() === "asc" ? (
-                <ArrowUp className="ml-2 h-4 w-4" />
-              ) : column.getIsSorted() === "desc" ? (
-                <ArrowDown className="ml-2 h-4 w-4" />
-              ) : (
-                <ArrowUpDown className="ml-2 h-4 w-4" />
-              )}
-            </Button>
-          );
-        },
-        cell: ({ row }) => {
-          const residence = row.original;
-          const rating = parseFloat(residence.average_rating);
-          return residence.has_ratings ? (
-            <Badge className="bg-gradient-to-r from-yellow-100 to-amber-100 text-yellow-700 border border-yellow-200/50">
-              ⭐ {rating.toFixed(1)}
-            </Badge>
-          ) : (
-            <span className="text-gray-400 italic text-xs">Aucune note</span>
-          );
-        },
-      },
-      {
         accessorKey: "is_available",
         header: "Disponibilité",
         cell: ({ row }) => {
@@ -253,24 +220,10 @@ export function ResidenceTable({
         cell: ({ row }) => {
           const residence = row.original;
           return (
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onEdit(residence)}
-                className="hover:bg-blue-50 hover:text-blue-600"
-              >
-                <Edit2 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDelete(residence)}
-                className="hover:bg-red-50 hover:text-red-600"
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
+            <ActionButtons
+              onEdit={() => onEdit(residence)}
+              onDelete={() => onDelete(residence)}
+            />
           );
         },
       },
@@ -308,27 +261,24 @@ export function ResidenceTable({
     <div className="space-y-4">
       {/* Search and Add Button */}
       <div className="flex items-center justify-between gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-          <Input
-            placeholder="Rechercher une résidence..."
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-10 bg-white h-12"
-          />
+        <div className="flex-1 max-w-sm">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Rechercher une résidence..."
+              value={globalFilter ?? ""}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="pl-10 h-10"
+            />
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {onRefresh && (
-            <Button
-              variant="outline"
-              size="xl"
+            <RefreshButton
               onClick={onRefresh}
-              disabled={isRefreshing}
-              className="hover:bg-gray-100"
-              title="Actualiser les données"
-            >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`} />
-            </Button>
+              isRefreshing={isRefreshing}
+              showLabel={false}
+            />
           )}
           {addButton && <div className="flex-shrink-0">{addButton}</div>}
         </div>

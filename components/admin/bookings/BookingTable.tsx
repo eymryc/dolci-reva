@@ -28,7 +28,6 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  RefreshCw,
   MoreVertical,
   XCircle,
 } from "lucide-react";
@@ -38,6 +37,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { RefreshButton } from "@/components/admin/shared/RefreshButton";
 
 interface BookingTableProps {
   data: Booking[];
@@ -409,28 +409,25 @@ export function BookingTable({
   return (
     <div className="space-y-4">
       {/* Search and Add Button */}
-      <div className="flex items-center justify-between gap-2 sm:gap-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 sm:left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-3.5 h-3.5 sm:w-4 sm:h-4" />
-          <Input
-            placeholder="Rechercher une réservation..."
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-8 sm:pl-10 bg-white h-8 sm:h-9 lg:h-12 text-xs sm:text-sm"
-          />
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1 max-w-sm">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Rechercher une réservation..."
+              value={globalFilter ?? ""}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="pl-10 h-10"
+            />
+          </div>
         </div>
         <div className="flex items-center gap-2">
           {onRefresh && (
-            <Button
-              variant="outline"
-              size="sm"
+            <RefreshButton
               onClick={onRefresh}
-              disabled={isRefreshing}
-              className="h-8 sm:h-9 lg:h-10 hover:bg-gray-100"
-              title="Actualiser les données"
-            >
-              <RefreshCw className={`w-3.5 h-3.5 sm:w-4 sm:h-4 ${isRefreshing ? "animate-spin" : ""}`} />
-            </Button>
+              isRefreshing={isRefreshing}
+              showLabel={false}
+            />
           )}
           {addButton && <div className="flex-shrink-0">{addButton}</div>}
         </div>
@@ -446,7 +443,7 @@ export function BookingTable({
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-3 sm:px-4 lg:px-6 py-1.5 sm:py-2 text-left text-[10px] sm:text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                      className="px-6 py-2 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                     >
                       {header.isPlaceholder
                         ? null
@@ -459,7 +456,7 @@ export function BookingTable({
             <tbody className="divide-y divide-gray-100 bg-white">
               {isLoading ? (
                 <tr>
-                  <td colSpan={columns.length} className="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
+                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
                     Chargement des réservations...
                   </td>
                 </tr>
@@ -470,7 +467,7 @@ export function BookingTable({
                     className="hover:bg-gradient-to-r hover:from-gray-50/50 hover:to-transparent transition-all duration-200"
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <td key={cell.id} className="px-3 sm:px-4 lg:px-6 py-1 sm:py-1.5 whitespace-nowrap">
+                      <td key={cell.id} className="px-6 py-1 whitespace-nowrap">
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </td>
                     ))}
@@ -478,7 +475,7 @@ export function BookingTable({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.length} className="px-3 sm:px-6 py-6 sm:py-8 text-center text-gray-500 text-xs sm:text-sm">
+                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
                     Aucune donnée
                   </td>
                 </tr>

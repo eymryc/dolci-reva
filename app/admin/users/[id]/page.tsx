@@ -2,20 +2,42 @@
 
 import React, { useState } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { ArrowLeft, Loader2, User, Mail, Phone, Shield, Star, CheckCircle2, XCircle, Calendar, TrendingUp, Award, Ban, Building2, FileText, Edit2, Activity, FileCheck, Download, Eye, AlertCircle, Check, X, AlertTriangle, Pause } from "lucide-react";
+import {
+  Loader2,
+  User,
+  Shield,
+  FileText,
+  Activity,
+  FileCheck,
+  XCircle,
+  CheckCircle2,
+  Star,
+  Award,
+  Ban,
+  Check,
+  X,
+  Eye,
+  Download,
+  AlertCircle,
+  Pause,
+  AlertTriangle,
+  Calendar,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Separator } from "@/components/ui/separator";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Card } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { useUser } from "@/hooks/use-users";
 import { usePermissions } from "@/hooks/use-permissions";
 import { useReviewDocument, useApproveOwner, useRejectOwner, useSuspendOwner } from "@/hooks/use-owner-verifications";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/context/AuthContext";
+import { UserHeader } from "@/components/admin/users/detail/UserHeader";
+import { UserOverviewTab } from "@/components/admin/users/detail/UserOverviewTab";
 
 export default function UserDetailPage() {
   const router = useRouter();
@@ -32,6 +54,39 @@ export default function UserDetailPage() {
   const queryClient = useQueryClient();
 
   const { data: user, isLoading, error } = useUser(id);
+
+  const getTypeBadge = (type: string) => {
+    const typeMap: Record<string, { label: string; color: string; bg: string }> = {
+      SUPER_ADMIN: { label: "Super Admin", color: "text-red-700", bg: "bg-red-100 border-red-200" },
+      ADMIN: { label: "Admin", color: "text-purple-700", bg: "bg-purple-100 border-purple-200" },
+      OWNER: { label: "Propriétaire", color: "text-blue-700", bg: "bg-blue-100 border-blue-200" },
+      CUSTOMER: { label: "Client", color: "text-green-700", bg: "bg-green-100 border-green-200" },
+    };
+    const typeInfo = typeMap[type] || { label: type, color: "text-gray-700", bg: "bg-gray-100 border-gray-200" };
+    return (
+      <Badge className={`${typeInfo.bg} ${typeInfo.color} border px-3 py-1`}>
+        {typeInfo.label}
+      </Badge>
+    );
+  };
+
+  const getStatusBadge = (status: string | undefined) => {
+    if (!status) return null;
+    const statusMap: Record<string, { label: string; color: string; bg: string }> = {
+      PENDING: { label: "En attente", color: "text-yellow-700", bg: "bg-yellow-100 border-yellow-200" },
+      SUBMITTED: { label: "Soumis", color: "text-blue-700", bg: "bg-blue-100 border-blue-200" },
+      UNDER_REVIEW: { label: "En révision", color: "text-purple-700", bg: "bg-purple-100 border-purple-200" },
+      APPROVED: { label: "Approuvé", color: "text-green-700", bg: "bg-green-100 border-green-200" },
+      REJECTED: { label: "Rejeté", color: "text-red-700", bg: "bg-red-100 border-red-200" },
+      SUSPENDED: { label: "Suspendu", color: "text-gray-700", bg: "bg-gray-100 border-gray-200" },
+    };
+    const statusInfo = statusMap[status] || { label: status, color: "text-gray-700", bg: "bg-gray-100 border-gray-200" };
+    return (
+      <Badge className={`${statusInfo.bg} ${statusInfo.color} border px-3 py-1`}>
+        {statusInfo.label}
+      </Badge>
+    );
+  };
 
   // States for modals
   const [reviewDocumentModal, setReviewDocumentModal] = useState<{
@@ -158,13 +213,13 @@ export default function UserDetailPage() {
   if (!canManageUsers()) {
     return (
       <div className="space-y-6 pb-8">
-        <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-red-200/60 text-center">
+          <div className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-red-200/60 text-center">
           <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Accès refusé</h2>
           <p className="text-gray-600 mb-6">Vous n&apos;avez pas les permissions nécessaires pour voir les détails de cet utilisateur.</p>
           <Button
             onClick={() => router.push("/admin/users")}
-            className="bg-[#f08400] hover:bg-[#d87200] text-white"
+            className="bg-theme-primary hover:bg-[#d87200] text-white"
           >
             Retour à la liste
           </Button>
@@ -178,8 +233,8 @@ export default function UserDetailPage() {
       <div className="flex items-center justify-center min-h-[500px]">
         <div className="text-center">
           <div className="relative">
-            <Loader2 className="w-16 h-16 animate-spin text-[#f08400] mb-6 mx-auto" />
-            <div className="absolute inset-0 w-16 h-16 border-4 border-[#f08400]/20 rounded-full mx-auto animate-pulse"></div>
+            <Loader2 className="w-16 h-16 animate-spin text-theme-primary mb-6 mx-auto" />
+            <div className="absolute inset-0 w-16 h-16 border-4 border-theme-primary/20 rounded-full mx-auto animate-pulse"></div>
           </div>
           <p className="text-gray-600 text-sm font-medium">Chargement des détails de l&apos;utilisateur...</p>
         </div>
@@ -196,7 +251,7 @@ export default function UserDetailPage() {
           <p className="text-gray-600 mb-6">Impossible de charger les détails de l&apos;utilisateur.</p>
           <Button
             onClick={() => router.push("/admin/users")}
-            className="bg-[#f08400] hover:bg-[#d87200] text-white"
+            className="bg-theme-primary hover:bg-[#d87200] text-white"
           >
             Retour à la liste
           </Button>
@@ -205,146 +260,31 @@ export default function UserDetailPage() {
     );
   }
 
-  const getTypeBadge = (type: string) => {
-    const typeMap: Record<string, { label: string; color: string; bg: string }> = {
-      SUPER_ADMIN: { label: "Super Admin", color: "text-red-700", bg: "bg-red-100 border-red-200" },
-      ADMIN: { label: "Admin", color: "text-purple-700", bg: "bg-purple-100 border-purple-200" },
-      OWNER: { label: "Propriétaire", color: "text-blue-700", bg: "bg-blue-100 border-blue-200" },
-      CUSTOMER: { label: "Client", color: "text-green-700", bg: "bg-green-100 border-green-200" },
-    };
-    const typeInfo = typeMap[type] || { label: type, color: "text-gray-700", bg: "bg-gray-100 border-gray-200" };
-    return (
-      <Badge className={`${typeInfo.bg} ${typeInfo.color} border px-3 py-1`}>
-        {typeInfo.label}
-      </Badge>
-    );
-  };
-
-  const getStatusBadge = (status: string | undefined) => {
-    if (!status) return null;
-    const statusMap: Record<string, { label: string; color: string; bg: string }> = {
-      PENDING: { label: "En attente", color: "text-yellow-700", bg: "bg-yellow-100 border-yellow-200" },
-      SUBMITTED: { label: "Soumis", color: "text-blue-700", bg: "bg-blue-100 border-blue-200" },
-      UNDER_REVIEW: { label: "En révision", color: "text-purple-700", bg: "bg-purple-100 border-purple-200" },
-      APPROVED: { label: "Approuvé", color: "text-green-700", bg: "bg-green-100 border-green-200" },
-      VERIFIED: { label: "Vérifié", color: "text-green-700", bg: "bg-green-100 border-green-200" }, // Alias pour APPROVED
-      REJECTED: { label: "Rejeté", color: "text-red-700", bg: "bg-red-100 border-red-200" },
-      SUSPENDED: { label: "Suspendu", color: "text-gray-700", bg: "bg-gray-100 border-gray-200" },
-    };
-    const statusInfo = statusMap[status] || { label: status, color: "text-gray-700", bg: "bg-gray-100 border-gray-200" };
-    return (
-      <Badge className={`${statusInfo.bg} ${statusInfo.color} border px-3 py-1`}>
-        {statusInfo.label}
-      </Badge>
-    );
-  };
-
-  const getUserInitials = () => {
-    return `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
-  };
-
   return (
     <div className="space-y-6 pb-8 animate-in fade-in-50 duration-500">
-      {/* Header avec Avatar */}
-      <Card className="bg-gradient-to-br from-white via-white to-gray-50/50 backdrop-blur-md rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-200/60 overflow-hidden relative">
-        {/* Decorative background */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-[#f08400]/5 via-transparent to-transparent rounded-full blur-3xl -z-0"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-blue-500/5 via-transparent to-transparent rounded-full blur-3xl -z-0"></div>
-        
-        <div className="relative z-10">
-          <div className="flex items-start justify-between gap-6 mb-6">
-            <div className="flex items-center gap-6">
-              {/* Avatar */}
-              <div className="relative">
-                <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-[#f08400] via-[#f08400]/90 to-orange-600 flex items-center justify-center shadow-2xl shadow-[#f08400]/30 ring-4 ring-white">
-                  <span className="text-3xl font-bold text-white">{getUserInitials()}</span>
-                </div>
-                {user.is_verified && (
-                  <div className="absolute -bottom-1 -right-1 w-8 h-8 bg-green-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                    <CheckCircle2 className="w-4 h-4 text-white" />
-                  </div>
-                )}
-                {user.is_premium && (
-                  <div className="absolute -top-1 -right-1 w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center border-4 border-white shadow-lg">
-                    <Star className="w-4 h-4 text-white fill-white" />
-                  </div>
-                )}
-              </div>
-              
-              {/* User Info */}
-              <div className="flex-1">
-                <div className="flex items-center gap-3 mb-2">
-                  <h1 className="text-4xl font-bold text-[#101828]">
-                    {user.first_name} {user.last_name}
-                  </h1>
-                  {getTypeBadge(user.type)}
-                </div>
-                <p className="text-gray-600 text-base mb-3 flex items-center gap-4">
-                  <span className="flex items-center gap-2">
-                    <Mail className="w-4 h-4" />
-                    {user.email}
-                  </span>
-                  <span className="flex items-center gap-2">
-                    <Phone className="w-4 h-4" />
-                    {user.phone}
-                  </span>
-                </p>
-                <div className="flex items-center gap-3 flex-wrap">
-                  {getStatusBadge(user.verification_status)}
-                  {user.role && (
-                    <Badge variant="outline" className="px-3 py-1">
-                      {user.role}
-                    </Badge>
-                  )}
-                </div>
-              </div>
-            </div>
-            
-            {/* Actions */}
-            <div className="flex items-center gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => router.push("/admin/users")}
-                className="hover:bg-gray-50 hover:border-gray-300 transition-all duration-200"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Retour
-              </Button>
-              <Button
-                size="sm"
-                onClick={() => router.push(`/admin/users?edit=${user.id}`)}
-                className="bg-[#f08400] hover:bg-[#d87200] text-white shadow-lg hover:shadow-xl transition-all duration-200"
-              >
-                <Edit2 className="w-4 h-4 mr-2" />
-                Modifier
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Card>
+      <UserHeader user={user} />
 
       {/* Tabs pour organiser les sections */}
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="bg-white/90 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-gray-200/60 h-auto">
-          <TabsTrigger value="overview" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+          <TabsList className="bg-white/90 backdrop-blur-md rounded-2xl p-1.5 shadow-lg border border-gray-200/60 h-auto">
+          <TabsTrigger value="overview" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-theme-primary data-[state=active]:text-white rounded-xl transition-all duration-200">
             <User className="w-4 h-4" />
             Vue d&apos;ensemble
           </TabsTrigger>
-          <TabsTrigger value="account" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+          <TabsTrigger value="account" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-theme-primary data-[state=active]:text-white rounded-xl transition-all duration-200">
             <Shield className="w-4 h-4" />
             Compte
           </TabsTrigger>
-          <TabsTrigger value="permissions" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+          <TabsTrigger value="permissions" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-theme-primary data-[state=active]:text-white rounded-xl transition-all duration-200">
             <FileText className="w-4 h-4" />
             Permissions
           </TabsTrigger>
-          <TabsTrigger value="stats" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+          <TabsTrigger value="stats" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-theme-primary data-[state=active]:text-white rounded-xl transition-all duration-200">
             <Activity className="w-4 h-4" />
             Statistiques
           </TabsTrigger>
           {user.verifications && user.verifications.length > 0 && (
-            <TabsTrigger value="verifications" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-[#f08400] data-[state=active]:text-white rounded-xl transition-all duration-200">
+            <TabsTrigger value="verifications" className="flex items-center gap-2 px-6 py-3 data-[state=active]:bg-theme-primary data-[state=active]:text-white rounded-xl transition-all duration-200">
               <FileCheck className="w-4 h-4" />
               Vérifications
             </TabsTrigger>
@@ -353,157 +293,16 @@ export default function UserDetailPage() {
 
         {/* Vue d&apos;ensemble */}
         <TabsContent value="overview" className="space-y-6 mt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Colonne principale */}
-            <div className="lg:col-span-2 space-y-4">
-              {/* Informations personnelles */}
-              <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                {/* Header compact */}
-                <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-5 border-b border-gray-200/50">
-                  <div className="flex items-center gap-4">
-                    <div className="p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md">
-                      <User className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-900">Informations personnelles</h2>
-                      <p className="text-xs text-gray-500 mt-0.5">Données de base de l&apos;utilisateur</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contenu */}
-                <div className="p-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                      <label className="text-xs font-medium text-gray-500 mb-1.5 block">Prénom</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{user.first_name}</p>
-                    </div>
-                    <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                      <label className="text-xs font-medium text-gray-500 mb-1.5 block">Nom</label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{user.last_name}</p>
-                    </div>
-                    <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                      <label className="text-xs font-medium text-gray-500 mb-1.5 flex items-center gap-1.5">
-                        <Mail className="w-3.5 h-3.5" />
-                        Email
-                      </label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1 break-all">{user.email}</p>
-                    </div>
-                    <div className="p-3 bg-gray-50/50 rounded-lg border border-gray-200/50">
-                      <label className="text-xs font-medium text-gray-500 mb-1.5 flex items-center gap-1.5">
-                        <Phone className="w-3.5 h-3.5" />
-                        Téléphone
-                      </label>
-                      <p className="text-sm font-semibold text-gray-900 mt-1">{user.phone}</p>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-
-              {/* Types de business */}
-              {user.businessTypes && user.businessTypes.length > 0 && (
-                <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                  {/* Header compact */}
-                  <div className="bg-gradient-to-r from-indigo-50 via-indigo-50/50 to-transparent p-5 border-b border-gray-200/50">
-                    <div className="flex items-center gap-4">
-                      <div className="p-2.5 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-xl shadow-md">
-                        <Building2 className="w-5 h-5 text-white" />
-                      </div>
-                      <div>
-                        <h2 className="text-lg font-bold text-gray-900">Types de business</h2>
-                        <p className="text-xs text-gray-500 mt-0.5">{user.businessTypes.length} type(s) de business</p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Contenu */}
-                  <div className="p-6">
-                    <div className="flex flex-wrap gap-2">
-                      {user.businessTypes.map((bt) => (
-                        <Badge
-                          key={bt.id}
-                          className="bg-gradient-to-br from-indigo-100 to-indigo-50 text-indigo-700 border border-indigo-200 px-3 py-1.5 text-xs font-semibold hover:shadow-md transition-all duration-200"
-                        >
-                          {bt.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                </Card>
-              )}
-            </div>
-
-            {/* Sidebar Stats */}
-            <div className="space-y-4">
-              {/* Statistiques */}
-              <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
-                {/* Header compact */}
-                <div className="bg-gradient-to-r from-orange-50 via-orange-50/50 to-transparent p-5 border-b border-gray-200/50">
-                  <div className="flex items-center gap-4">
-                    <div className="p-2.5 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl shadow-md">
-                      <TrendingUp className="w-5 h-5 text-white" />
-                    </div>
-                    <div>
-                      <h2 className="text-lg font-bold text-gray-900">Statistiques</h2>
-                      <p className="text-xs text-gray-500 mt-0.5">Métriques de performance</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Contenu */}
-                <div className="p-6">
-                  <div className="space-y-3">
-                    <div className="p-4 bg-gradient-to-br from-blue-50 via-blue-50/50 to-white rounded-lg border border-blue-200/50 hover:border-blue-300 transition-all duration-200">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
-                          <Award className="w-4 h-4 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xs font-medium text-gray-600 mb-0.5">Score de réputation</p>
-                          <p className="text-2xl font-bold text-gray-900">
-                            {user.reputation_score ? parseFloat(user.reputation_score).toFixed(2) : "0.00"}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-4 bg-gradient-to-br from-green-50 via-green-50/50 to-white rounded-lg border border-green-200/50 hover:border-green-300 transition-all duration-200">
-                      <div className="flex items-center gap-3">
-                        <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md">
-                          <Calendar className="w-4 h-4 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xs font-medium text-gray-600 mb-0.5">Total réservations</p>
-                          <p className="text-2xl font-bold text-gray-900">{user.total_bookings || 0}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className={`p-4 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-50 via-red-50/50" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-50 via-yellow-50/50" : "from-green-50 via-green-50/50"} to-white rounded-lg border ${parseFloat(user.cancellation_rate || "0") > 10 ? "border-red-200/50 hover:border-red-300" : parseFloat(user.cancellation_rate || "0") > 5 ? "border-yellow-200/50 hover:border-yellow-300" : "border-green-200/50 hover:border-green-300"} transition-all duration-200`}>
-                      <div className="flex items-center gap-3">
-                        <div className={`p-2 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-500 to-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-500 to-yellow-600" : "from-green-500 to-green-600"} rounded-lg shadow-md`}>
-                          <Ban className="w-4 h-4 text-white" />
-                        </div>
-                        <div className="flex-1">
-                          <p className="text-xs font-medium text-gray-600 mb-0.5">Taux d&apos;annulation</p>
-                          <p className={`text-2xl font-bold ${parseFloat(user.cancellation_rate || "0") > 10 ? "text-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "text-yellow-600" : "text-green-600"}`}>
-                            {user.cancellation_rate ? parseFloat(user.cancellation_rate).toFixed(2) : "0.00"}%
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </Card>
-            </div>
-          </div>
+          <UserOverviewTab user={user} />
         </TabsContent>
 
         {/* Compte */}
         <TabsContent value="account" className="space-y-6 mt-0">
           <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
             {/* Header compact */}
-            <div className="bg-gradient-to-r from-purple-50 via-purple-50/50 to-transparent p-5 border-b border-gray-200/50">
+              <div className="bg-linear-to-r from-purple-50 via-purple-50/50 to-transparent p-5 border-b border-gray-200/50">
               <div className="flex items-center gap-4">
-                <div className="p-2.5 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl shadow-md">
+                <div className="p-2.5 bg-linear-to-br from-purple-500 to-purple-600 rounded-xl shadow-md">
                   <Shield className="w-5 h-5 text-white" />
                 </div>
                 <div>
@@ -603,9 +402,9 @@ export default function UserDetailPage() {
           {user.permissions && user.permissions.length > 0 ? (
             <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
               {/* Header compact */}
-              <div className="bg-gradient-to-r from-green-50 via-green-50/50 to-transparent p-5 border-b border-gray-200/50">
+              <div className="bg-linear-to-r from-green-50 via-green-50/50 to-transparent p-5 border-b border-gray-200/50">
                 <div className="flex items-center gap-4">
-                  <div className="p-2.5 bg-gradient-to-br from-green-500 to-green-600 rounded-xl shadow-md">
+                  <div className="p-2.5 bg-linear-to-br from-green-500 to-green-600 rounded-xl shadow-md">
                     <FileText className="w-5 h-5 text-white" />
                   </div>
                   <div>
@@ -621,9 +420,9 @@ export default function UserDetailPage() {
                   {user.permissions.map((permission, index) => (
                     <div
                       key={index}
-                      className="px-3 py-2.5 bg-gradient-to-br from-gray-50 to-white rounded-lg text-xs text-gray-700 border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 flex items-center gap-2"
+                      className="px-3 py-2.5 bg-linear-to-br from-gray-50 to-white rounded-lg text-xs text-gray-700 border border-gray-200 hover:border-gray-300 hover:shadow-md transition-all duration-200 flex items-center gap-2"
                     >
-                      <CheckCircle2 className="w-3.5 h-3.5 text-green-600 flex-shrink-0" />
+                      <CheckCircle2 className="w-3.5 h-3.5 text-green-600 shrink-0" />
                       <span className="font-medium">{permission}</span>
                     </div>
                   ))}
@@ -644,9 +443,9 @@ export default function UserDetailPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
               {/* Header compact */}
-              <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-4 border-b border-gray-200/50">
+              <div className="bg-linear-to-r from-blue-50 via-blue-50/50 to-transparent p-4 border-b border-gray-200/50">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
+                  <div className="p-2 bg-linear-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
                     <Award className="w-4 h-4 text-white" />
                   </div>
                   <h3 className="text-sm font-bold text-gray-900">Score de réputation</h3>
@@ -663,9 +462,9 @@ export default function UserDetailPage() {
 
             <Card className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden">
               {/* Header compact */}
-              <div className="bg-gradient-to-r from-green-50 via-green-50/50 to-transparent p-4 border-b border-gray-200/50">
+              <div className="bg-linear-to-r from-green-50 via-green-50/50 to-transparent p-4 border-b border-gray-200/50">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-br from-green-500 to-green-600 rounded-lg shadow-md">
+                  <div className="p-2 bg-linear-to-br from-green-500 to-green-600 rounded-lg shadow-md">
                     <Calendar className="w-4 h-4 text-white" />
                   </div>
                   <h3 className="text-sm font-bold text-gray-900">Total réservations</h3>
@@ -680,9 +479,9 @@ export default function UserDetailPage() {
 
             <Card className={`bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden`}>
               {/* Header compact */}
-              <div className={`bg-gradient-to-r ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-50 via-red-50/50" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-50 via-yellow-50/50" : "from-green-50 via-green-50/50"} to-transparent p-4 border-b border-gray-200/50`}>
+              <div className={`bg-linear-to-r ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-50 via-red-50/50" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-50 via-yellow-50/50" : "from-green-50 via-green-50/50"} to-transparent p-4 border-b border-gray-200/50`}>
                 <div className="flex items-center gap-3">
-                  <div className={`p-2 bg-gradient-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-500 to-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-500 to-yellow-600" : "from-green-500 to-green-600"} rounded-lg shadow-md`}>
+                  <div className={`p-2 bg-linear-to-br ${parseFloat(user.cancellation_rate || "0") > 10 ? "from-red-500 to-red-600" : parseFloat(user.cancellation_rate || "0") > 5 ? "from-yellow-500 to-yellow-600" : "from-green-500 to-green-600"} rounded-lg shadow-md`}>
                     <Ban className="w-4 h-4 text-white" />
                   </div>
                   <h3 className="text-sm font-bold text-gray-900">Taux d&apos;annulation</h3>
@@ -709,10 +508,10 @@ export default function UserDetailPage() {
                   className="bg-white/90 backdrop-blur-md rounded-2xl shadow-lg border border-gray-200/60 hover:shadow-xl transition-all duration-300 overflow-hidden"
                 >
                   {/* Header compact */}
-                  <div className="bg-gradient-to-r from-blue-50 via-blue-50/50 to-transparent p-5 border-b border-gray-200/50">
+                  <div className="bg-linear-to-r from-blue-50 via-blue-50/50 to-transparent p-5 border-b border-gray-200/50">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-4">
-                        <div className="p-2.5 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl shadow-md">
+                        <div className="p-2.5 bg-linear-to-br from-blue-500 to-blue-600 rounded-xl shadow-md">
                           <FileCheck className="w-5 h-5 text-white" />
                         </div>
                         <div>
@@ -847,9 +646,9 @@ export default function UserDetailPage() {
                       {/* Colonne 2: Fichier du document */}
                       {verification.document_file && (
                         <div className="space-y-4">
-                          <div className="p-4 bg-gradient-to-br from-blue-50 via-blue-50/50 to-white rounded-xl border-2 border-blue-200/50">
+                          <div className="p-4 bg-linear-to-br from-blue-50 via-blue-50/50 to-white rounded-xl border-2 border-blue-200/50">
                             <div className="flex items-center gap-3 mb-3">
-                              <div className="p-2 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
+                              <div className="p-2 bg-linear-to-br from-blue-500 to-blue-600 rounded-lg shadow-md">
                                 <FileText className="w-4 h-4 text-white" />
                               </div>
                               <div className="flex-1 min-w-0">
@@ -897,10 +696,10 @@ export default function UserDetailPage() {
               {/* Actions sur le propriétaire */}
               {user.type === "OWNER" && (canApproveOwner() || canRejectOwner() || canSuspendOwner()) && (
                 <Card className="bg-white/90 backdrop-blur-md rounded-3xl p-8 shadow-xl shadow-gray-200/50 border border-gray-200/60 hover:shadow-2xl transition-all duration-300 relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-orange-500/5 to-transparent rounded-full blur-3xl -z-0"></div>
+                  <div className="absolute top-0 right-0 w-48 h-48 bg-linear-to-br from-orange-500/5 to-transparent rounded-full blur-3xl z-0"></div>
                   <div className="relative z-10">
                     <div className="flex items-center gap-4 mb-6">
-                      <div className="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl shadow-lg">
+                      <div className="p-3 bg-linear-to-br from-orange-500 to-orange-600 rounded-2xl shadow-lg">
                         <Shield className="w-6 h-6 text-white" />
                       </div>
                       <div>
@@ -1109,7 +908,7 @@ export default function UserDetailPage() {
             </div>
             <div className="p-4 bg-red-50 rounded-lg border border-red-200">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 flex-shrink-0" />
+                <AlertTriangle className="w-5 h-5 text-red-600 mt-0.5 shrink-0" />
                 <p className="text-sm text-red-800">
                   Cette action rejettera le propriétaire et il ne pourra plus utiliser les fonctionnalités réservées aux propriétaires.
                 </p>
@@ -1164,7 +963,7 @@ export default function UserDetailPage() {
             </div>
             <div className="p-4 bg-orange-50 rounded-lg border border-orange-200">
               <div className="flex items-start gap-2">
-                <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" />
+                <AlertTriangle className="w-5 h-5 text-orange-600 mt-0.5 shrink-0" />
                 <p className="text-sm text-orange-800">
                   Cette action suspendra temporairement le propriétaire. Il pourra être réactivé plus tard.
                 </p>

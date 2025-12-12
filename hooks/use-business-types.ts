@@ -1,6 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { toast } from "sonner";
+import { ApiResponse, extractApiData } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 // Types
 export interface BusinessType {
@@ -22,7 +24,8 @@ export function useBusinessTypes() {
     queryKey: ["business-types"],
     queryFn: async () => {
       const response = await api.get("/business-types");
-      return response.data.data as BusinessType[];
+      const data = extractApiData<BusinessType[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -34,7 +37,9 @@ export function useBusinessType(id: number) {
     queryKey: ["business-types", id],
     queryFn: async () => {
       const response = await api.get(`/business-types/${id}`);
-      return response.data.data as BusinessType;
+      const data = extractApiData<BusinessType>(response.data);
+      if (!data) throw new Error('Business type not found');
+      return data;
     },
     enabled: !!id,
   });
@@ -46,19 +51,17 @@ export function useCreateBusinessType() {
 
   return useMutation({
     mutationFn: async (data: BusinessTypeFormData) => {
-      const response = await api.post("/business-types", data);
-      return response.data.data as BusinessType;
+      const response = await api.post<ApiResponse<BusinessType>>("/business-types", data);
+      const businessTypeData = extractApiData<BusinessType>(response.data);
+      if (!businessTypeData) throw new Error('Failed to create business type');
+      return businessTypeData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["business-types"] });
       toast.success("Business type created successfully!");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Failed to create business type"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Failed to create business type" });
     },
   });
 }
@@ -75,8 +78,10 @@ export function useUpdateBusinessType() {
       id: number;
       data: BusinessTypeFormData;
     }) => {
-      const response = await api.put(`/business-types/${id}`, data);
-      return response.data.data as BusinessType;
+      const response = await api.put<ApiResponse<BusinessType>>(`/business-types/${id}`, data);
+      const businessTypeData = extractApiData<BusinessType>(response.data);
+      if (!businessTypeData) throw new Error('Failed to update business type');
+      return businessTypeData;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["business-types"] });
@@ -85,12 +90,8 @@ export function useUpdateBusinessType() {
       });
       toast.success("Business type updated successfully!");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Failed to update business type"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Failed to update business type" });
     },
   });
 }
@@ -108,12 +109,8 @@ export function useDeleteBusinessType() {
       queryClient.invalidateQueries({ queryKey: ["business-types"] });
       toast.success("Business type deleted successfully!");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Failed to delete business type"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Failed to delete business type" });
     },
   });
 }

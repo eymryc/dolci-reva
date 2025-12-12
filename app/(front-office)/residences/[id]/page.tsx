@@ -14,153 +14,14 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import Image from "next/image";
 import Link from "next/link";
 import { usePublicResidence, useBookResidence } from '@/hooks/use-residences';
 import { usePublicOpinions, useCreateOpinion } from '@/hooks/use-opinions';
 import { useAuth } from '@/context/AuthContext';
 import { CustomerSignUpModal } from '@/components/auth/CustomerSignUpModal';
 import { toast } from 'sonner';
-import { Calendar, Home, MapPin, Droplet, Users, Star, Shield } from 'lucide-react';
-import { 
-  Heart, 
-  Share2, 
-  ArrowLeft,
-  ChevronLeft,
-  ChevronRight,
-  Check,
-  X,
-  Loader2
-} from "lucide-react";
-
-// Carousel amélioré avec disposition moderne
-function Carousel({ images }: { images: string[] }) {
-  const [current, setCurrent] = useState(0);
-  const total = images.length;
-  const hasMultipleImages = total > 1;
-
-  const goTo = (idx: number) => setCurrent((idx + total) % total);
-  const prev = () => goTo(current - 1);
-  const next = () => goTo(current + 1);
-
-  if (images.length === 0) {
-    return (
-      <div className="w-full aspect-[16/10] rounded-3xl overflow-hidden bg-gray-100 shadow-2xl flex items-center justify-center">
-        <p className="text-gray-400">Aucune image disponible</p>
-      </div>
-    );
-  }
-
-  // Si une seule image, affichage simple
-  if (!hasMultipleImages) {
-    return (
-      <div className="relative w-full group">
-        <div className="w-full aspect-[16/10] rounded-3xl overflow-hidden bg-gray-100 shadow-2xl">
-          <Image
-            src={images[0]}
-            alt="Photo principale"
-            fill
-            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
-            sizes="(max-width: 768px) 100vw, 1200px"
-            priority
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
-        </div>
-      </div>
-    );
-  }
-
-  // Disposition avec miniatures
-  const maxVisibleThumbnails = 6;
-  const shouldShowAll = images.length <= maxVisibleThumbnails;
-  const visibleThumbnails = shouldShowAll ? images : images.slice(0, maxVisibleThumbnails - 1);
-  const hasMoreThanMax = images.length > maxVisibleThumbnails;
-
-  return (
-    <div className="w-full flex flex-col lg:flex-row gap-3">
-      {/* Image principale - 50% */}
-      <div className="w-full lg:w-1/2 relative aspect-[16/10] rounded-2xl overflow-hidden bg-gray-100 shadow-md group">
-        <Image
-          src={images[current] || images[0]}
-          alt={`Photo ${current + 1} sur ${total}`}
-          fill
-          className="w-full h-full object-cover transition-all duration-700"
-          sizes="(max-width: 768px) 100vw, 50vw"
-          priority={current === 0}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent" />
-        
-        {/* Compteur d'images */}
-        <div className="absolute top-3 right-3 bg-black/60 backdrop-blur-sm text-white px-2.5 py-1 rounded-full text-xs font-medium z-10">
-          {current + 1} / {total}
-        </div>
-      
-        {/* Flèches de navigation */}
-        <button
-          onClick={prev}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-theme-primary hover:text-white transition-all duration-300 p-1.5 rounded-full shadow-md border border-gray-200 z-10 opacity-100 hover:scale-110"
-          aria-label="Photo précédente"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-        <button
-          onClick={next}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/90 hover:bg-theme-primary hover:text-white transition-all duration-300 p-1.5 rounded-full shadow-md border border-gray-200 z-10 opacity-100 hover:scale-110"
-          aria-label="Photo suivante"
-        >
-          <ChevronRight className="w-4 h-4" />
-        </button>
-      </div>
-      
-      {/* Miniatures en grille 3 colonnes - 50% */}
-      <div className="w-full lg:w-1/2">
-        <div className="grid grid-cols-3 gap-2">
-          {visibleThumbnails.map((image, idx) => (
-            <button
-              key={idx}
-              onClick={() => goTo(idx)}
-              className={`relative aspect-square rounded-lg overflow-hidden transition-all duration-300 ${
-                idx === current 
-                  ? 'ring-2 ring-theme-primary shadow-md'
-                  : 'ring-1 ring-gray-200 hover:ring-theme-primary/50 opacity-70 hover:opacity-100'
-              }`}
-              aria-label={`Voir la photo ${idx + 1}`}
-            >
-              <Image
-                src={image}
-                alt={`Miniature ${idx + 1}`}
-                fill
-                className="object-cover"
-                sizes="(max-width: 768px) 33vw, 16vw"
-              />
-              {idx === current && (
-                <div className="absolute inset-0 bg-theme-primary/15 border-2 border-theme-primary" />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 hover:opacity-100 transition-opacity" />
-            </button>
-          ))}
-          
-          {/* Indicateur s'il y a plus d'images */}
-          {hasMoreThanMax && (
-            <button
-              onClick={() => {
-                const nextIndex = visibleThumbnails.length;
-                goTo(nextIndex);
-              }}
-              className="relative aspect-square rounded-lg bg-gradient-to-br from-theme-primary/10 to-theme-accent/10 flex items-center justify-center border-2 border-theme-primary/30 hover:border-theme-primary transition-all duration-300 cursor-pointer"
-              aria-label={`Voir les ${images.length - maxVisibleThumbnails + 1} images restantes`}
-            >
-              <div className="text-center">
-                <span className="text-lg font-bold text-theme-primary">+{images.length - maxVisibleThumbnails + 1}</span>
-                <p className="text-xs text-gray-600 mt-0.5 font-medium">plus</p>
-              </div>
-            </button>
-          )}
-        </div>
-      </div>
-    </div>
-  );
-}
+import { Calendar, Home, MapPin, Droplet, Users, Star, Shield, Check, X, Loader2 } from 'lucide-react';
+import { ResidenceCarousel } from '@/components/front-office/residences/detail/ResidenceCarousel';
 
 // Formater les labels
 const formatLabel = (value: string) => {
@@ -176,7 +37,6 @@ export default function ResidenceDetailPage() {
   const bookResidence = useBookResidence();
   const { user } = useAuth();
   
-  const [isFavorite, setIsFavorite] = useState(false);
   const [showAllAmenities, setShowAllAmenities] = useState(false);
   const [showReviewForm, setShowReviewForm] = useState(false);
   const [showSignUpModal, setShowSignUpModal] = useState(false);
@@ -461,48 +321,12 @@ export default function ResidenceDetailPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Header avec navigation amélioré */}
-      <div className="bg-white/80 backdrop-blur-md shadow-md border-b sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Link 
-              href="/residences" 
-              className="flex items-center gap-2 text-gray-700 hover:text-theme-primary transition-all duration-300 group font-medium"
-            >
-              <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-              <span>Retour aux résidences</span>
-            </Link>
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="flex items-center gap-2 hover:bg-theme-primary/5 hover:border-theme-primary/30 transition-all"
-              >
-                <Share2 className="w-4 h-4" />
-                <span className="hidden sm:inline">Partager</span>
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className={`flex items-center gap-2 transition-all duration-300 ${
-                  isFavorite 
-                    ? 'text-red-500 border-red-500 bg-red-50 hover:bg-red-100' 
-                    : 'hover:bg-gray-50'
-                }`}
-                onClick={() => setIsFavorite(!isFavorite)}
-              >
-                <Heart className={`w-4 h-4 transition-all ${isFavorite ? 'fill-current scale-110' : ''}`} />
-                <span className="hidden sm:inline">{isFavorite ? 'Favori' : 'Ajouter aux favoris'}</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+     
 
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6 lg:py-8">
         {/* Galerie d'images */}
         <section className="mb-6">
-          <Carousel images={images} />
+          <ResidenceCarousel images={images} />
         </section>
 
         {/* Titre, localisation, note amélioré */}

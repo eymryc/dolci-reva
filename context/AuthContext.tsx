@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect, useCallback, useMemo, ReactNode } from 'react';
 import api from '@/lib/axios';
+import { ApiResponse, SingleDataApiResponse, extractApiData } from '@/types/api-response.types';
 
 export interface BusinessType {
   id: number;
@@ -99,8 +100,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const token = typeof window !== 'undefined' ? localStorage.getItem('access_token') : null;
     if (token) {
       try {
-        const res = await api.get('/profile');
-        setUser(res.data.data);
+        const res = await api.get<SingleDataApiResponse<User>>('/profile');
+        const userData = extractApiData<User>(res.data);
+        setUser(userData || null);
       } catch {
         setUser(null);
       } finally {

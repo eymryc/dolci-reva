@@ -27,7 +27,6 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  RefreshCw,
   Calendar,
   MapPin,
   User,
@@ -42,12 +41,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useConfirmVisit } from "@/hooks/use-visits";
 import { ConfirmationDialog } from "@/components/admin/shared/ConfirmationDialog";
+import { RefreshButton } from "@/components/admin/shared/RefreshButton";
 
 interface VisitTableProps {
   data: Visit[];
   isLoading?: boolean;
   onRefresh?: () => void;
   isRefreshing?: boolean;
+  hideActions?: boolean; // Masquer la colonne Actions (pour les clients)
 }
 
 const getStatusBadge = (status: string) => {
@@ -98,6 +99,7 @@ export function VisitTable({
   isLoading = false,
   onRefresh,
   isRefreshing = false,
+  hideActions = false,
 }: VisitTableProps) {
   const confirmVisitMutation = useConfirmVisit();
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -150,6 +152,13 @@ export function VisitTable({
         },
         cell: ({ row }) => {
           const visit = row.original;
+          if (hideActions) {
+            return (
+              <span className="font-medium text-xs sm:text-sm text-gray-900">
+                {row.getValue("visit_reference")}
+              </span>
+            );
+          }
           return (
             <button
               onClick={() => {
@@ -258,48 +267,50 @@ export function VisitTable({
           return getStatusBadge(row.getValue("status"));
         },
       },
-      {
-        id: "actions",
-        header: "Actions",
-        cell: ({ row }) => {
-          const visit = row.original;
-          const isConfirmed = visit.status === "CONFIRMED";
-          
-          // Masquer complètement le dropdown si déjà confirmé
-          if (isConfirmed) {
-            return null;
-          }
-          
-          return (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="h-8 w-8 p-0 hover:bg-gray-100"
-                >
-                  <span className="sr-only">Ouvrir le menu</span>
-                  <MoreVertical className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => {
-                    setVisitToConfirm(visit);
-                    setIsConfirmDialogOpen(true);
-                  }}
-                  className="cursor-pointer"
-                >
-                  <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
-                  Confirmer la visite
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          );
+      ...(hideActions ? [] : [
+        {
+          id: "actions",
+          header: "Actions",
+          cell: ({ row }: { row: { original: Visit } }) => {
+            const visit = row.original;
+            const isConfirmed = visit.status === "CONFIRMED";
+            
+            // Masquer complètement le dropdown si déjà confirmé
+            if (isConfirmed) {
+              return null;
+            }
+            
+            return (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-gray-100"
+                  >
+                    <span className="sr-only">Ouvrir le menu</span>
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setVisitToConfirm(visit);
+                      setIsConfirmDialogOpen(true);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
+                    Confirmer la visite
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          },
         },
-      },
+      ] as ColumnDef<Visit>[]),
     ],
-    []
+    [hideActions]
   );
 
   const table = useReactTable({
@@ -325,81 +336,79 @@ export function VisitTable({
   return (
     <div className="space-y-4">
       {/* Search and Actions */}
-      <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
-          <Input
-            placeholder="Rechercher..."
-            value={globalFilter ?? ""}
-            onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pl-8 h-9 sm:h-10 text-xs sm:text-sm"
-          />
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1 max-w-sm">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Rechercher..."
+              value={globalFilter ?? ""}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="pl-10 h-10"
+            />
+          </div>
         </div>
-        {onRefresh && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onRefresh}
-            disabled={isRefreshing}
-            className="h-9 sm:h-10"
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
-            Actualiser
-          </Button>
-        )}
+        <div className="flex items-center gap-2">
+          {onRefresh && (
+            <RefreshButton
+              onClick={onRefresh}
+              isRefreshing={isRefreshing}
+              showLabel={false}
+            />
+          )}
+        </div>
       </div>
 
       {/* Table */}
-      <div className="rounded-md border border-gray-200 overflow-x-auto">
-        <table className="w-full">
-          <thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id} className="border-b bg-gray-50/50">
-                {headerGroup.headers.map((header) => (
-                  <th
-                    key={header.id}
-                    className="h-10 sm:h-12 px-2 sm:px-4 text-left align-middle font-medium text-xs sm:text-sm text-gray-700"
-                  >
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(header.column.columnDef.header, header.getContext())}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          <tbody>
-            {isLoading ? (
-              <tr>
-                <td colSpan={columns.length} className="h-24 text-center">
-                  <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-[#f08400]"></div>
-                  </div>
-                </td>
-              </tr>
-            ) : table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <tr
-                  key={row.id}
-                  className="border-b transition-colors hover:bg-gray-50/50 data-[state=selected]:bg-gray-100"
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <td key={cell.id} className="p-2 sm:p-4 align-middle text-xs sm:text-sm">
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                    </td>
+      <div className="rounded-xl border border-gray-200/50 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 border-b border-gray-200">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="px-6 py-2 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
                   ))}
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan={columns.length} className="h-24 text-center text-gray-500 text-sm">
-                  Aucune donnée
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              ))}
+            </thead>
+            <tbody className="divide-y divide-gray-100 bg-white">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
+                    Chargement des visites...
+                  </td>
+                </tr>
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className="hover:bg-gradient-to-r hover:from-gray-50/50 hover:to-transparent transition-all duration-200"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="px-6 py-1 whitespace-nowrap">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
+                    Aucune donnée
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Pagination */}

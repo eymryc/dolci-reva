@@ -11,8 +11,9 @@ import React, { useMemo } from "react";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Commission } from "@/hooks/use-commissions";
 import { Button } from "@/components/ui/button";
-import { Edit2, Trash2, ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
 import { DataTable } from "@/components/admin/shared/DataTable";
+import { ActionButtons } from "@/components/admin/shared/ActionButtons";
 
 interface CommissionTableProps {
   data: Commission[];
@@ -91,26 +92,11 @@ export function CommissionTable({
         cell: ({ row }) => {
           const commission = row.original;
           return (
-            <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onEdit(commission)}
-                className="hover:bg-blue-50 hover:text-blue-600"
-                aria-label={`Modifier la commission ${commission.commission}%`}
-              >
-                <Edit2 className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onDelete(commission)}
-                className="hover:bg-red-50 hover:text-red-600"
-                aria-label={`Supprimer la commission ${commission.commission}%`}
-              >
-                <Trash2 className="h-4 w-4" />
-              </Button>
-            </div>
+            <ActionButtons
+              onEdit={() => onEdit(commission)}
+              onDelete={() => onDelete(commission)}
+              showDirectButtons={true}
+            />
           );
         },
       },

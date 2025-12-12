@@ -5,6 +5,8 @@ import { toast } from "sonner";
 import { usePermissions } from "./use-permissions";
 import { logger } from "@/lib/logger";
 import type { Amenity, Owner } from "@/types/common";
+import { ApiResponse, extractApiData } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 // Réexporter les types pour la compatibilité
 export type { Amenity, Owner };
@@ -116,10 +118,8 @@ export function useResidences() {
 
       const response = await api.get("/residences", { params });
       // Handle Laravel paginated response
-      if (response.data.data && Array.isArray(response.data.data)) {
-        return response.data.data as Residence[];
-      }
-      return [] as Residence[];
+      const data = extractApiData<Residence[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -171,10 +171,8 @@ export function usePublicResidences(filters?: PublicResidencesFilters) {
       
       const response = await api.get("/public/residences", { params });
       // Handle Laravel response
-      if (response.data.data && Array.isArray(response.data.data)) {
-        return response.data.data as Residence[];
-      }
-      return [] as Residence[];
+      const data = extractApiData<Residence[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -195,7 +193,9 @@ export function usePublicResidence(id: number) {
     queryKey: ["public", "residences", id],
     queryFn: async () => {
       const response = await api.get(`/public/residences/${id}`);
-      return response.data.data as Residence;
+      const data = extractApiData<Residence>(response.data);
+      if (!data) throw new Error('Residence not found');
+      return data;
     },
   });
 }
@@ -217,7 +217,9 @@ export function useResidence(id: number) {
     queryKey: ["residences", id],
     queryFn: async () => {
       const response = await api.get(`/residences/${id}`);
-      return response.data.data as Residence;
+      const data = extractApiData<Residence>(response.data);
+      if (!data) throw new Error('Residence not found');
+      return data;
     },
     enabled: !!id,
   });
@@ -284,23 +286,21 @@ export function useCreateResidence() {
         });
       }
 
-      const response = await api.post("/residences", formData, {
+      const response = await api.post<ApiResponse<Residence>>("/residences", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      return response.data.data as Residence;
+      const residenceData = extractApiData<Residence>(response.data);
+      if (!residenceData) throw new Error('Failed to create residence');
+      return residenceData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["residences"] });
       toast.success("Residence created successfully!");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Failed to create residence"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Failed to create residence" });
     },
   });
 }
@@ -370,12 +370,14 @@ export function useUpdateResidence() {
         });
       }
 
-      const response = await api.put(`/residences/${id}`, formData, {
+      const response = await api.put<ApiResponse<Residence>>(`/residences/${id}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      return response.data.data as Residence;
+      const residenceData = extractApiData<Residence>(response.data);
+      if (!residenceData) throw new Error('Failed to update residence');
+      return residenceData;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["residences"] });
@@ -384,12 +386,8 @@ export function useUpdateResidence() {
       });
       toast.success("Residence updated successfully!");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Failed to update residence"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Failed to update residence" });
     },
   });
 }
@@ -422,12 +420,8 @@ export function useDeleteResidence() {
       queryClient.invalidateQueries({ queryKey: ["residences"] });
       toast.success("Residence deleted successfully!");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Failed to delete residence"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Failed to delete residence" });
     },
   });
 }
@@ -486,12 +480,8 @@ export function useBookResidence() {
     onSuccess: (data) => {
       toast.success(data.message || "Réservation effectuée avec succès !");
     },
-    onError: (error: AxiosError<{ message?: string; error?: string }>) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Erreur lors de la réservation"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Erreur lors de la réservation" });
     },
   });
 }

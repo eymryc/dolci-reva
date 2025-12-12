@@ -2,6 +2,8 @@ import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import api from "@/lib/axios";
 import { toast } from "sonner";
 import type { Amenity } from "@/types/common";
+import { ApiResponse, extractApiData } from "@/types/api-response.types";
+import { handleError } from "@/lib/error-handler";
 
 // Réexporter le type pour la compatibilité
 export type { Amenity };
@@ -17,7 +19,8 @@ export function useAmenities() {
     queryKey: ["amenities"],
     queryFn: async () => {
       const response = await api.get("/amenities");
-      return response.data.data as Amenity[];
+      const data = extractApiData<Amenity[]>(response.data);
+      return data || [];
     },
   });
 }
@@ -28,7 +31,9 @@ export function useAmenity(id: number) {
     queryKey: ["amenities", id],
     queryFn: async () => {
       const response = await api.get(`/amenities/${id}`);
-      return response.data.data as Amenity;
+      const data = extractApiData<Amenity>(response.data);
+      if (!data) throw new Error('Amenity not found');
+      return data;
     },
     enabled: !!id,
   });
@@ -40,19 +45,17 @@ export function useCreateAmenity() {
 
   return useMutation({
     mutationFn: async (data: AmenityFormData) => {
-      const response = await api.post("/amenities", data);
-      return response.data.data as Amenity;
+      const response = await api.post<ApiResponse<Amenity>>("/amenities", data);
+      const amenityData = extractApiData<Amenity>(response.data);
+      if (!amenityData) throw new Error('Failed to create amenity');
+      return amenityData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["amenities"] });
       toast.success("Commodité créée avec succès !");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la création de la commodité"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la création de la commodité" });
     },
   });
 }
@@ -69,8 +72,10 @@ export function useUpdateAmenity() {
       id: number;
       data: AmenityFormData;
     }) => {
-      const response = await api.put(`/amenities/${id}`, data);
-      return response.data.data as Amenity;
+      const response = await api.put<ApiResponse<Amenity>>(`/amenities/${id}`, data);
+      const amenityData = extractApiData<Amenity>(response.data);
+      if (!amenityData) throw new Error('Failed to update amenity');
+      return amenityData;
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ["amenities"] });
@@ -79,12 +84,8 @@ export function useUpdateAmenity() {
       });
       toast.success("Commodité mise à jour avec succès !");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la mise à jour de la commodité"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la mise à jour de la commodité" });
     },
   });
 }
@@ -102,12 +103,8 @@ export function useDeleteAmenity() {
       queryClient.invalidateQueries({ queryKey: ["amenities"] });
       toast.success("Commodité supprimée avec succès !");
     },
-    onError: (error: any) => {
-      toast.error(
-        error.response?.data?.message ||
-          error.response?.data?.error ||
-          "Échec de la suppression de la commodité"
-      );
+    onError: (error: unknown) => {
+      handleError(error, { defaultMessage: "Échec de la suppression de la commodité" });
     },
   });
 }

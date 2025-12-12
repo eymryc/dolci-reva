@@ -29,7 +29,6 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  RefreshCw,
   MoreHorizontal,
   CheckCircle,
   XCircle,
@@ -40,6 +39,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { RefreshButton } from "@/components/admin/shared/RefreshButton";
 
 interface DwellingTableProps {
   data: Dwelling[];
@@ -418,33 +418,27 @@ export function DwellingTable({
         </div>
         <div className="flex items-center gap-2">
           {onRefresh && (
-            <Button
-              variant="outline"
-              size="sm"
+            <RefreshButton
               onClick={onRefresh}
-              disabled={isRefreshing}
-              className="h-10"
-            >
-              <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
-              Actualiser
-            </Button>
+              isRefreshing={isRefreshing}
+              showLabel={false}
+            />
           )}
           {addButton}
         </div>
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border border-gray-200 overflow-hidden">
+      <div className="rounded-xl border border-gray-200/50 overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full" style={{ tableLayout: 'auto' }}>
-            <thead className="bg-gray-50 border-b border-gray-200">
+          <table className="w-full">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 border-b border-gray-200">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-4 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider whitespace-nowrap"
-                      style={{ minWidth: '120px' }}
+                      className="px-6 py-2 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
                     >
                       {header.isPlaceholder
                         ? null
@@ -454,39 +448,29 @@ export function DwellingTable({
                 </tr>
               ))}
             </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
+            <tbody className="divide-y divide-gray-100 bg-white">
               {isLoading ? (
                 <tr>
-                  <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-500">
-                    <div className="flex flex-col items-center gap-2">
-                      <RefreshCw className="w-6 h-6 animate-spin text-[#f08400]" />
-                      <span>Chargement...</span>
-                    </div>
+                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
+                    Chargement des hébergements...
                   </td>
                 </tr>
               ) : table.getRowModel().rows.length > 0 ? (
                 table.getRowModel().rows.map((row) => (
                   <tr
                     key={row.id}
-                    className="hover:bg-gray-50 transition-colors"
+                    className="hover:bg-gradient-to-r hover:from-gray-50/50 hover:to-transparent transition-all duration-200"
                   >
-                    {row.getVisibleCells().map((cell) => {
-                      // Permettre le retour à la ligne pour certaines colonnes
-                      const isTextColumn = cell.column.id === 'description' || cell.column.id === 'address';
-                      return (
-                        <td 
-                          key={cell.id} 
-                          className={`px-4 py-3 text-sm ${isTextColumn ? '' : 'whitespace-nowrap'}`}
-                        >
-                          {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                        </td>
-                      );
-                    })}
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="px-6 py-1 whitespace-nowrap">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan={columns.length} className="px-4 py-12 text-center text-gray-500">
+                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
                     Aucune donnée
                   </td>
                 </tr>

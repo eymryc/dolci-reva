@@ -27,9 +27,9 @@ import {
   ArrowUpDown,
   ArrowUp,
   ArrowDown,
-  RefreshCw,
   Loader2,
 } from "lucide-react";
+import { RefreshButton } from "@/components/admin/shared/RefreshButton";
 
 export default function TransactionsPage() {
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -210,41 +210,26 @@ export default function TransactionsPage() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-[#101828] mb-2">
-            Transactions
-          </h1>
-          <p className="text-gray-600 text-sm sm:text-base">
-            Consultez l&apos;historique de toutes vos transactions
-          </p>
-        </div>
-      </div>
-
       {/* Card with Table */}
       <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-gray-200/50 hover:shadow-xl transition-all duration-300">
         {/* Search and Actions */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between mb-6">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-gray-400" />
-            <Input
-              placeholder="Rechercher..."
-              value={globalFilter}
-              onChange={(e) => setGlobalFilter(e.target.value)}
-              className="pl-8 h-9 sm:h-10 text-xs sm:text-sm"
-            />
+        <div className="flex items-center justify-between gap-4 mb-6">
+          <div className="flex-1 max-w-sm">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+              <Input
+                placeholder="Rechercher..."
+                value={globalFilter}
+                onChange={(e) => setGlobalFilter(e.target.value)}
+                className="pl-10 h-10"
+              />
+            </div>
           </div>
-          <Button
-            variant="outline"
-            size="sm"
+          <RefreshButton
             onClick={handleRefresh}
-            disabled={isRefreshing}
-            className="h-9 sm:h-10"
-          >
-            <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
-            Actualiser
-          </Button>
+            isRefreshing={isRefreshing}
+            showLabel={false}
+          />
         </div>
 
         {/* Table */}

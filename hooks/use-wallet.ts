@@ -1,8 +1,9 @@
 import { useQuery, useMutation } from '@tanstack/react-query';
 import api from '@/lib/axios';
 import { toast } from 'sonner';
-import { ApiResponse, ValidationErrorResponse, PaginatedApiResponse } from '@/types/api-responses';
+import { ApiResponse, PaginatedApiResponse, extractApiData, extractApiMessage } from '@/types/api-response.types';
 import { logger } from '@/lib/logger';
+import { handleError } from '@/lib/error-handler';
 
 export interface RechargeWalletData {
   amount: number;
@@ -35,7 +36,7 @@ export interface Transaction {
   updated_at: string;
 }
 
-export type PaginatedTransactionsResponse = PaginatedApiResponse<Transaction>;
+// PaginatedTransactionsResponse est maintenant PaginatedApiResponse<Transaction>
 
 /**
  * Catégories de transactions disponibles
@@ -72,7 +73,7 @@ export function useWalletTransactions(page: number = 1, transaction_category: Tr
         transaction_category 
       };
       const response = await api.get('/wallet_transactions', { params });
-      return response.data as PaginatedTransactionsResponse;
+      return response.data as PaginatedApiResponse<Transaction>;
     },
   });
 }
@@ -98,9 +99,12 @@ export function useRechargeWallet() {
     mutationFn: async (data: RechargeWalletData) => {
       const response = await api.post<ApiResponse<RechargeWalletResponse>>('/wallets/recharge', data);
       logger.debug('Wallet recharge response:', response);
+      const rechargeData = extractApiData<RechargeWalletResponse>(response.data);
+      const message = extractApiMessage(response.data);
+      if (!rechargeData) throw new Error('Failed to initialize wallet recharge');
       return {
-        data: response.data.data as RechargeWalletResponse,
-        message: response.data.message,
+        data: rechargeData,
+        message: message || '',
       };
     },
     onSuccess: (result) => {
@@ -116,29 +120,7 @@ export function useRechargeWallet() {
       }
     },
     onError: (error: unknown) => {
-      const axiosError = error as {
-        response?: {
-          status?: number;
-          data?: ValidationErrorResponse | { message?: string; error?: string };
-        };
-      };
-      
-      if (axiosError.response?.status === 422) {
-        const validationError = axiosError.response.data as ValidationErrorResponse;
-        if (validationError?.data) {
-          const errorMessages = Object.values(validationError.data).flat().join(', ');
-          toast.error(errorMessages || validationError.message || 'Erreurs de validation');
-        } else {
-          toast.error(validationError?.message || 'Erreurs de validation');
-        }
-      } else {
-        const errorData = axiosError.response?.data as { message?: string; error?: string };
-        toast.error(
-          errorData?.message ||
-          errorData?.error ||
-          'Erreur lors de l\'initialisation de la recharge'
-        );
-      }
+      handleError(error, { defaultMessage: 'Erreur lors de l\'initialisation de la recharge' });
     },
   });
 }

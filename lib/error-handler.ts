@@ -8,7 +8,11 @@
 import { AxiosError } from 'axios';
 import { toast } from 'sonner';
 import { logger } from './logger';
-import { ValidationErrorResponse } from '@/types/api-responses';
+import { 
+  extractApiMessage,
+  extractValidationErrors as extractApiValidationErrors,
+  isApiError
+} from '@/types/api-response.types';
 
 /**
  * Types d'erreurs possibles
@@ -71,9 +75,9 @@ export function extractValidationErrors(
   error: unknown
 ): Record<string, string[]> | null {
   if (error instanceof AxiosError) {
-    const response = error.response?.data as ValidationErrorResponse | undefined;
-    if (response?.data && typeof response.data === 'object') {
-      return response.data as Record<string, string[]>;
+    const response = error.response?.data;
+    if (response && isApiError(response)) {
+      return extractApiValidationErrors(response);
     }
   }
   return null;
@@ -84,8 +88,12 @@ export function extractValidationErrors(
  */
 export function extractErrorMessage(error: unknown): string {
   if (error instanceof AxiosError) {
-    const response = error.response?.data as { message?: string; error?: string } | undefined;
-    return response?.message || response?.error || error.message || 'Une erreur est survenue';
+    const response = error.response?.data;
+    if (response) {
+      const message = extractApiMessage(response);
+      if (message) return message;
+    }
+    return error.message || 'Une erreur est survenue';
   }
   
   if (error instanceof Error) {

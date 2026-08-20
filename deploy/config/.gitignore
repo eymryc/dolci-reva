@@ -1,0 +1,7 @@
+# Secrets / config machine — NE PAS COMMITTER
+deploy.env
+*.log
+
+# Backups générés sur le VPS (si sync local)
+logs/
+../backups/

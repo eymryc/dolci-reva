@@ -1,0 +1,43 @@
+# =============================================================================
+# Override local — usage :
+#   docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
+# =============================================================================
+services:
+  php:
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/php.dev.ini:/usr/local/etc/php/conf.d/99-dolci.ini:ro
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+
+  nginx:
+    ports:
+      # API locale (remplace artisan serve)
+      - "127.0.0.1:8080:80"
+
+  queue:
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/php.dev.ini:/usr/local/etc/php/conf.d/99-dolci.ini:ro
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+
+  scheduler:
+    volumes:
+      - ./:/var/www/html
+      - ./docker/php/php.dev.ini:/usr/local/etc/php/conf.d/99-dolci.ini:ro
+    environment:
+      APP_ENV: local
+      APP_DEBUG: "true"
+
+  # Accès host aux outils (TablePlus, DBeaver…) — ports non publics
+  mysql:
+    ports:
+      - "127.0.0.1:3307:3306"
+
+  redis:
+    ports:
+      # 6380 pour éviter le conflit avec un Redis déjà installé sur le Mac
+      - "127.0.0.1:6380:6379"

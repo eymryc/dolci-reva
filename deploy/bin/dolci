@@ -1,0 +1,174 @@
+#!/usr/bin/env bash
+# =============================================================================
+# Dolci Rêva — CLI de déploiement maison (sans GitHub Actions)
+#
+# Usage:
+#   ./deploy/bin/dolci setup
+#   ./deploy/bin/dolci api [--skip-pull] [--skip-migrate] [--skip-build]
+#   ./deploy/bin/dolci web [--skip-pull]
+#   ./deploy/bin/dolci all
+#   ./deploy/bin/dolci health
+#   ./deploy/bin/dolci backup
+#   ./deploy/bin/dolci bootstrap
+#   ./deploy/bin/dolci sync
+#   ./deploy/bin/dolci status
+#   ./deploy/bin/dolci ssh
+# =============================================================================
+set -euo pipefail
+
+BIN_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# shellcheck source=../lib/common.sh
+source "${BIN_DIR}/../lib/common.sh"
+load_deploy_config
+
+usage() {
+  cat <<'EOF'
+Dolci Rêva — déploiement maison
+
+Commandes:
+  setup         Crée deploy/config/deploy.env depuis l'exemple
+  bootstrap     Prépare le VPS (docker, node, pm2, nginx, certbot, ufw)
+  sync          Rsync monorepo local → VPS (sans .env / node_modules / vendor)
+  ssl           Vhost Nginx + certificat Let's Encrypt (Certbot)
+  api           Déploie l'API Laravel (Docker)
+  web           Déploie le front Next.js (PM2)
+  all           API puis Web + healthcheck
+  health        Vérifie /up, :3001, URLs publiques
+  backup        Dump MySQL (et storage si BACKUP_STORAGE=1)
+  status        Aperçu distant: docker compose + pm2
+  ssh           Ouvre un shell SSH sur le VPS
+  help          Cette aide
+
+Options utiles (avant/après la commande selon le script):
+  --skip-pull      Ne fait pas de git pull
+  --skip-migrate   Skip artisan migrate
+  --skip-build     Skip docker compose build
+  --force-renew    (ssl) Force le renouvellement du certificat
+
+Config: deploy/config/deploy.env  (voir deploy.env.example)
+EOF
+}
+
+cmd="${1:-help}"
+shift || true
+
+# Propagate known flags as env for scripts
+EXTRA_ARGS=()
+for arg in "$@"; do
+  case "$arg" in
+    --skip-pull) SKIP_PULL=1; EXTRA_ARGS+=("$arg") ;;
+    --skip-migrate) SKIP_MIGRATE=1; EXTRA_ARGS+=("$arg") ;;
+    --skip-build) SKIP_BUILD_IMAGES=1; EXTRA_ARGS+=("$arg") ;;
+    --migrate) SKIP_MIGRATE=0; EXTRA_ARGS+=("$arg") ;;
+    --build) SKIP_BUILD_IMAGES=0; EXTRA_ARGS+=("$arg") ;;
+    --force-renew) EXTRA_ARGS+=("$arg") ;;
+    *) EXTRA_ARGS+=("$arg") ;;
+  esac
+done
+export SKIP_PULL SKIP_MIGRATE SKIP_BUILD_IMAGES
+export DEPLOY_PATH GIT_REMOTE GIT_BRANCH DOCKER_COMPOSE_FILE PM2_APP_NAME
+export HEALTH_URL WEB_HEALTH_URL DEPLOY_MODE
+export DOMAIN DOMAIN_WWW CERTBOT_EMAIL
+
+# Bash 3 (macOS) + set -u : "${arr[@]}" vide → erreur. Pattern sûr :
+run_script() {
+  local script="$1"
+  shift
+  if [[ $# -gt 0 ]]; then
+    run_on_target "$script" "$@"
+  else
+    run_on_target "$script"
+  fi
+}
+
+case "$cmd" in
+  help|-h|--help)
+    usage
+    ;;
+
+  setup)
+    dest="${DOLCI_DEPLOY_ROOT}/config/deploy.env"
+    src="${DOLCI_DEPLOY_ROOT}/config/deploy.env.example"
+    if [[ -f "$dest" ]]; then
+      warn "Existe déjà: $dest"
+    else
+      cp "$src" "$dest"
+      ok "Créé $dest — éditez DEPLOY_HOST / DEPLOY_USER / clé SSH"
+    fi
+    ;;
+
+  bootstrap)
+    header "Bootstrap distant"
+    if [[ "${DEPLOY_MODE}" == "local" ]]; then
+      bash "${DOLCI_DEPLOY_ROOT}/scripts/bootstrap-vps.sh"
+    else
+      run_script "bootstrap-vps.sh"
+    fi
+    ;;
+
+  sync|push|code)
+    header "Sync monorepo → VPS"
+    if [[ "${DEPLOY_MODE}" == "local" ]]; then
+      die "sync est pour DEPLOY_MODE=remote (cette machine → VPS)"
+    fi
+    sync_monorepo_to_remote
+    echo
+    info "Ensuite sur le VPS (ou via ssh):"
+    echo "  1. API .env  : cp dolci-reva-api/.env.docker.example dolci-reva-api/.env && éditer"
+    echo "  2. Web .env  : cp deploy/env/web.env.production.example dolci-reva-web/.env.production && éditer"
+    echo "  3. Deploy    : ./deploy/bin/dolci api --skip-pull && ./deploy/bin/dolci web --skip-pull"
+    echo "  4. SSL       : DNS A → VPS puis ./deploy/bin/dolci ssl"
+    ;;
+
+  ssl|certbot|https)
+    header "Nginx + SSL (Let's Encrypt)"
+    run_script "setup-nginx-ssl.sh" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
+    ;;
+
+  api)
+    header "Deploy API"
+    run_script "deploy-api.sh" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
+    ;;
+
+  web)
+    header "Deploy Web"
+    run_script "deploy-web.sh" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
+    ;;
+
+  all)
+    header "Deploy ALL"
+    run_script "deploy-all.sh" ${EXTRA_ARGS[@]+"${EXTRA_ARGS[@]}"}
+    ;;
+
+  health)
+    header "Healthcheck"
+    run_script "healthcheck.sh"
+    ;;
+
+  backup)
+    header "Backup"
+    run_script "backup-db.sh"
+    ;;
+
+  status)
+    header "Status distant"
+    if [[ "${DEPLOY_MODE}" == "local" ]]; then
+      (cd "${DEPLOY_PATH}/dolci-reva-api" && docker compose ps) || true
+      pm2 status || true
+    else
+      ssh_run "bash -lc 'cd ${DEPLOY_PATH}/dolci-reva-api && docker compose ps; echo; pm2 status || true; echo; curl -sS -o /dev/null -w \"API /up => %{http_code}\\n\" http://127.0.0.1:8080/up || true'"
+    fi
+    ;;
+
+  ssh)
+    require_remote_config
+    build_ssh_args
+    exec ssh "${SSH_ARGS[@]}" "${DEPLOY_USER}@${DEPLOY_HOST}"
+    ;;
+
+  *)
+    err "Commande inconnue: $cmd"
+    usage
+    exit 1
+    ;;
+esac

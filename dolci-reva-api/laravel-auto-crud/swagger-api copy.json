@@ -1,0 +1,3603 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "V2-DOLCIREVA-API",
+        "version": "1.0.0",
+        "description": "This is an automatically generated Swagger JSON file with full CRUD operations for the V2-DOLCIREVA-API."
+    },
+    "security": [
+        {
+            "BearerAuth": []
+        }
+    ],
+    "servers": [
+        {
+            "url": "http://v2-dolcireva-api.test/api",
+            "description": "Server"
+        }
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "security": [],
+                "summary": "Login",
+                "operationId": "login",
+                "tags": ["Auth"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/LoginResponse"
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/LoginRequest"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activities": {
+            "post": {
+                "summary": "Create activities",
+                "operationId": "create_activities",
+                "tags": ["Activities"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Activities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Activities"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get activities",
+                "operationId": "get_activities",
+                "tags": ["Activities"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Activities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/activities/{id}": {
+            "patch": {
+                "summary": "Update activities",
+                "operationId": "update_activities",
+                "tags": ["Activities"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Activities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Activities"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete activities",
+                "operationId": "delete_activities",
+                "tags": ["Activities"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Activities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single activities",
+                "operationId": "get_single_activities",
+                "tags": ["Activities"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Activities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/addresses": {
+            "post": {
+                "summary": "Create addresses",
+                "operationId": "create_addresses",
+                "tags": ["Addresses"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Addresses"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Addresses"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get addresses",
+                "operationId": "get_addresses",
+                "tags": ["Addresses"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Addresses"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/addresses/{id}": {
+            "patch": {
+                "summary": "Update addresses",
+                "operationId": "update_addresses",
+                "tags": ["Addresses"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Addresses"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Addresses"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete addresses",
+                "operationId": "delete_addresses",
+                "tags": ["Addresses"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Addresses"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single addresses",
+                "operationId": "get_single_addresses",
+                "tags": ["Addresses"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Addresses"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/amenities": {
+            "post": {
+                "summary": "Create amenities",
+                "operationId": "create_amenities",
+                "tags": ["Amenities"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Amenities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Amenities"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get amenities",
+                "operationId": "get_amenities",
+                "tags": ["Amenities"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Amenities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/amenities/{id}": {
+            "patch": {
+                "summary": "Update amenities",
+                "operationId": "update_amenities",
+                "tags": ["Amenities"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Amenities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Amenities"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete amenities",
+                "operationId": "delete_amenities",
+                "tags": ["Amenities"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Amenities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single amenities",
+                "operationId": "get_single_amenities",
+                "tags": ["Amenities"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Amenities"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings": {
+            "post": {
+                "summary": "Create bookings",
+                "operationId": "create_bookings",
+                "tags": ["Bookings"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Bookings"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Bookings"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get bookings",
+                "operationId": "get_bookings",
+                "tags": ["Bookings"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Bookings"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/bookings/{id}": {
+            "patch": {
+                "summary": "Update bookings",
+                "operationId": "update_bookings",
+                "tags": ["Bookings"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Bookings"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Bookings"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete bookings",
+                "operationId": "delete_bookings",
+                "tags": ["Bookings"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Bookings"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single bookings",
+                "operationId": "get_single_bookings",
+                "tags": ["Bookings"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Bookings"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories": {
+            "post": {
+                "summary": "Create categories",
+                "operationId": "create_categories",
+                "tags": ["Categories"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Categories"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Categories"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get categories",
+                "operationId": "get_categories",
+                "tags": ["Categories"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Categories"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/categories/{id}": {
+            "patch": {
+                "summary": "Update categories",
+                "operationId": "update_categories",
+                "tags": ["Categories"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Categories"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Categories"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete categories",
+                "operationId": "delete_categories",
+                "tags": ["Categories"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Categories"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single categories",
+                "operationId": "get_single_categories",
+                "tags": ["Categories"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Categories"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/commissions": {
+            "post": {
+                "summary": "Create commissions",
+                "operationId": "create_commissions",
+                "tags": ["Commissions"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Commissions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Commissions"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get commissions",
+                "operationId": "get_commissions",
+                "tags": ["Commissions"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Commissions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/commissions/{id}": {
+            "patch": {
+                "summary": "Update commissions",
+                "operationId": "update_commissions",
+                "tags": ["Commissions"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Commissions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Commissions"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete commissions",
+                "operationId": "delete_commissions",
+                "tags": ["Commissions"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Commissions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single commissions",
+                "operationId": "get_single_commissions",
+                "tags": ["Commissions"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Commissions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menus": {
+            "post": {
+                "summary": "Create menus",
+                "operationId": "create_menus",
+                "tags": ["Menus"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menus"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Menus"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get menus",
+                "operationId": "get_menus",
+                "tags": ["Menus"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menus"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menus/{id}": {
+            "patch": {
+                "summary": "Update menus",
+                "operationId": "update_menus",
+                "tags": ["Menus"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menus"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Menus"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete menus",
+                "operationId": "delete_menus",
+                "tags": ["Menus"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menus"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single menus",
+                "operationId": "get_single_menus",
+                "tags": ["Menus"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menus"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menu_items": {
+            "post": {
+                "summary": "Create menu_items",
+                "operationId": "create_menu_items",
+                "tags": ["Menu_items"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menu_items"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Menu_items"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get menu_items",
+                "operationId": "get_menu_items",
+                "tags": ["Menu_items"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menu_items"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/menu_items/{id}": {
+            "patch": {
+                "summary": "Update menu_items",
+                "operationId": "update_menu_items",
+                "tags": ["Menu_items"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menu_items"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Menu_items"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete menu_items",
+                "operationId": "delete_menu_items",
+                "tags": ["Menu_items"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menu_items"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single menu_items",
+                "operationId": "get_single_menu_items",
+                "tags": ["Menu_items"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Menu_items"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/properties": {
+            "post": {
+                "summary": "Create properties",
+                "operationId": "create_properties",
+                "tags": ["Properties"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Properties"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Properties"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get properties",
+                "operationId": "get_properties",
+                "tags": ["Properties"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Properties"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/properties/{id}": {
+            "patch": {
+                "summary": "Update properties",
+                "operationId": "update_properties",
+                "tags": ["Properties"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Properties"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Properties"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete properties",
+                "operationId": "delete_properties",
+                "tags": ["Properties"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Properties"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single properties",
+                "operationId": "get_single_properties",
+                "tags": ["Properties"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Properties"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rooms": {
+            "post": {
+                "summary": "Create rooms",
+                "operationId": "create_rooms",
+                "tags": ["Rooms"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Rooms"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Rooms"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get rooms",
+                "operationId": "get_rooms",
+                "tags": ["Rooms"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Rooms"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/rooms/{id}": {
+            "patch": {
+                "summary": "Update rooms",
+                "operationId": "update_rooms",
+                "tags": ["Rooms"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Rooms"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Rooms"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete rooms",
+                "operationId": "delete_rooms",
+                "tags": ["Rooms"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Rooms"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single rooms",
+                "operationId": "get_single_rooms",
+                "tags": ["Rooms"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Rooms"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spaces": {
+            "post": {
+                "summary": "Create spaces",
+                "operationId": "create_spaces",
+                "tags": ["Spaces"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Spaces"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Spaces"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get spaces",
+                "operationId": "get_spaces",
+                "tags": ["Spaces"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Spaces"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/spaces/{id}": {
+            "patch": {
+                "summary": "Update spaces",
+                "operationId": "update_spaces",
+                "tags": ["Spaces"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Spaces"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Spaces"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete spaces",
+                "operationId": "delete_spaces",
+                "tags": ["Spaces"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Spaces"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single spaces",
+                "operationId": "get_single_spaces",
+                "tags": ["Spaces"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Spaces"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/time_slots": {
+            "post": {
+                "summary": "Create time_slots",
+                "operationId": "create_time_slots",
+                "tags": ["Time_slots"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Time_slots"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Time_slots"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get time_slots",
+                "operationId": "get_time_slots",
+                "tags": ["Time_slots"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Time_slots"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/time_slots/{id}": {
+            "patch": {
+                "summary": "Update time_slots",
+                "operationId": "update_time_slots",
+                "tags": ["Time_slots"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Time_slots"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Time_slots"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete time_slots",
+                "operationId": "delete_time_slots",
+                "tags": ["Time_slots"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Time_slots"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single time_slots",
+                "operationId": "get_single_time_slots",
+                "tags": ["Time_slots"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Time_slots"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users": {
+            "post": {
+                "summary": "Create users",
+                "operationId": "create_users",
+                "tags": ["Users"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Users"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get users",
+                "operationId": "get_users",
+                "tags": ["Users"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "patch": {
+                "summary": "Update users",
+                "operationId": "update_users",
+                "tags": ["Users"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Users"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete users",
+                "operationId": "delete_users",
+                "tags": ["Users"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single users",
+                "operationId": "get_single_users",
+                "tags": ["Users"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/venues": {
+            "post": {
+                "summary": "Create venues",
+                "operationId": "create_venues",
+                "tags": ["Venues"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venues"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Venues"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get venues",
+                "operationId": "get_venues",
+                "tags": ["Venues"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venues"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/venues/{id}": {
+            "patch": {
+                "summary": "Update venues",
+                "operationId": "update_venues",
+                "tags": ["Venues"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venues"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Venues"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete venues",
+                "operationId": "delete_venues",
+                "tags": ["Venues"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venues"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single venues",
+                "operationId": "get_single_venues",
+                "tags": ["Venues"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venues"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/venue_opening_hours": {
+            "post": {
+                "summary": "Create venue_opening_hours",
+                "operationId": "create_venue_opening_hours",
+                "tags": ["Venue_opening_hours"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venue_opening_hours"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Venue_opening_hours"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get venue_opening_hours",
+                "operationId": "get_venue_opening_hours",
+                "tags": ["Venue_opening_hours"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venue_opening_hours"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/venue_opening_hours/{id}": {
+            "patch": {
+                "summary": "Update venue_opening_hours",
+                "operationId": "update_venue_opening_hours",
+                "tags": ["Venue_opening_hours"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venue_opening_hours"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Venue_opening_hours"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete venue_opening_hours",
+                "operationId": "delete_venue_opening_hours",
+                "tags": ["Venue_opening_hours"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venue_opening_hours"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single venue_opening_hours",
+                "operationId": "get_single_venue_opening_hours",
+                "tags": ["Venue_opening_hours"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Venue_opening_hours"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wallets": {
+            "post": {
+                "summary": "Create wallets",
+                "operationId": "create_wallets",
+                "tags": ["Wallets"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallets"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Wallets"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get wallets",
+                "operationId": "get_wallets",
+                "tags": ["Wallets"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallets"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wallets/{id}": {
+            "patch": {
+                "summary": "Update wallets",
+                "operationId": "update_wallets",
+                "tags": ["Wallets"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallets"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Wallets"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete wallets",
+                "operationId": "delete_wallets",
+                "tags": ["Wallets"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallets"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single wallets",
+                "operationId": "get_single_wallets",
+                "tags": ["Wallets"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallets"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wallet_transactions": {
+            "post": {
+                "summary": "Create wallet_transactions",
+                "operationId": "create_wallet_transactions",
+                "tags": ["Wallet_transactions"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallet_transactions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Wallet_transactions"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get wallet_transactions",
+                "operationId": "get_wallet_transactions",
+                "tags": ["Wallet_transactions"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallet_transactions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/wallet_transactions/{id}": {
+            "patch": {
+                "summary": "Update wallet_transactions",
+                "operationId": "update_wallet_transactions",
+                "tags": ["Wallet_transactions"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallet_transactions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Wallet_transactions"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete wallet_transactions",
+                "operationId": "delete_wallet_transactions",
+                "tags": ["Wallet_transactions"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallet_transactions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single wallet_transactions",
+                "operationId": "get_single_wallet_transactions",
+                "tags": ["Wallet_transactions"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Wallet_transactions"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/withdrawals": {
+            "post": {
+                "summary": "Create withdrawals",
+                "operationId": "create_withdrawals",
+                "tags": ["Withdrawals"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Withdrawals"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Withdrawals"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get withdrawals",
+                "operationId": "get_withdrawals",
+                "tags": ["Withdrawals"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Withdrawals"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/withdrawals/{id}": {
+            "patch": {
+                "summary": "Update withdrawals",
+                "operationId": "update_withdrawals",
+                "tags": ["Withdrawals"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Withdrawals"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Withdrawals"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete withdrawals",
+                "operationId": "delete_withdrawals",
+                "tags": ["Withdrawals"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Withdrawals"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single withdrawals",
+                "operationId": "get_single_withdrawals",
+                "tags": ["Withdrawals"],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Withdrawals"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "BearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "LoginResponse": {
+                "type": "object",
+                "properties": {
+                    "access_token": {
+                        "type": "string",
+                        "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    },
+                    "token_type": {
+                        "type": "string",
+                        "example": "Bearer"
+                    },
+                    "expires_in": {
+                        "type": "integer",
+                        "example": 3600
+                    }
+                },
+                "required": ["access_token", "token_type", "expires_in"]
+            },
+            "LoginRequest": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "user@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "format": "password",
+                        "example": "secret123"
+                    }
+                },
+                "required": ["email", "password"]
+            },
+
+            "Activities": {
+                "type": "object",
+                "properties": {
+                    "organizer_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "address_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["RANDO", "VISITE", "ATELIER"]
+                    },
+                    "duration_minutes": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "equipment_provided": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "price_per_person": {
+                        "type": "number",
+                        "enum": 1.1
+                    }
+                },
+                "required": [
+                    "organizer_id",
+                    "address_id",
+                    "title",
+                    "description",
+                    "type",
+                    "duration_minutes",
+                    "equipment_provided",
+                    "price_per_person"
+                ]
+            },
+            "Addresses": {
+                "type": "object",
+                "properties": {
+                    "street": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "postal_code": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "city": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "country": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "latitude": {
+                        "type": "number",
+                        "example": 1.1
+                    },
+                    "longitude": {
+                        "type": "number",
+                        "example": 1.1
+                    },
+                    "place_id": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    }
+                },
+                "required": [
+                    "street",
+                    "postal_code",
+                    "city",
+                    "country",
+                    "latitude",
+                    "longitude",
+                    "user_id"
+                ]
+            },
+            "Amenities": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    }
+                },
+                "required": ["name"]
+            },
+            "Bookings": {
+                "type": "object",
+                "properties": {
+                    "customer_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "owner_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "bookable_type": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "bookable_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "start_date": {
+                        "type": "string",
+                        "example": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    },
+                    "end_date": {
+                        "type": "string",
+                        "example": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    },
+                    "total_price": {
+                        "type": "number",
+                        "example": 1.1,
+                        "format": "date-time"
+                    },
+                    "commission_amount": {
+                        "type": "number",
+                        "example": 1.1,
+                        "format": "date-time"
+                    },
+                    "owner_amount": {
+                        "type": "number",
+                        "example": 1.1,
+                        "format": "date-time"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["CONFIRME", "ANNULE", "EN_ATTENTE"]
+                    },
+                    "payment_status": {
+                        "type": "string",
+                        "enum": ["PAYE", "REMBOURSE", "EN_ATTENTE"]
+                    },
+                    "notes": {
+                        "type": "string",
+                        "enum": "Example Value"
+                    },
+                    "cancellation_reason": {
+                        "type": "string",
+                        "enum": "Example Value"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "enum": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "customer_id",
+                    "owner_id",
+                    "bookable_type",
+                    "bookable_id",
+                    "start_date",
+                    "end_date",
+                    "total_price",
+                    "status",
+                    "payment_status"
+                ]
+            },
+            "Categories": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "icon": {
+                        "type": "string",
+                        "example": "Example Value"
+                    }
+                },
+                "required": ["name"]
+            },
+            "Commissions": {
+                "type": "object",
+                "properties": {
+                    "commission": {
+                        "type": "number",
+                        "example": 1.1
+                    },
+                    "is_active": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "example": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    }
+                },
+                "required": ["commission", "is_active"]
+            },
+            "Menus": {
+                "type": "object",
+                "properties": {
+                    "venue_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "PETIT_DEJEUNER",
+                            "DEJEUNER",
+                            "DINER",
+                            "BOISSONS",
+                            "ENFANTS"
+                        ]
+                    },
+                    "is_active": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "enum": "00:00:00",
+                        "format": "time"
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "enum": "00:00:00",
+                        "format": "time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "enum": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    }
+                },
+                "required": ["venue_id", "name", "type", "is_active"]
+            },
+            "Menu_items": {
+                "type": "object",
+                "properties": {
+                    "menu_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "category": {
+                        "type": "string",
+                        "enum": ["ENTREE", "PLAT", "DESSERT", "BOISSON"]
+                    },
+                    "price": {
+                        "type": "number",
+                        "enum": 1.1
+                    },
+                    "is_vegetarian": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "is_vegan": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "is_gluten_free": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "position": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "image_url": {
+                        "type": "string",
+                        "enum": "Example Value"
+                    }
+                },
+                "required": [
+                    "menu_id",
+                    "name",
+                    "category",
+                    "price",
+                    "is_vegetarian",
+                    "is_vegan",
+                    "is_gluten_free",
+                    "position"
+                ]
+            },
+            "Properties": {
+                "type": "object",
+                "properties": {
+                    "owner_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "address_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "tagline": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "legal_name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "brand": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["RESIDENCE", "HOTEL", "RESIDENCE HOTELIERE"]
+                    },
+                    "rental_type": {
+                        "type": "string",
+                        "enum": ["ENTIER", "COLOCATION", "CHAMBRE"]
+                    },
+                    "max_guests": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "bedrooms": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "bathrooms": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "size_m2": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "piece_number": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "price": {
+                        "type": "number",
+                        "enum": 1.1
+                    }
+                },
+                "required": [
+                    "owner_id",
+                    "address_id",
+                    "category_id",
+                    "title",
+                    "description",
+                    "type",
+                    "rental_type",
+                    "price"
+                ]
+            },
+            "Rooms": {
+                "type": "object",
+                "properties": {
+                    "property_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "max_guests": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "price": {
+                        "type": "number",
+                        "example": 1.1
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["SIMPLE", "DOUBLE", "TWIN", "TRIPLE", "QUAD"]
+                    },
+                    "standing": {
+                        "type": "string",
+                        "enum": [
+                            "STANDARD",
+                            "DELUXE",
+                            "EX\u00c9CUTIVE",
+                            "SUITE",
+                            "SUITE JUNIOR",
+                            "SUITE EX\u00c9CUTIVE",
+                            "SUITE PR\u00c9SIDENTIELLE"
+                        ]
+                    },
+                    "is_available": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "is_active": {
+                        "type": "integer",
+                        "enum": 1
+                    }
+                },
+                "required": [
+                    "property_id",
+                    "name",
+                    "max_guests",
+                    "price",
+                    "type",
+                    "standing",
+                    "is_available",
+                    "is_active"
+                ]
+            },
+            "Spaces": {
+                "type": "object",
+                "properties": {
+                    "venue_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["TABLE", "SALON", "PISTE"]
+                    },
+                    "min_guests": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "max_guests": {
+                        "type": "integer",
+                        "enum": 1
+                    },
+                    "is_hourly_rate": {
+                        "type": "integer",
+                        "enum": 1
+                    }
+                },
+                "required": [
+                    "venue_id",
+                    "name",
+                    "type",
+                    "min_guests",
+                    "max_guests",
+                    "is_hourly_rate"
+                ]
+            },
+            "Time_slots": {
+                "type": "object",
+                "properties": {
+                    "activity_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "start_time": {
+                        "type": "string",
+                        "example": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    },
+                    "end_time": {
+                        "type": "string",
+                        "example": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    },
+                    "max_participants": {
+                        "type": "integer",
+                        "example": 1,
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "activity_id",
+                    "start_time",
+                    "end_time",
+                    "max_participants"
+                ]
+            },
+            "Users": {
+                "type": "object",
+                "properties": {
+                    "first_name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "example": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "Example Value",
+                        "format": "date-time"
+                    },
+                    "remember_token": {
+                        "type": "string",
+                        "example": "Example Value",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "first_name",
+                    "last_name",
+                    "phone",
+                    "email",
+                    "password"
+                ]
+            },
+            "Venues": {
+                "type": "object",
+                "properties": {
+                    "owner_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "address_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "category_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["RESTAURANT", "BAR", "LOUNGE", "SALLE_EVENT"]
+                    },
+                    "capacity": {
+                        "type": "integer",
+                        "enum": 1
+                    }
+                },
+                "required": [
+                    "owner_id",
+                    "address_id",
+                    "category_id",
+                    "name",
+                    "description",
+                    "type",
+                    "capacity"
+                ]
+            },
+            "Venue_opening_hours": {
+                "type": "object",
+                "properties": {
+                    "venue_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "day": {
+                        "type": "string",
+                        "enum": [
+                            "monday",
+                            "tuesday",
+                            "wednesday",
+                            "thursday",
+                            "friday",
+                            "saturday",
+                            "sunday"
+                        ]
+                    },
+                    "open": {
+                        "type": "string",
+                        "enum": "00:00:00",
+                        "format": "time"
+                    },
+                    "close": {
+                        "type": "string",
+                        "enum": "00:00:00",
+                        "format": "time"
+                    }
+                },
+                "required": ["venue_id", "day", "open", "close"]
+            },
+            "Wallets": {
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "balance": {
+                        "type": "number",
+                        "example": 1.1
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "example": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    }
+                },
+                "required": ["user_id", "balance"]
+            },
+            "Wallet_transactions": {
+                "type": "object",
+                "properties": {
+                    "wallet_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": ["CREDIT", "DEBIT"]
+                    },
+                    "amount": {
+                        "type": "number",
+                        "enum": 1.1
+                    },
+                    "reason": {
+                        "type": "string",
+                        "enum": "Example Value"
+                    }
+                },
+                "required": ["wallet_id", "type", "amount"]
+            },
+            "Withdrawals": {
+                "type": "object",
+                "properties": {
+                    "user_id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 1.1
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": ["PENDING", "APPROVED", "REJECTED"]
+                    }
+                },
+                "required": ["user_id", "amount", "status"]
+            }
+        }
+    }
+}

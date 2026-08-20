@@ -1,0 +1,244 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Laravel Auto Crud (V2-DOLCIREVA-API)",
+        "version": "1.0.0",
+        "description": "This is an automatic generated Swagger JSON file with full CRUD operations"
+    },
+    "servers": [
+        {
+            "url": "http://v2-dolcireva-api.test/api",
+            "description": "Server"
+        }
+    ],
+    "paths": {
+        "/users": {
+            "post": {
+                "summary": "Create users",
+                "operationId": "create_users",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Users"
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get users",
+                "operationId": "get_users",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/users/{id}": {
+            "patch": {
+                "summary": "Update users",
+                "operationId": "update_users",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Users"
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "Delete users",
+                "operationId": "delete_users",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "get": {
+                "summary": "Get single users",
+                "operationId": "get_single_users",
+                "tags": [
+                    "Users"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful response",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Users"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Users": {
+                "type": "object",
+                "properties": {
+                    "first_name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "last_name": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "phone": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "Example Value"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "CUSTOMER",
+                            "OWNER",
+                            "ADMIN",
+                            "SUPER_ADMIN"
+                        ]
+                    },
+                    "email_verified_at": {
+                        "type": "string",
+                        "enum": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    },
+                    "password": {
+                        "type": "string",
+                        "enum": "Example Value",
+                        "format": "date-time"
+                    },
+                    "deleted_at": {
+                        "type": "string",
+                        "enum": "2025-01-01 00:00:00",
+                        "format": "date-time"
+                    },
+                    "remember_token": {
+                        "type": "string",
+                        "enum": "Example Value",
+                        "format": "date-time"
+                    }
+                },
+                "required": [
+                    "first_name",
+                    "last_name",
+                    "phone",
+                    "email",
+                    "type",
+                    "password"
+                ]
+            }
+        }
+    }
+}

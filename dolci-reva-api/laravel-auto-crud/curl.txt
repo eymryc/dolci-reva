@@ -1,0 +1,2225 @@
+=====================Venue=====================
+curl --location 'http://v2-dolcireva-api.test/api/venues' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "capacity": "value",
+    "opening_hours": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "capacity": "value",
+    "opening_hours": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/venues' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Venue=====================
+=====================User=====================
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================User=====================
+=====================Address=====================
+curl --location 'http://v2-dolcireva-api.test/api/addresses' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "street": "value",
+    "postal_code": "value",
+    "city": "value",
+    "country": "value",
+    "latitude": "value",
+    "longitude": "value",
+    "place_id": "value",
+    "user_id": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/addresses/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "street": "value",
+    "postal_code": "value",
+    "city": "value",
+    "country": "value",
+    "latitude": "value",
+    "longitude": "value",
+    "place_id": "value",
+    "user_id": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/addresses/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/addresses' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/addresses/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Address=====================
+=====================Category=====================
+curl --location 'http://v2-dolcireva-api.test/api/categories' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "name": "value",
+    "icon": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/categories/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "name": "value",
+    "icon": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/categories/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/categories' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/categories/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Category=====================
+=====================Space=====================
+curl --location 'http://v2-dolcireva-api.test/api/spaces' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "venue_id": "value",
+    "name": "value",
+    "type": "value",
+    "min_guests": "value",
+    "max_guests": "value",
+    "is_hourly_rate": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/spaces/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "venue_id": "value",
+    "name": "value",
+    "type": "value",
+    "min_guests": "value",
+    "max_guests": "value",
+    "is_hourly_rate": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/spaces/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/spaces' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/spaces/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Space=====================
+=====================Activity=====================
+curl --location 'http://v2-dolcireva-api.test/api/activities' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "organizer_id": "value",
+    "address_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "duration_minutes": "value",
+    "equipment_provided": "value",
+    "price_per_person": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/activities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "organizer_id": "value",
+    "address_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "duration_minutes": "value",
+    "equipment_provided": "value",
+    "price_per_person": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/activities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/activities' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/activities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Activity=====================
+=====================TimeSlot=====================
+curl --location 'http://v2-dolcireva-api.test/api/time_slots' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "activity_id": "value",
+    "start_time": "value",
+    "end_time": "value",
+    "max_participants": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/time_slots/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "activity_id": "value",
+    "start_time": "value",
+    "end_time": "value",
+    "max_participants": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/time_slots/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/time_slots' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/time_slots/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================TimeSlot=====================
+=====================Media=====================
+curl --location 'http://v2-dolcireva-api.test/api/media' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "uploader_id": "value",
+    "url": "value",
+    "type": "value",
+    "width": "value",
+    "height": "value",
+    "is_verified": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/media/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "uploader_id": "value",
+    "url": "value",
+    "type": "value",
+    "width": "value",
+    "height": "value",
+    "is_verified": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/media/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/media' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/media/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Media=====================
+=====================Amenity=====================
+curl --location 'http://v2-dolcireva-api.test/api/amenities' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "name": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/amenities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "name": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/amenities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/amenities' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/amenities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Amenity=====================
+=====================User=====================
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================User=====================
+=====================Property=====================
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Property=====================
+=====================Property=====================
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Property=====================
+=====================Property=====================
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Property=====================
+=====================Property=====================
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Property=====================
+=====================Venue=====================
+curl --location 'http://v2-dolcireva-api.test/api/venues' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "capacity": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "capacity": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/venues' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Venue=====================
+=====================Property=====================
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "tagline": "value",
+    "legal_name": "value",
+    "brand": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "tagline": "value",
+    "legal_name": "value",
+    "brand": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Property=====================
+=====================Room=====================
+curl --location 'http://v2-dolcireva-api.test/api/rooms' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '[]'
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '[]'
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Room=====================
+=====================Room=====================
+curl --location 'http://v2-dolcireva-api.test/api/rooms' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "property_id": "value",
+    "name": "value",
+    "description": "value",
+    "max_guests": "value",
+    "price": "value",
+    "type": "value",
+    "standing": "value",
+    "is_available": "value",
+    "is_active": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "property_id": "value",
+    "name": "value",
+    "description": "value",
+    "max_guests": "value",
+    "price": "value",
+    "type": "value",
+    "standing": "value",
+    "is_available": "value",
+    "is_active": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Room=====================
+=====================Booking=====================
+curl --location 'http://v2-dolcireva-api.test/api/bookings' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "user_id": "value",
+    "reservationable_type": "value",
+    "reservationable_id": "value",
+    "start_date": "value",
+    "end_date": "value",
+    "total_price": "value",
+    "status": "value",
+    "payment_status": "value",
+    "notes": "value",
+    "cancellation_reason": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "user_id": "value",
+    "reservationable_type": "value",
+    "reservationable_id": "value",
+    "start_date": "value",
+    "end_date": "value",
+    "total_price": "value",
+    "status": "value",
+    "payment_status": "value",
+    "notes": "value",
+    "cancellation_reason": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Booking=====================
+=====================Wallet=====================
+curl --location 'http://v2-dolcireva-api.test/api/wallets' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "user_id": "value",
+    "balance": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/wallets/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "user_id": "value",
+    "balance": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/wallets/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/wallets' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/wallets/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Wallet=====================
+=====================Withdrawal=====================
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "user_id": "value",
+    "amount": "value",
+    "status": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "user_id": "value",
+    "amount": "value",
+    "status": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Withdrawal=====================
+=====================MenuItem=====================
+curl --location 'http://v2-dolcireva-api.test/api/menu_items' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "menu_id": "value",
+    "name": "value",
+    "description": "value",
+    "category": "value",
+    "price": "value",
+    "is_vegetarian": "value",
+    "is_vegan": "value",
+    "is_gluten_free": "value",
+    "position": "value",
+    "image_url": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/menu_items/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "menu_id": "value",
+    "name": "value",
+    "description": "value",
+    "category": "value",
+    "price": "value",
+    "is_vegetarian": "value",
+    "is_vegan": "value",
+    "is_gluten_free": "value",
+    "position": "value",
+    "image_url": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/menu_items/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/menu_items' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/menu_items/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================MenuItem=====================
+=====================Menu=====================
+curl --location 'http://v2-dolcireva-api.test/api/menus' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "venue_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "is_active": "value",
+    "start_time": "value",
+    "end_time": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/menus/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "venue_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "is_active": "value",
+    "start_time": "value",
+    "end_time": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/menus/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/menus' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/menus/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Menu=====================
+=====================WalletTransaction=====================
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "wallet_id": "value",
+    "type": "value",
+    "amount": "value",
+    "reason": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "wallet_id": "value",
+    "type": "value",
+    "amount": "value",
+    "reason": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================WalletTransaction=====================
+=====================Commission=====================
+curl --location 'http://v2-dolcireva-api.test/api/commissions' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "commission": "value",
+    "is_active": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/commissions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "commission": "value",
+    "is_active": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/commissions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/commissions' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/commissions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Commission=====================
+=====================Booking=====================
+curl --location 'http://v2-dolcireva-api.test/api/bookings' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "user_id": "value",
+    "bookable_type": "value",
+    "bookable_id": "value",
+    "start_date": "value",
+    "end_date": "value",
+    "total_price": "value",
+    "status": "value",
+    "payment_status": "value",
+    "notes": "value",
+    "cancellation_reason": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "user_id": "value",
+    "bookable_type": "value",
+    "bookable_id": "value",
+    "start_date": "value",
+    "end_date": "value",
+    "total_price": "value",
+    "status": "value",
+    "payment_status": "value",
+    "notes": "value",
+    "cancellation_reason": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Booking=====================
+=====================User=====================
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "type": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "type": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================User=====================
+=====================Category=====================
+curl --location 'http://v2-dolcireva-api.test/api/categories' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "name": "value",
+    "icon": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/categories/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "name": "value",
+    "icon": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/categories/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/categories' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/categories/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Category=====================
+=====================Activity=====================
+curl --location 'http://v2-dolcireva-api.test/api/activities' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "organizer_id": "value",
+    "address_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "duration_minutes": "value",
+    "equipment_provided": "value",
+    "price_per_person": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/activities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "organizer_id": "value",
+    "address_id": "value",
+    "title": "value",
+    "description": "value",
+    "type": "value",
+    "duration_minutes": "value",
+    "equipment_provided": "value",
+    "price_per_person": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/activities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/activities' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/activities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Activity=====================
+=====================Address=====================
+curl --location 'http://v2-dolcireva-api.test/api/addresses' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "street": "value",
+    "postal_code": "value",
+    "city": "value",
+    "country": "value",
+    "latitude": "value",
+    "longitude": "value",
+    "place_id": "value",
+    "user_id": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/addresses/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "street": "value",
+    "postal_code": "value",
+    "city": "value",
+    "country": "value",
+    "latitude": "value",
+    "longitude": "value",
+    "place_id": "value",
+    "user_id": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/addresses/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/addresses' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/addresses/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Address=====================
+=====================Amenity=====================
+curl --location 'http://v2-dolcireva-api.test/api/amenities' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "name": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/amenities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "name": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/amenities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/amenities' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/amenities/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Amenity=====================
+=====================Booking=====================
+curl --location 'http://v2-dolcireva-api.test/api/bookings' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "customer_id": "value",
+    "owner_id": "value",
+    "bookable_type": "value",
+    "bookable_id": "value",
+    "start_date": "value",
+    "end_date": "value",
+    "total_price": "value",
+    "commission_amount": "value",
+    "owner_amount": "value",
+    "status": "value",
+    "payment_status": "value",
+    "notes": "value",
+    "cancellation_reason": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "customer_id": "value",
+    "owner_id": "value",
+    "bookable_type": "value",
+    "bookable_id": "value",
+    "start_date": "value",
+    "end_date": "value",
+    "total_price": "value",
+    "commission_amount": "value",
+    "owner_amount": "value",
+    "status": "value",
+    "payment_status": "value",
+    "notes": "value",
+    "cancellation_reason": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/bookings/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Booking=====================
+=====================Commission=====================
+curl --location 'http://v2-dolcireva-api.test/api/commissions' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "commission": "value",
+    "is_active": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/commissions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "commission": "value",
+    "is_active": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/commissions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/commissions' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/commissions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Commission=====================
+=====================Image=====================
+curl --location 'http://v2-dolcireva-api.test/api/images' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "imageable_type": "value",
+    "imageable_id": "value",
+    "path": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/images/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "imageable_type": "value",
+    "imageable_id": "value",
+    "path": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/images/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/images' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/images/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Image=====================
+=====================Menu=====================
+curl --location 'http://v2-dolcireva-api.test/api/menus' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "venue_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "is_active": "value",
+    "start_time": "value",
+    "end_time": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/menus/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "venue_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "is_active": "value",
+    "start_time": "value",
+    "end_time": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/menus/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/menus' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/menus/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Menu=====================
+=====================MenuItem=====================
+curl --location 'http://v2-dolcireva-api.test/api/menu_items' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "menu_id": "value",
+    "name": "value",
+    "description": "value",
+    "category": "value",
+    "price": "value",
+    "is_vegetarian": "value",
+    "is_vegan": "value",
+    "is_gluten_free": "value",
+    "position": "value",
+    "image_url": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/menu_items/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "menu_id": "value",
+    "name": "value",
+    "description": "value",
+    "category": "value",
+    "price": "value",
+    "is_vegetarian": "value",
+    "is_vegan": "value",
+    "is_gluten_free": "value",
+    "position": "value",
+    "image_url": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/menu_items/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/menu_items' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/menu_items/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================MenuItem=====================
+=====================Property=====================
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "tagline": "value",
+    "legal_name": "value",
+    "brand": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value",
+    "piece_number": "value",
+    "price": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "title": "value",
+    "tagline": "value",
+    "legal_name": "value",
+    "brand": "value",
+    "description": "value",
+    "type": "value",
+    "rental_type": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "size_m2": "value",
+    "piece_number": "value",
+    "price": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Property=====================
+=====================Room=====================
+curl --location 'http://v2-dolcireva-api.test/api/rooms' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "property_id": "value",
+    "name": "value",
+    "description": "value",
+    "max_guests": "value",
+    "price": "value",
+    "type": "value",
+    "standing": "value",
+    "is_available": "value",
+    "is_active": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "property_id": "value",
+    "name": "value",
+    "description": "value",
+    "max_guests": "value",
+    "price": "value",
+    "type": "value",
+    "standing": "value",
+    "is_available": "value",
+    "is_active": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/rooms/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Room=====================
+=====================Space=====================
+curl --location 'http://v2-dolcireva-api.test/api/spaces' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "venue_id": "value",
+    "name": "value",
+    "type": "value",
+    "min_guests": "value",
+    "max_guests": "value",
+    "is_hourly_rate": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/spaces/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "venue_id": "value",
+    "name": "value",
+    "type": "value",
+    "min_guests": "value",
+    "max_guests": "value",
+    "is_hourly_rate": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/spaces/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/spaces' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/spaces/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Space=====================
+=====================TimeSlot=====================
+curl --location 'http://v2-dolcireva-api.test/api/time_slots' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "activity_id": "value",
+    "start_time": "value",
+    "end_time": "value",
+    "max_participants": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/time_slots/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "activity_id": "value",
+    "start_time": "value",
+    "end_time": "value",
+    "max_participants": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/time_slots/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/time_slots' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/time_slots/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================TimeSlot=====================
+=====================Venue=====================
+curl --location 'http://v2-dolcireva-api.test/api/venues' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "capacity": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "address_id": "value",
+    "category_id": "value",
+    "name": "value",
+    "description": "value",
+    "type": "value",
+    "capacity": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/venues' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/venues/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Venue=====================
+=====================VenueOpeningHour=====================
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "venue_id": "value",
+    "day": "value",
+    "open": "value",
+    "close": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "venue_id": "value",
+    "day": "value",
+    "open": "value",
+    "close": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================VenueOpeningHour=====================
+=====================VenueOpeningHour=====================
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "venue_id": "value",
+    "day": "value",
+    "open": "value",
+    "close": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "venue_id": "value",
+    "day": "value",
+    "open": "value",
+    "close": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/venue_opening_hours/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================VenueOpeningHour=====================
+=====================Wallet=====================
+curl --location 'http://v2-dolcireva-api.test/api/wallets' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "user_id": "value",
+    "balance": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/wallets/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "user_id": "value",
+    "balance": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/wallets/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/wallets' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/wallets/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Wallet=====================
+=====================WalletTransaction=====================
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "wallet_id": "value",
+    "type": "value",
+    "amount": "value",
+    "reason": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "wallet_id": "value",
+    "type": "value",
+    "amount": "value",
+    "reason": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/wallet_transactions/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================WalletTransaction=====================
+=====================Withdrawal=====================
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "user_id": "value",
+    "amount": "value",
+    "status": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "user_id": "value",
+    "amount": "value",
+    "status": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/withdrawals/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Withdrawal=====================
+=====================User=====================
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "type": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "type": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================User=====================
+=====================Property=====================
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "owner_id": "value",
+    "category_id": "value",
+    "name": "value",
+    "description": "value",
+    "address": "value",
+    "state": "value",
+    "street": "value",
+    "city": "value",
+    "country": "value",
+    "latitude": "value",
+    "longitude": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "piece_number": "value",
+    "price": "value",
+    "type": "value",
+    "rental_type": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "owner_id": "value",
+    "category_id": "value",
+    "name": "value",
+    "description": "value",
+    "address": "value",
+    "state": "value",
+    "street": "value",
+    "city": "value",
+    "country": "value",
+    "latitude": "value",
+    "longitude": "value",
+    "max_guests": "value",
+    "bedrooms": "value",
+    "bathrooms": "value",
+    "piece_number": "value",
+    "price": "value",
+    "type": "value",
+    "rental_type": "value",
+    "deleted_at": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/properties' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/properties/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================Property=====================
+=====================User=====================
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request POST \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "type": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "deleted_at": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request PATCH \
+--data '{
+    "first_name": "value",
+    "last_name": "value",
+    "phone": "value",
+    "email": "value",
+    "type": "value",
+    "email_verified_at": "value",
+    "password": "value",
+    "deleted_at": "value",
+    "remember_token": "value"
+}'
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request DELETE
+
+curl --location 'http://v2-dolcireva-api.test/api/users' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+curl --location 'http://v2-dolcireva-api.test/api/users/:id' \
+--header 'Accept: application/json' \
+--header 'Content-Type: application/json' \
+--request GET
+
+=====================User=====================

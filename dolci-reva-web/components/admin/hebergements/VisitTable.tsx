@@ -1,0 +1,487 @@
+"use client";
+
+import React, { useMemo, useState } from "react";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  flexRender,
+  type ColumnDef,
+  type SortingState,
+  type ColumnFiltersState,
+  type RowSelectionState,
+} from "@tanstack/react-table";
+import { Visit } from "@/hooks/use-visits";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Badge } from "@/components/ui/badge";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+  Search,
+  ArrowUpDown,
+  ArrowUp,
+  ArrowDown,
+  Calendar,
+  MapPin,
+  User,
+  MoreVertical,
+  CheckCircle2,
+} from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useConfirmVisit } from "@/hooks/use-visits";
+import { ConfirmationDialog } from "@/components/admin/shared/ConfirmationDialog";
+import { RefreshButton } from "@/components/admin/shared/RefreshButton";
+
+interface VisitTableProps {
+  data: Visit[];
+  isLoading?: boolean;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
+  hideActions?: boolean; // Masquer la colonne Actions (pour les clients)
+}
+
+const getStatusBadge = (status: string) => {
+  const statusConfig = {
+    PENDING: {
+      bg: "bg-gradient-to-r from-yellow-100 to-amber-100",
+      text: "text-yellow-700",
+      border: "border-yellow-200/50",
+      dot: "bg-yellow-500",
+      label: "En attente",
+    },
+    CONFIRMED: {
+      bg: "bg-gradient-to-r from-green-100 to-emerald-100",
+      text: "text-green-700",
+      border: "border-green-200/50",
+      dot: "bg-green-500",
+      label: "Confirmée",
+    },
+    CANCELLED: {
+      bg: "bg-gradient-to-r from-red-100 to-rose-100",
+      text: "text-red-700",
+      border: "border-red-200/50",
+      dot: "bg-red-500",
+      label: "Annulée",
+    },
+    COMPLETED: {
+      bg: "bg-gradient-to-r from-blue-100 to-indigo-100",
+      text: "text-blue-700",
+      border: "border-blue-200/50",
+      dot: "bg-blue-500",
+      label: "Terminée",
+    },
+  };
+  const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.PENDING;
+
+  return (
+    <Badge
+      className={`${config.bg} ${config.text} ${config.border} border inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold shadow-sm`}
+    >
+      <div className={`w-1.5 h-1.5 rounded-full ${config.dot}`}></div>
+      {config.label}
+    </Badge>
+  );
+};
+
+export function VisitTable({
+  data,
+  isLoading = false,
+  onRefresh,
+  isRefreshing = false,
+  hideActions = false,
+}: VisitTableProps) {
+  const confirmVisitMutation = useConfirmVisit();
+  const [sorting, setSorting] = useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState("");
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+  const [isConfirmDialogOpen, setIsConfirmDialogOpen] = useState(false);
+  const [visitToConfirm, setVisitToConfirm] = useState<Visit | null>(null);
+
+  const columns = useMemo<ColumnDef<Visit>[]>(
+    () => [
+      {
+        id: "select",
+        header: ({ table }) => (
+          <Checkbox
+            checked={table.getIsAllPageRowsSelected()}
+            onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+            aria-label="Select all"
+          />
+        ),
+        cell: ({ row }) => (
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        ),
+        enableSorting: false,
+        enableHiding: false,
+      },
+      {
+        accessorKey: "visit_reference",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="h-7 sm:h-8 px-1.5 sm:px-2 hover:bg-transparent text-xs sm:text-sm"
+            >
+              Référence
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUp className="ml-1.5 h-3 w-3" />
+              ) : column.getIsSorted() === "desc" ? (
+                <ArrowDown className="ml-1.5 h-3 w-3" />
+              ) : (
+                <ArrowUpDown className="ml-1.5 h-3 w-3" />
+              )}
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const visit = row.original;
+          if (hideActions) {
+            return (
+              <span className="font-medium text-xs sm:text-sm text-gray-900">
+                {row.getValue("visit_reference")}
+              </span>
+            );
+          }
+          return (
+            <button
+              onClick={() => {
+                window.location.href = `/admin/hebergements/visits/${visit.id}`;
+              }}
+              className="font-medium text-xs sm:text-sm text-[#f08400] hover:text-[#d87200] hover:underline transition-colors"
+            >
+              {row.getValue("visit_reference")}
+            </button>
+          );
+        },
+      },
+      {
+        accessorKey: "dwelling",
+        header: "Hébergement",
+        cell: ({ row }) => {
+          const dwelling = row.original.dwelling;
+          return (
+            <div className="flex items-center gap-2">
+              <MapPin className="w-4 h-4 text-gray-400" />
+              <div className="text-xs sm:text-sm">
+                <div className="font-medium">{dwelling.address}</div>
+                <div className="text-gray-500 text-xs">{dwelling.city}, {dwelling.country}</div>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "visitor",
+        header: "Visiteur",
+        cell: ({ row }) => {
+          const visitor = row.original.visitor;
+          const status = row.original.status;
+          const isConfirmed = status === "CONFIRMED";
+          
+          if (!visitor || !isConfirmed) {
+            return (
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-gray-300" />
+                <div className="text-xs sm:text-sm">
+                  <div className="flex items-center gap-1.5 text-red-500">
+                    <span className="text-xs">🔒</span>
+                    <span className="italic">Données disponibles après confirmation</span>
+                  </div>
+                </div>
+              </div>
+            );
+          }
+          
+          return (
+            <div className="flex items-center gap-2">
+              <User className="w-4 h-4 text-gray-400" />
+              <div className="text-xs sm:text-sm">
+                <div className="font-medium">{visitor.first_name} {visitor.last_name}</div>
+                <div className="text-gray-500 text-xs">{visitor.email}</div>
+                {visitor.phone && (
+                  <div className="text-gray-500 text-xs">{visitor.phone}</div>
+                )}
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "scheduled_at",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="h-7 sm:h-8 px-1.5 sm:px-2 hover:bg-transparent text-xs sm:text-sm"
+            >
+              Date prévue
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUp className="ml-1.5 h-3 w-3" />
+              ) : column.getIsSorted() === "desc" ? (
+                <ArrowDown className="ml-1.5 h-3 w-3" />
+              ) : (
+                <ArrowUpDown className="ml-1.5 h-3 w-3" />
+              )}
+            </Button>
+          );
+        },
+        cell: ({ row }) => {
+          const date = new Date(row.getValue("scheduled_at"));
+          return (
+            <div className="flex items-center gap-2 text-xs sm:text-sm">
+              <Calendar className="w-4 h-4 text-gray-400" />
+              <div>
+                <div className="font-medium">
+                  {date.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                </div>
+                <div className="text-gray-500 text-xs">
+                  {date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })}
+                </div>
+              </div>
+            </div>
+          );
+        },
+      },
+      {
+        accessorKey: "status",
+        header: "Statut",
+        cell: ({ row }) => {
+          return getStatusBadge(row.getValue("status"));
+        },
+      },
+      ...(hideActions ? [] : [
+        {
+          id: "actions",
+          header: "Actions",
+          cell: ({ row }: { row: { original: Visit } }) => {
+            const visit = row.original;
+            const isConfirmed = visit.status === "CONFIRMED";
+            
+            // Masquer complètement le dropdown si déjà confirmé
+            if (isConfirmed) {
+              return null;
+            }
+            
+            return (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 hover:bg-gray-100"
+                  >
+                    <span className="sr-only">Ouvrir le menu</span>
+                    <MoreVertical className="h-4 w-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-48">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      setVisitToConfirm(visit);
+                      setIsConfirmDialogOpen(true);
+                    }}
+                    className="cursor-pointer"
+                  >
+                    <CheckCircle2 className="mr-2 h-4 w-4 text-green-600" />
+                    Confirmer la visite
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          },
+        },
+      ] as ColumnDef<Visit>[]),
+    ],
+    [hideActions]
+  );
+
+  const table = useReactTable({
+    data,
+    columns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onRowSelectionChange: setRowSelection,
+    onGlobalFilterChange: setGlobalFilter,
+    globalFilterFn: "includesString",
+    state: {
+      sorting,
+      columnFilters,
+      rowSelection,
+      globalFilter,
+    },
+  });
+
+  return (
+    <div className="space-y-4">
+      {/* Search and Actions */}
+      <div className="flex items-center justify-between gap-4">
+        <div className="flex-1 max-w-sm">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Input
+              placeholder="Rechercher..."
+              value={globalFilter ?? ""}
+              onChange={(e) => setGlobalFilter(e.target.value)}
+              className="pl-10 h-10"
+            />
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          {onRefresh && (
+            <RefreshButton
+              onClick={onRefresh}
+              isRefreshing={isRefreshing}
+              showLabel={false}
+            />
+          )}
+        </div>
+      </div>
+
+      {/* Table */}
+      <div className="rounded-xl border border-gray-200/50 overflow-hidden">
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gradient-to-r from-gray-50 to-gray-100/50 border-b border-gray-200">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <tr key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => (
+                    <th
+                      key={header.id}
+                      className="px-6 py-2 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider"
+                    >
+                      {header.isPlaceholder
+                        ? null
+                        : flexRender(header.column.columnDef.header, header.getContext())}
+                    </th>
+                  ))}
+                </tr>
+              ))}
+            </thead>
+            <tbody className="divide-y divide-gray-100 bg-white">
+              {isLoading ? (
+                <tr>
+                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
+                    Chargement des visites...
+                  </td>
+                </tr>
+              ) : table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <tr
+                    key={row.id}
+                    className="hover:bg-gradient-to-r hover:from-gray-50/50 hover:to-transparent transition-all duration-200"
+                  >
+                    {row.getVisibleCells().map((cell) => (
+                      <td key={cell.id} className="px-6 py-1 whitespace-nowrap">
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </td>
+                    ))}
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={columns.length} className="px-6 py-8 text-center text-gray-500">
+                    Aucune donnée
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 px-2">
+        <div className="text-xs sm:text-sm text-gray-600">
+          {table.getFilteredSelectedRowModel().rows.length} sur{" "}
+          {table.getFilteredRowModel().rows.length} ligne(s) sélectionnée(s).
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.setPageIndex(0)}
+            disabled={!table.getCanPreviousPage()}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronsLeft className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronLeft className="h-4 w-4" />
+          </Button>
+          <div className="text-xs sm:text-sm text-gray-600">
+            Page {table.getState().pagination.pageIndex + 1} sur {table.getPageCount()}
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronRight className="h-4 w-4" />
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            disabled={!table.getCanNextPage()}
+            className="h-8 w-8 p-0"
+          >
+            <ChevronsRight className="h-4 w-4" />
+          </Button>
+        </div>
+      </div>
+
+      {/* Confirmation Dialog */}
+      <ConfirmationDialog
+        open={isConfirmDialogOpen}
+        onOpenChange={setIsConfirmDialogOpen}
+        onConfirm={() => {
+          if (visitToConfirm) {
+            confirmVisitMutation.mutate(visitToConfirm.id, {
+              onSuccess: () => {
+                setIsConfirmDialogOpen(false);
+                setVisitToConfirm(null);
+              },
+            });
+          }
+        }}
+        title="Confirmer la visite"
+        description="Êtes-vous sûr de vouloir confirmer cette visite ? Une fois confirmée, les informations du visiteur seront visibles."
+        itemName={visitToConfirm?.visit_reference}
+        isLoading={confirmVisitMutation.isPending}
+        confirmText="Confirmer"
+        cancelText="Annuler"
+      />
+    </div>
+  );
+}
+

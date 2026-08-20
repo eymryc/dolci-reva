@@ -1,0 +1,22 @@
+# Déploiement GitHub Actions — DÉSACTIVÉ
+# Dolci Rêva utilise désormais un pipeline maison :
+#   ./deploy/bin/dolci help
+# Voir deploy/DEPLOY.md
+#
+# Ce workflow ne se déclenche plus (on: workflow_dispatch + if: false).
+
+name: Deploy (disabled)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  notice:
+    name: Deploy via homemade scripts
+    runs-on: ubuntu-latest
+    if: false
+    steps:
+      - name: Disabled
+        run: |
+          echo "Use ./deploy/bin/dolci instead of GitHub Actions."
+          exit 1

@@ -1,0 +1,105 @@
+/**
+ * Table des types de business
+ * 
+ * Utilise le composant DataTable générique pour afficher les types de business
+ * avec tri, filtrage et pagination.
+ */
+
+"use client";
+
+import React, { useMemo } from "react";
+import type { ColumnDef } from "@tanstack/react-table";
+import { BusinessType } from "@/hooks/use-business-types";
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown, ArrowUp, ArrowDown } from "lucide-react";
+import { DataTable } from "@/components/admin/shared/DataTable";
+import { ActionButtons } from "@/components/admin/shared/ActionButtons";
+
+interface BusinessTypeTableProps {
+  data: BusinessType[];
+  onEdit: (businessType: BusinessType) => void;
+  onDelete: (businessType: BusinessType) => void;
+  isLoading?: boolean;
+  addButton?: React.ReactNode;
+  onRefresh?: () => void;
+  isRefreshing?: boolean;
+}
+
+export function BusinessTypeTable({
+  data,
+  onEdit,
+  onDelete,
+  isLoading = false,
+  addButton,
+  onRefresh,
+  isRefreshing = false,
+}: BusinessTypeTableProps) {
+  const columns = useMemo<ColumnDef<BusinessType>[]>(
+    () => [
+      {
+        accessorKey: "name",
+        header: ({ column }) => {
+          return (
+            <Button
+              variant="ghost"
+              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+              className="h-8 px-2 hover:bg-transparent"
+            >
+              Nom
+              {column.getIsSorted() === "asc" ? (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              ) : column.getIsSorted() === "desc" ? (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              ) : (
+                <ArrowUpDown className="ml-2 h-4 w-4" />
+              )}
+            </Button>
+          );
+        },
+        cell: ({ row }) => (
+          <div className="font-semibold text-gray-900">{row.getValue("name")}</div>
+        ),
+      },
+      {
+        accessorKey: "description",
+        header: "Description",
+        cell: ({ row }) => {
+          const description = row.getValue("description") as string | undefined;
+          return (
+            <div className="text-gray-600">
+              {description || <span className="text-gray-400 italic">Aucune description</span>}
+            </div>
+          );
+        },
+      },
+      {
+        id: "actions",
+        header: "Actions",
+        cell: ({ row }) => {
+          const businessType = row.original;
+          return (
+            <ActionButtons
+              onEdit={() => onEdit(businessType)}
+              onDelete={() => onDelete(businessType)}
+              showDirectButtons={true}
+            />
+          );
+        },
+      },
+    ],
+    [onEdit, onDelete]
+  );
+
+  return (
+    <DataTable
+      data={data}
+      columns={columns}
+      isLoading={isLoading}
+      addButton={addButton}
+      onRefresh={onRefresh}
+      isRefreshing={isRefreshing}
+      searchPlaceholder="Rechercher un type de business..."
+      emptyMessage="Aucune donnée"
+    />
+  );
+}

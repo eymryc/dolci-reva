@@ -1,0 +1,47 @@
+import type { Metadata } from "next";
+import { Rajdhani } from "next/font/google";
+import NextTopLoader from "nextjs-toploader";
+import { Toaster } from "@/components/ui/sonner"
+import "./globals.css";
+import { AuthProvider } from "@/context/AuthContext";
+import { QueryProvider } from "@/providers/QueryProvider";
+
+const rajdhani = Rajdhani({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600', '700'],
+  variable: '--font-rajdhani',
+});
+
+export const metadata: Metadata = {
+  title: "Dolci Rêva",
+  description: "La Côte d'Ivoire regorge d'énormes potentialités, permettant ainsi la pratique du tourisme. Mais, toutes ces richesses restent méconnus de la plupart des ivoiriens et des touristes étrangers. Dolci Rêva vous aidera",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body
+        className={`${rajdhani.variable} antialiased`}
+      >
+        <NextTopLoader
+          color="#f08400"
+          height={3}
+          showSpinner={false}
+          crawlSpeed={200}
+          speed={400}
+          shadow="0 0 10px #f08400,0 0 5px #f08400"
+        />
+        <Toaster richColors position="bottom-right" />
+        <QueryProvider>
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </QueryProvider>
+      </body>
+    </html>
+  );
+}

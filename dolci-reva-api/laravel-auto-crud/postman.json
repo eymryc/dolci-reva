@@ -1,0 +1,241 @@
+{
+    "info": {
+        "name": "Laravel Auto Crud (V2-DOLCIREVA-API)",
+        "schema": "https:\/\/schema.getpostman.com\/json\/collection\/v2.1.0\/collection.json"
+    },
+    "item": [
+        {
+            "name": "Users",
+            "item": [
+                {
+                    "name": "Create users",
+                    "request": {
+                        "method": "POST",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"first_name\": \"value\",\n    \"last_name\": \"value\",\n    \"phone\": \"value\",\n    \"email\": \"value\",\n    \"type\": \"value\",\n    \"email_verified_at\": \"value\",\n    \"password\": \"value\",\n    \"deleted_at\": \"value\",\n    \"remember_token\": \"value\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http:\/\/v2-dolcireva-api.test\/api\/users",
+                            "protocol": "http",
+                            "host": [
+                                "v2-dolcireva-api",
+                                "test"
+                            ],
+                            "port": 80,
+                            "path": [
+                                "api",
+                                "users"
+                            ],
+                            "variable": []
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Update users",
+                    "request": {
+                        "method": "PATCH",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "{\n    \"first_name\": \"value\",\n    \"last_name\": \"value\",\n    \"phone\": \"value\",\n    \"email\": \"value\",\n    \"type\": \"value\",\n    \"email_verified_at\": \"value\",\n    \"password\": \"value\",\n    \"deleted_at\": \"value\",\n    \"remember_token\": \"value\"\n}",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http:\/\/v2-dolcireva-api.test\/api\/users\/:id",
+                            "protocol": "http",
+                            "host": [
+                                "v2-dolcireva-api",
+                                "test"
+                            ],
+                            "port": 80,
+                            "path": [
+                                "api",
+                                "users",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Delete users",
+                    "request": {
+                        "method": "DELETE",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http:\/\/v2-dolcireva-api.test\/api\/users\/:id",
+                            "protocol": "http",
+                            "host": [
+                                "v2-dolcireva-api",
+                                "test"
+                            ],
+                            "port": 80,
+                            "path": [
+                                "api",
+                                "users",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get users",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http:\/\/v2-dolcireva-api.test\/api\/users",
+                            "protocol": "http",
+                            "host": [
+                                "v2-dolcireva-api",
+                                "test"
+                            ],
+                            "port": 80,
+                            "path": [
+                                "api",
+                                "users"
+                            ],
+                            "variable": []
+                        }
+                    },
+                    "response": []
+                },
+                {
+                    "name": "Get single users",
+                    "request": {
+                        "method": "GET",
+                        "header": [
+                            {
+                                "key": "Accept",
+                                "value": "application\/json",
+                                "type": "text"
+                            },
+                            {
+                                "key": "Content-Type",
+                                "value": "application\/json",
+                                "type": "text"
+                            }
+                        ],
+                        "body": {
+                            "mode": "raw",
+                            "raw": "[]",
+                            "options": {
+                                "raw": {
+                                    "language": "json"
+                                }
+                            }
+                        },
+                        "url": {
+                            "raw": "http:\/\/v2-dolcireva-api.test\/api\/users\/:id",
+                            "protocol": "http",
+                            "host": [
+                                "v2-dolcireva-api",
+                                "test"
+                            ],
+                            "port": 80,
+                            "path": [
+                                "api",
+                                "users",
+                                ":id"
+                            ],
+                            "variable": [
+                                {
+                                    "key": "id",
+                                    "value": "1"
+                                }
+                            ]
+                        }
+                    },
+                    "response": []
+                }
+            ]
+        }
+    ]
+}

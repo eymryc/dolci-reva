@@ -1,0 +1,164 @@
+services:
+  # ---------------------------------------------------------------------------
+  # PHP-FPM — Laravel API
+  # ---------------------------------------------------------------------------
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dolci_api_php
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - dolci
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "php -v || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ---------------------------------------------------------------------------
+  # Nginx conteneur — document root Laravel /public → php:9000
+  # Écoute uniquement sur 127.0.0.1:8080 (SSL géré par Nginx hôte)
+  # ---------------------------------------------------------------------------
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: dolci_api_nginx
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8080:80"
+    volumes:
+      - ./:/var/www/html:ro
+      - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - dolci
+    depends_on:
+      - php
+
+  # ---------------------------------------------------------------------------
+  # MySQL 8
+  # ---------------------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: dolci_api_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE:-dolci_reva}
+      MYSQL_USER: ${DB_USERNAME:-dolci_user}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?Set MYSQL_ROOT_PASSWORD in .env}
+    volumes:
+      - dolci_mysql_data:/var/lib/mysql
+    networks:
+      - dolci
+    # Ne PAS exposer 3306 publiquement
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 40s
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=caching_sha2_password
+
+  # ---------------------------------------------------------------------------
+  # Redis — cache + queues
+  # ---------------------------------------------------------------------------
+  redis:
+    image: redis:7-alpine
+    container_name: dolci_api_redis
+    restart: unless-stopped
+    command:
+      [
+        "redis-server",
+        "--appendonly",
+        "yes",
+        "--maxmemory",
+        "256mb",
+        "--maxmemory-policy",
+        "allkeys-lru",
+      ]
+    volumes:
+      - dolci_redis_data:/data
+    networks:
+      - dolci
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+
+  # ---------------------------------------------------------------------------
+  # Queue worker (notifications, jobs…)
+  # ---------------------------------------------------------------------------
+  queue:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dolci_api_queue
+    restart: unless-stopped
+    env_file:
+      - .env
+    command:
+      [
+        "php",
+        "artisan",
+        "queue:work",
+        "redis",
+        "--sleep=3",
+        "--tries=3",
+        "--max-time=3600",
+      ]
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - dolci
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      php:
+        condition: service_started
+
+  # ---------------------------------------------------------------------------
+  # Scheduler Laravel
+  # ---------------------------------------------------------------------------
+  scheduler:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: dolci_api_scheduler
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: ["php", "artisan", "schedule:work"]
+    volumes:
+      - ./:/var/www/html
+    networks:
+      - dolci
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      php:
+        condition: service_started
+
+networks:
+  dolci:
+    driver: bridge
+
+volumes:
+  dolci_mysql_data:
+  dolci_redis_data:
